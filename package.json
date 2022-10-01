@@ -1,0 +1,33 @@
+{
+  "name": "cs458-schedulingtool",
+  "version": "0.0.1",
+  "description": "Scheduling Tool to consolidate data from several departments across campus into a single tool",
+  "main": "index.js",
+  "type": "module",
+  "private": "true",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kirbitz/CS458-SchedulingTool.git"
+  },
+  "keywords": [
+    "Scheduling",
+    "Stout"
+  ],
+  "author": "Tyler Marefke, Adam Lucka, Augustus Knaack, Caleb Czeck, Garrett Preston, Jacob Gibbs, Karsten Roland, Yoonseo Park",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Kirbitz/CS458-SchedulingTool/issues"
+  },
+  "homepage": "https://github.com/Kirbitz/CS458-SchedulingTool#readme",
+  "devDependencies": {
+    "eslint": "^8.24.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.3.0",
+    "eslint-plugin-promise": "^6.0.1",
+    "eslint-plugin-react": "^7.31.8"
+  }
+}
