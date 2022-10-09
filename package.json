@@ -9,8 +9,7 @@
     "devServe": "nodemon --watch server/index.js --watch server/api/dataHelper.js server/index.js",
     "client": "esbuild --bundle --minify --target=ES6 --outfile=public/bundle.js client/app.jsx",
     "devClient": "nodemon --watch client --exec ./node_modules/.bin/esbuild --bundle --sourcemap --target=ES6 --outfile=public/bundle.js client/app.jsx",
-    "test": "jest",
-    "testCoverage": "jest --coverage",
+    "test": "jest --coverage",
     "testJest": "jest --detectOpenHandles"
   },
   "repository": {
