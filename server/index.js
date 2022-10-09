@@ -11,7 +11,3 @@ app.use((req, response, next) => {
 app.use(Express.static('public'))
 
 module.exports = app
-
-const testing = () => {
-  return 1 + 1
-}
