@@ -31,6 +31,10 @@ jobs:
     #Installs npm packages
     - name: Install dependencies
       run: npm ci
+
+    - name: Build Project
+      run: npm run build --if-preset
+
     #Runs tests through the test script in package.json
     #should be "jest --coverage"
     - name: Run tests
