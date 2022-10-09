@@ -1,6 +1,6 @@
 # Workflow for testing code and submitting a codecov report
 
-name: Jest Code Coverage Report
+name: Build, Test and Coverage Report
 
 # Controls when the workflow will run
 on:
