@@ -2,4 +2,5 @@
 [![CodeQL](https://github.com/Kirbitz/CS458-SchedulingTool/actions/workflows/CodeQLAnalysis.yml/badge.svg)](https://github.com/Kirbitz/CS458-SchedulingTool/actions/workflows/CodeQLAnalysis.yml) <br />
 # CS458-SchedulingTool
 Repo for CS458 Scheduling Tool Project <br/>
-Tool is planned to work as a one size fits all scheduling tool for UW-Stout
+Tool is planned to work as a one size fits all scheduling tool for UW-Stout.
+Contributors:
