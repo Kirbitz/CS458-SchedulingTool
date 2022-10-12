@@ -8,6 +8,6 @@ app.use((req, response, next) => {
   next()
 })
 
-app.use(Express.static('public')) 
+app.use(Express.static('public'))
 
 module.exports = app
