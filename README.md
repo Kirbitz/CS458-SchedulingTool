@@ -2,7 +2,7 @@
 [![CodeQL](https://github.com/Kirbitz/CS458-SchedulingTool/actions/workflows/CodeQLAnalysis.yml/badge.svg)](https://github.com/Kirbitz/CS458-SchedulingTool/actions/workflows/CodeQLAnalysis.yml) <br />
 
 # Authors
-* [Tyler Marefke](https://github.com/kirbitz)
+[Tyler Marefke](https://github.com/kirbitz)
 
 # CS458-SchedulingTool
 Repo for CS458 Scheduling Tool Project <br/>
