@@ -8,6 +8,7 @@
 [Caleb Czeck](https://github.com/Blackkirby72)
 [Yoonseo Park](https://github.com/YoonseoPark0518)
 [Karsten Roland](https://github.com/KarstenRoland)
+[Jacob Gibbs](https://github.com/comessErinaceus)
 
 # CS458-SchedulingTool
 Repo for CS458 Scheduling Tool Project <br/>
