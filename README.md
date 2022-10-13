@@ -5,6 +5,7 @@
 [Tyler Marefke](https://github.com/kirbitz)
 [Adam Lucka](https://github.com/AdamLucka)
 [Caleb Czeck](https://github.com/Blackkirby72)
+[Yoonseo Park](https://github.com/YoonseoPark0518)
 
 # CS458-SchedulingTool
 Repo for CS458 Scheduling Tool Project <br/>
