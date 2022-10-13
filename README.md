@@ -4,6 +4,7 @@
 # Authors
 [Tyler Marefke](https://github.com/kirbitz)
 [Adam Lucka](https://github.com/AdamLucka)
+[Garrett Preston](https://github.com/Garrett-Preston)
 
 # CS458-SchedulingTool
 Repo for CS458 Scheduling Tool Project <br/>
