@@ -10,6 +10,7 @@
     "build": "esbuild --bundle --minify --target=ES6 --outfile=public/bundle.js client/app.jsx",
     "devBuild": "nodemon --watch client --exec ./node_modules/.bin/esbuild --bundle --sourcemap --target=ES6 --outfile=public/bundle.js client/app.jsx",
     "test": "jest --coverage",
+    "devTest": "jest --watchAll --verbose",
     "testJest": "jest --detectOpenHandles"
   },
   "repository": {
@@ -36,6 +37,7 @@
     "eslint": "^8.24.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jest": "^27.1.1",
     "eslint-plugin-n": "^15.3.0",
     "eslint-plugin-promise": "^6.0.1",
     "eslint-plugin-react": "^7.31.8",
