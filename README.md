@@ -6,6 +6,7 @@
 [Adam Lucka](https://github.com/AdamLucka)
 [Garrett Preston](https://github.com/Garrett-Preston)
 [Caleb Czeck](https://github.com/Blackkirby72)
+[Yoonseo Park](https://github.com/YoonseoPark0518)
 [Karsten Roland](https://github.com/KarstenRoland)
 
 # CS458-SchedulingTool
