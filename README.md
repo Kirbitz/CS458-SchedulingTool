@@ -7,6 +7,7 @@
 [Garrett Preston](https://github.com/Garrett-Preston)
 [Caleb Czeck](https://github.com/Blackkirby72)
 [Karsten Roland](https://github.com/KarstenRoland)
+[Jacob Gibbs](https://github.com/comessErinaceus)
 
 # CS458-SchedulingTool
 Repo for CS458 Scheduling Tool Project <br/>
