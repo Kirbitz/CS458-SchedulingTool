@@ -6,7 +6,9 @@
 [Adam Lucka](https://github.com/AdamLucka)
 [Garrett Preston](https://github.com/Garrett-Preston)
 [Caleb Czeck](https://github.com/Blackkirby72)
+[Karsten Roland](https://github.com/KarstenRoland)
 
 # CS458-SchedulingTool
 Repo for CS458 Scheduling Tool Project <br/>
-Tool is planned to work as a one size fits all scheduling tool for UW-Stout
+Tool is planned to work as a one size fits all scheduling tool for UW-Stout.
+Contributors:
