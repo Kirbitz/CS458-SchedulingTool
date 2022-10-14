@@ -1,4 +1,4 @@
-const myApp = require('../server/index.js')
+const myApp = require('../../server/index.js')
 const request = require('supertest')
 describe('app testing Base Address Tests', () => {
   it('Connecting to the base address', async () => {
