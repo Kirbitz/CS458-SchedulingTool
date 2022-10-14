@@ -1,3 +1,4 @@
+import Week from './Components/Week.jsx'
 const React = require('react')
 const { createRoot } = require('react-dom/client')
 
@@ -5,5 +6,12 @@ const { createRoot } = require('react-dom/client')
 createRoot(
   document.getElementById('root')
 ).render(
-  <h1>HelloWorld!</h1>
+  <div>
+    <Week/>
+    <Week/>
+    <Week/>
+    <Week/>
+    <Week/>
+
+  </div>
 )
