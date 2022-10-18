@@ -16,17 +16,19 @@ Returns json data about he login session.
 - **Data Params**
   _Required:_ User email
 
-  `email=[string]`
+  `email: [string]`
 
   `joeshmo@example.xyz`
 
   _Required:_ User password
 
-  `password=[string]`
+  `password: [string]`
 
-  `MyPet'sName1!`
+  `MyPet'sName1234!`
 
-- **Auth required:** YES, Bearer token in Authorization header ------ probably change idk for now
+- **Auth required:** YES, TBD
+<!-- Bearer token or express-session seem pretty easy -->
+<!-- Can set in Authorization header or something, then validate with each request -->
 
 ## Response
 
@@ -42,6 +44,8 @@ Returns json data about he login session.
     "email": "joeshmo@example.xyz",
     "isManager": false,
     "sessionID": "random-session-id-string"
+    // sessionID could probably be a cookie
+    // also stored in DB table, validated with .env variable
   }
   ```
 
@@ -78,14 +82,13 @@ Returns json data about he login session.
 ## Sample Call
 
 ```javascript
-$.ajax({
-  url: '/login/',
-  dataType: 'json',
-  type: 'POST',
-  beforeSend: function (xhr) {
-    xhr.
-  },
-  success: function (r) {
-    console.log(r);
+axios({
+  method: 'POST',
+  url: '/login',
+  responseType: 'json',
+  data: {
+    email: 'joeshmo@example.xyz',
+    password: "MyPet'sName1234!"
   }
 });
+```
