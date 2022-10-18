@@ -20,7 +20,7 @@ describe('Tests for <NavigationBar />', () => {
   ${'Department'}
   ${'Settings'}
   `('Parameter Checks for selected button', ({ input }) => {
-    const component = render(<NavigationBar currentlySelected={input} />, { wrapper: BrowserRouter })
+    const component = render(<NavigationBar selected={input} />, { wrapper: BrowserRouter })
 
     expect(component.getByTestId(input).outerHTML).toContain('colorWarning')
   })

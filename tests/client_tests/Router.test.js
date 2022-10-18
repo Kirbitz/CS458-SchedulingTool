@@ -5,6 +5,7 @@ import { BrowserRouter, MemoryRouter, useLocation } from 'react-router-dom'
 
 import PageRoutes from '../../client/Components/PageRoutes.jsx'
 
+// Component for checking the route is correct
 const LocationDisplay = () => {
   const location = useLocation()
 
