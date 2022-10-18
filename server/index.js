@@ -10,4 +10,8 @@ app.use((req, response, next) => {
 
 app.use(Express.static('public'))
 
+app.get('*', (req, res) => {
+  res.redirect('/')
+})
+
 module.exports = app
