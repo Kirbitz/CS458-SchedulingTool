@@ -1,19 +1,21 @@
 # User Login
 
-Returns json data about he login session.
+Returns json data about the login session.
 
 - **URL:**
 
-  /login/
+  /login
 
 - **Method:**
 
   `POST`
 
 - **URL Params:**
+
   None
 
 - **Data Params**
+
   _Required:_ User email
 
   `email: [string]`
@@ -26,9 +28,8 @@ Returns json data about he login session.
 
   `MyPet'sName1234!`
 
-- **Auth required:** YES, TBD
-<!-- Bearer token or express-session seem pretty easy -->
-<!-- Can set in Authorization header or something, then validate with each request -->
+- **Auth required:** Yes, Bearer or express-session set in Authorization header.
+<!-- Will update once it is finalized. -->
 
 ## Response
 
@@ -41,11 +42,7 @@ Returns json data about he login session.
   ```json
   {
     "userId": 1234,
-    "email": "joeshmo@example.xyz",
-    "isManager": false,
-    "sessionID": "random-session-id-string"
-    // sessionID could probably be a cookie
-    // also stored in DB table, validated with .env variable
+    "isManager": false
   }
   ```
 
