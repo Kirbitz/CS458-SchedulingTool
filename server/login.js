@@ -1,6 +1,8 @@
 const dotenv = require('dotenv')
 dotenv.config()
 
+const sjcl = require('sjcl')
+
 // Database connection with knex
 const knex = require('knex')({
   client: 'mysql',
@@ -17,12 +19,15 @@ const knex = require('knex')({
 const loginCallback = async (req, res) => {
   const loginData = req.body
 
-  console.log(loginData)
-
   // Throw an error if no username or password passed in
   if (Object.keys(loginData).length === 0) {
     throw new Error('Username and password are required to log in')
   }
+
+  // create a bit array
+  const passwordBitArray = sjcl.hash.sha256.hash(loginData.password)
+  // create the password hash
+  const passwordHash = sjcl.codec.hex.fromBits(passwordBitArray)
 
   // Query the database to see if the username/password combo exists
   const user = await knex.select('Credentials.credentialsId', '_UserDepartment.isManager')
@@ -30,33 +35,31 @@ const loginCallback = async (req, res) => {
     .join('User', 'Credentials.credentialsId', 'User.userId')
     .join('_UserDepartment', 'User.userId', '_UserDepartment.userId')
     .where('Credentials.credentialsUsername', '=', loginData.username)
-    .andWhere('Credentials.credentialsPassword', '=', loginData.password)
+    .andWhere('Credentials.credentialsPassword', '=', passwordHash)
     .then(result => {
       // Returns the an array of Rows
       return result
     })
 
-  let resJson
-
   // There is no user with those login credentials
   if (user.length === 0) {
-    // Respond with '401 Unauthorized'; User not logged in
-    resJson = {
+    // Incorrect login info; User not logged in
+    // Send status code 401 and JSON, then end the response
+    res.status(401).json({
       error: {
         status: 401,
         message: 'Unauthorized'
       }
-    }
-  } else {
-    // Successful login
-    resJson = {
-      userId: user[0].credentialsId,
-      isManager: user[0].isManager
-    }
+    }).end()
+    return
   }
 
-  // Send the JSON data and status code. Then end the response
-  res.json(resJson).end()
+  // Successful login
+  // Send status code 200 and JSON, then end the response
+  res.status(200).json({
+    userId: user[0].credentialsId,
+    isManager: user[0].isManager
+  }).end()
 }
 
 module.exports = {
