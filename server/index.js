@@ -12,7 +12,7 @@ app.use((req, response, next) => {
 app.use(Express.static('public'))
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join('public', 'index.html'))
+  res.sendFile(path.join(__dirname, '../public', 'index.html'))
 })
 
 module.exports = app
