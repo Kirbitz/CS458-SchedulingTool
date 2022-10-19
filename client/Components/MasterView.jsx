@@ -12,6 +12,7 @@ export default function MasterView (props) {
     // TODO date and day info on each day
     // TODO scroll bar for weeks
     // List of names for employees
+    // make Day a card
     <Container>
       <NavigationBar/>
       <br></br>
