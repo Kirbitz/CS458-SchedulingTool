@@ -18,9 +18,9 @@ Returns json data about the login session.
 
   _Required:_ User email
 
-  `email: [string]`
+  `username: [string]`
 
-  `joeshmo@example.xyz`
+  `jshmoe1234`
 
   _Required:_ User password
 
@@ -47,6 +47,19 @@ Returns json data about the login session.
   ```
 
 - **Error Response:**
+
+  **Code:** `401 UNAUTHORIZED`
+
+  **Content:**
+  
+  ```json
+  {
+    "error": {
+      "status": 401,
+      "message": "Unauthorized"
+    }
+  }
+  ```
 
   **Code:** `404 NOT FOUND`
 
@@ -84,7 +97,7 @@ axios({
   url: '/login',
   responseType: 'json',
   data: {
-    email: 'joeshmo@example.xyz',
+    username: 'jshmoe1234',
     password: "MyPet'sName1234!"
   }
 });
