@@ -8,8 +8,14 @@ import { Container } from '@mui/material'
 // Week component for the master schedule view
 export default function MasterView (props) {
   return (
+    // TODO Month label
+    // TODO date and day info on each day
+    // TODO scroll bar for weeks
+    // List of names for employees
     <Container>
       <NavigationBar/>
+      <br></br>
+      <br></br>
       <br></br>
       <br></br>
       <br></br>

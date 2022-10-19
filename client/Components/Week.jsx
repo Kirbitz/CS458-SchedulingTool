@@ -7,21 +7,20 @@ import { Container } from '@mui/material'
 // Week component for the master schedule view
 export default function Week (props) {
   return (
-    <Container sx= {{
-      mx: 'auto',
-      width: '1/4',
-      // border: '2px #111C2C solid',
-      display: 'grid',
-      gap: 0.5,
-      gridTemplateColumns: 'repeat(7, 1fr)'
-    }}>
-      <Day weekday={ 'Monday' }/>
-      <Day weekday={ 'Tuesday' }/>
-      <Day weekday={ 'Wednesday' }/>
-      <Day weekday={ 'Thursday' }/>
-      <Day weekday={ 'Friday' }/>
-      <Day weekday={ 'Saturday' }/>
-      <Day weekday={ 'Sunday' }/>
+    <Container maxWidth={false} justifyContent="center"
+      sx= {{
+        // border: '2px #111C2C solid',
+        display: 'grid',
+        gap: 0.5,
+        gridTemplateColumns: 'repeat(17, 1fr)'
+      }}>
+        <Day weekday={ 'Monday' }/>
+        <Day weekday={ 'Tuesday' }/>
+        <Day weekday={ 'Wednesday' }/>
+        <Day weekday={ 'Thursday' }/>
+        <Day weekday={ 'Friday' }/>
+        <Day weekday={ 'Saturday' }/>
+        <Day weekday={ 'Sunday' }/>
     </Container>
   )
 }
