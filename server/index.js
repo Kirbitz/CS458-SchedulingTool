@@ -1,4 +1,5 @@
 const Express = require('express')
+const path = require('path')
 
 const app = new Express()
 
@@ -11,7 +12,7 @@ app.use((req, response, next) => {
 app.use(Express.static('public'))
 
 app.get('*', (req, res) => {
-  res.redirect('/')
+  res.sendFile(path.join('public', 'index.html'))
 })
 
 module.exports = app
