@@ -1,6 +1,7 @@
 import React from 'react'
 
 import Day from './Day.jsx'
+import Timeline from './Timeline.jsx'
 import { Grid } from '@mui/material'
 
 // const dateData = [{ weekday: 'Monday', date: 23 }]
@@ -8,38 +9,25 @@ import { Grid } from '@mui/material'
 // Week component for the master schedule view
 export default function Week (props) {
   // sizing for Grid items
-  const all = 12
-  const half = 6
-  const oneThird = 4
-  const oneFourth = 3
   const oneSixth = 2
+  const weekGridBoxSize = 10
 
   return (
-
           <Grid sx={{ flexGrow: 1 }} container spacing={1}>
-              <Grid item xs={ all } sm={ half } md={ oneThird } lg={ oneFourth } xl={ oneSixth }>
-                <Day weekday={ 'Monday' }/>
+              <Grid item xs={ oneSixth } sm={ oneSixth } md={ oneSixth } lg={ oneSixth } xl={ oneSixth }>
+                <Timeline/>
               </Grid>
-              <Grid item xs={ all } sm={ half } md={ oneThird } lg={ oneFourth } xl={ oneSixth }>
-                <Day weekday={ 'Tuesday' }/>
+              <Grid item xs={weekGridBoxSize} sm={weekGridBoxSize} md={weekGridBoxSize} lg={weekGridBoxSize} xl={weekGridBoxSize}>
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                  <Day sx={{ height: '300' }} weekday={ 'Monday' }/>
+                  <Day sx={{ height: '300' }} weekday={ 'Tuesday' }/>
+                  <Day sx={{ height: '300' }} weekday={ 'Wednesday' }/>
+                  <Day sx={{ height: '300' }} weekday={ 'Thursday' }/>
+                  <Day sx={{ height: '300' }} weekday={ 'Friday' }/>
+                  <Day sx={{ height: '300' }} weekday={ 'Saturday' }/>
+                  <Day sx={{ height: '300' }} weekday={ 'Sunday' }/>
+                </div>
               </Grid>
-              <Grid item xs={ all } sm={ half } md={ oneThird } lg={ oneFourth } xl={ oneSixth }>
-                <Day weekday={ 'Wednesday' }/>
-              </Grid>
-              <Grid item xs={ all } sm={ half } md={ oneThird } lg={ oneFourth } xl={ oneSixth }>
-                <Day weekday={ 'Thursday' }/>
-              </Grid>
-              <Grid item xs={ all } sm={ half } md={ oneThird } lg={ oneFourth } xl={ oneSixth }>
-                <Day weekday={ 'Friday' }/>
-              </Grid>
-              <Grid item xs={ all } sm={ half } md={ oneThird } lg={ oneFourth } xl={ oneSixth }>
-                <Day weekday={ 'Saturday' }/>
-              </Grid>
-              <Grid item xs={ all } sm={ half } md={ oneThird } lg={ oneFourth } xl={ oneSixth }>
-                <Day weekday={ 'Sunday' }/>
-              </Grid>
-
           </Grid>
-
   )
 }

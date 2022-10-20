@@ -3,7 +3,7 @@ import React from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 
 import NavigationBar from './NavigationBar.jsx'
-import MasterView from './MasterView.jsx'
+import MasterView from '../Pages/MasterView.jsx'
 
 // Set of routes for react to navigate between
 export default function PageRoutes (props) {

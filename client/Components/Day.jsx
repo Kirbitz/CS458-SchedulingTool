@@ -15,7 +15,7 @@ export default function Day (props) {
   const btnHeight = '85%'
 
   return (<div>
-        <Card spacing={3} sx={{ minWidth: 100, maxWidth: 400, width: '95%', height: 300 }}>
+        <Card spacing={1} sx={{ width: 250, height: 500, margin: 1 }}>
           <CardContent>
             <Typography color={ buttonTextColor }>{weekday}</Typography>
             {/* Button for adding commitments */}
@@ -25,7 +25,7 @@ export default function Day (props) {
               width: btnWidth,
               height: btnHeight,
               backgroundColor: buttonColor
-            }}>
+            }}> +
             </Button>
             {/* Button for subtracting commitments */}
             <Button sx={{
@@ -34,7 +34,7 @@ export default function Day (props) {
               width: btnWidth,
               height: btnHeight,
               backgroundColor: buttonColor
-            }}> for subbing
+            }}> -
             </Button>
           </CardContent>
         </Card>
