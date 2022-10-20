@@ -28,7 +28,7 @@ Returns json data about the login session.
 
   `MyPet'sName1234!`
 
-- **Auth required:** Yes, Bearer or express-session set in Authorization header.
+- **Auth required:** Yes, JWT token set in Authorization header
 <!-- Will update once it is finalized. -->
 
 ## Response
@@ -60,6 +60,8 @@ Returns json data about the login session.
     }
   }
   ```
+
+  OR
 
   **Code:** `404 NOT FOUND`
 

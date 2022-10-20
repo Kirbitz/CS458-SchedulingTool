@@ -3,7 +3,7 @@ const dbClient = require('knex')({
   connection: {
     host: process.env.DBEndpoint,
     port: process.env.DBport,
-    user: process.env.DBUser,
+    user: process.env.DBUsername,
     password: process.env.DBPassword,
     database: process.env.DBName
   }

@@ -1,7 +1,8 @@
 const dotenv = require('dotenv')
 dotenv.config()
 
-const sjcl = require('sjcl')
+const sjcl = require('sjcl') // sha256 for encryption
+const jwt = require('jsonwebtoken')
 
 // Database connection with knex
 const dbClient = require('./dbClient')
@@ -48,9 +49,20 @@ const loginCallback = async (req, res) => {
     return
   }
 
+  // The user has correct credentials
+  // Sign a token to be stored in Authorization header
+  const token = await jwt.sign(
+    {
+      userId: user.credentialsId
+    },
+    'secret',
+    {
+      expiresIn: 5 * 60 * 60 // Token valid for 5 hours
+    })
+
   // Successful login
   // Send status code 200 and JSON, then end the response
-  res.status(200).json({
+  res.status(200).set('Authorization', token).json({
     userId: user[0].credentialsId,
     isManager: user[0].isManager
   }).end()
