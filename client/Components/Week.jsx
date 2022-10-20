@@ -1,26 +1,37 @@
 import React from 'react'
 
 import Day from './Day.jsx'
-import { Container } from '@mui/material'
+import { Grid } from '@mui/material'
 
 // const dateData = [{ weekday: 'Monday', date: 23 }]
 // Week component for the master schedule view
 export default function Week (props) {
   return (
-    <Container maxWidth={false} justifyContent="center"
-      sx= {{
-        // border: '2px #111C2C solid',
-        display: 'grid',
-        gap: 0.5,
-        gridTemplateColumns: 'repeat(17, 1fr)'
-      }}>
-        <Day weekday={ 'Monday' }/>
-        <Day weekday={ 'Tuesday' }/>
-        <Day weekday={ 'Wednesday' }/>
-        <Day weekday={ 'Thursday' }/>
-        <Day weekday={ 'Friday' }/>
-        <Day weekday={ 'Saturday' }/>
-        <Day weekday={ 'Sunday' }/>
-    </Container>
+
+          <Grid container spacing={0.5}>
+              <Grid item xs={6} sm={6} md={3} lg={3} xl={3}>
+                <Day weekday={ 'Monday' }/>
+              </Grid>
+              <Grid item xs={6} sm={6} md={3} lg={3} xl={3}>
+                <Day weekday={ 'Tuesday' }/>
+              </Grid>
+              <Grid item xs={6} sm={6} md={3} lg={3} xl={3}>
+                <Day weekday={ 'Wednesday' }/>
+              </Grid>
+              <Grid item xs={6} sm={6} md={3} lg={3} xl={3}>
+                <Day weekday={ 'Thursday' }/>
+              </Grid>
+              <Grid item xs={6} sm={6} md={3} lg={3} xl={3}>
+                <Day weekday={ 'Friday' }/>
+              </Grid>
+              <Grid item xs={6} sm={6} md={3} lg={3} xl={3}>
+                <Day weekday={ 'Saturday' }/>
+              </Grid>
+              <Grid item xs={6} sm={6} md={3} lg={3} xl={3}>
+                <Day weekday={ 'Sunday' }/>
+              </Grid>
+
+          </Grid>
+
   )
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { Button, Container, Box } from '@mui/material'
+import { Button, Card, Typography, CardContent } from '@mui/material'
 
 // Week component for the master schedule view
 export default function Day (props) {
@@ -9,22 +9,17 @@ export default function Day (props) {
   // const dd = this.props
 
   return (<div>
-       <Container>
-       <Box sx={{
-         mx: 'auto',
-         color: '#111C2C',
-         width: 150,
-         height: 50
-       }}>
-          { weekday }</Box>
-        <Button sx={{
-          mx: 'auto',
-          color: '#111C2C',
-          width: 150,
-          height: 100,
-          backgroundColor: '#B4B5B4'
-        }}></Button>
-       </Container>
+        <Card sx={{ minWidth: 100, maxWidth: 400, width: 200, height: 300 }}>
+          <CardContent>
+            <Typography>{weekday}</Typography>
+            <Button sx={{
+              mx: 'auto',
+              color: '#111C2C',
+              width: 'fullWidth',
+              backgroundColor: '#B4B5B4'
+            }}></Button>
+          </CardContent>
+        </Card>
   </div>
   )
 }

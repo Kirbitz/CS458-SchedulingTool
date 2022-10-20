@@ -2,7 +2,7 @@ import React from 'react'
 
 import NavigationBar from './NavigationBar.jsx'
 import Week from './Week.jsx'
-import { Container } from '@mui/material'
+// import { Container } from '@mui/material'
 
 // const dateData = [{ weekday: 'Monday', date: 23 }]
 // Week component for the master schedule view
@@ -13,14 +13,24 @@ export default function MasterView (props) {
     // TODO scroll bar for weeks
     // List of names for employees
     // make Day a card
-    <Container>
-      <NavigationBar/>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <Week/>
-    </Container>
+    <div>
+
+          <NavigationBar/>
+
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+
+          <Week/>
+
+    </div>
   )
 }
