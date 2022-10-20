@@ -8,16 +8,33 @@ export default function Day (props) {
   const { weekday } = props
   // const dd = this.props
 
+  // Colors
+  const buttonTextColor = '#111C2C'
+  const buttonColor = '#B4B5B4'
+  const btnWidth = '50%'
+
   return (<div>
-        <Card sx={{ minWidth: 100, maxWidth: 400, width: 200, height: 300 }}>
+        <Card spacing={3} sx={{ minWidth: 100, maxWidth: 400, width: '95%', height: 300 }}>
           <CardContent>
-            <Typography>{weekday}</Typography>
+            <Typography color={ buttonTextColor }>{weekday}</Typography>
+            {/* Button for adding commitments */}
             <Button sx={{
               mx: 'auto',
-              color: '#111C2C',
-              width: 'fullWidth',
-              backgroundColor: '#B4B5B4'
-            }}></Button>
+              color: buttonTextColor,
+              width: btnWidth,
+              height: '100%',
+              backgroundColor: buttonColor
+            }}>
+            </Button>
+            {/* Button for subtracting commitments */}
+            <Button sx={{
+              mx: 'auto',
+              color: buttonTextColor,
+              width: btnWidth,
+              height: '100%',
+              backgroundColor: buttonColor
+            }}> for subbing
+            </Button>
           </CardContent>
         </Card>
   </div>
