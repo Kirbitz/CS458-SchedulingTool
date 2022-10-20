@@ -17,11 +17,14 @@ const knex = require('knex')({
 
 // function is asynchronous to allow query to happen before trying to access results
 const loginCallback = async (req, res) => {
-  const loginData = req.body
+  let loginData = req.body
 
   // Throw an error if no username or password passed in
   if (Object.keys(loginData).length === 0) {
-    throw new Error('Username and password are required to log in')
+    loginData = {
+      username: '',
+      password: ''
+    }
   }
 
   // create a bit array
