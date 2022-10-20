@@ -4,16 +4,7 @@ dotenv.config()
 const sjcl = require('sjcl')
 
 // Database connection with knex
-const knex = require('knex')({
-  client: 'mysql',
-  connection: {
-    host: process.env.DBEndpoint,
-    port: process.env.DBport,
-    user: process.env.DBUser,
-    password: process.env.DBPassword,
-    database: process.env.DBName
-  }
-})
+const dbClient = require('./dbClient')
 
 // function is asynchronous to allow query to happen before trying to access results
 const loginCallback = async (req, res) => {
@@ -33,7 +24,7 @@ const loginCallback = async (req, res) => {
   const passwordHash = sjcl.codec.hex.fromBits(passwordBitArray)
 
   // Query the database to see if the username/password combo exists
-  const user = await knex.select('Credentials.credentialsId', '_UserDepartment.isManager')
+  const user = await dbClient.select('Credentials.credentialsId', '_UserDepartment.isManager')
     .from('Credentials')
     .join('User', 'Credentials.credentialsId', 'User.userId')
     .join('_UserDepartment', 'User.userId', '_UserDepartment.userId')
