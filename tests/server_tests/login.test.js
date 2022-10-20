@@ -1,4 +1,3 @@
-// const { loginCallback } = require('../../server/login.js')
 const request = require('supertest')
 const myApp = require('../../server/index')
 
