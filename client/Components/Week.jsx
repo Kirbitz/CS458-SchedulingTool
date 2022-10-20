@@ -16,7 +16,7 @@ export default function Week (props) {
 
   return (
 
-          <Grid disableGutters sx={{ flexGrow: 1 }} container spacing={1}>
+          <Grid sx={{ flexGrow: 1 }} container spacing={1}>
               <Grid item xs={ all } sm={ half } md={ oneThird } lg={ oneFourth } xl={ oneSixth }>
                 <Day weekday={ 'Monday' }/>
               </Grid>

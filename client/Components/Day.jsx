@@ -12,6 +12,7 @@ export default function Day (props) {
   const buttonTextColor = '#111C2C'
   const buttonColor = '#B4B5B4'
   const btnWidth = '50%'
+  const btnHeight = '85%'
 
   return (<div>
         <Card spacing={3} sx={{ minWidth: 100, maxWidth: 400, width: '95%', height: 300 }}>
@@ -22,7 +23,7 @@ export default function Day (props) {
               mx: 'auto',
               color: buttonTextColor,
               width: btnWidth,
-              height: '100%',
+              height: btnHeight,
               backgroundColor: buttonColor
             }}>
             </Button>
@@ -31,7 +32,7 @@ export default function Day (props) {
               mx: 'auto',
               color: buttonTextColor,
               width: btnWidth,
-              height: '100%',
+              height: btnHeight,
               backgroundColor: buttonColor
             }}> for subbing
             </Button>
