@@ -14,14 +14,13 @@ export default function MasterView (props) {
   // TODO Month label
   // TODO date and day info on each day
   // TODO scroll bar for weeks
-  // List of names for employees
-  // make Day a card - done
-  // Add a line for the current time
-    <Box>
+  // TODO make color coding based on if the shift is filled for that day
+  // Add a line for the current time to the timeline component
+    <Box sx={{ color: 'red' }}>
       <NavigationBar/>
       <Toolbar></Toolbar>
-      <Grid container sx={{ mt: '200' }}>
-            <Grid item xs={ 11 } sm={ 11 } md={ 11 } lg={ 11 }>
+      <Grid container sx={{ mt: '2' }}>
+            <Grid item xs={ 11 } sm={ 11 } md={ 11 } lg={ 11 } xl={ 11 }>
               <Box>
                 <Week/>
               </Box>

@@ -15,7 +15,7 @@ export default function Day (props) {
   const btnHeight = '85%'
 
   return (<div>
-        <Card spacing={1} sx={{ width: 250, height: 500, margin: 1 }}>
+        <Card spacing={1} sx={{ width: 250, height: 635, margin: 1 }}>
           <CardContent>
             <Typography color={ buttonTextColor }>{weekday}</Typography>
             {/* Button for adding commitments */}

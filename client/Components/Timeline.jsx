@@ -3,44 +3,44 @@ import { List, ListItem, ListItemText } from '@mui/material'
 
 export default function Timeline (props) {
   return (
-    <List sx={{ height: 430 }}>
-    <ListItem disablePadding>
-      <ListItemText>Time</ListItemText>
+    <List style={{ height: '100%', border: '2px solid black' }}>
+    <ListItem >
+      <ListItemText primary="Time"/>
     </ListItem>
-    <ListItem disablePadding >
+    <ListItem >
       <ListItemText>1:00am</ListItemText>
     </ListItem>
-    <ListItem disablePadding >
+    <ListItem >
       <ListItemText>2</ListItemText>
     </ListItem>
-    <ListItem disablePadding >
+    <ListItem >
       <ListItemText>3</ListItemText>
     </ListItem>
-    <ListItem disablePadding >
+    <ListItem >
       <ListItemText>4</ListItemText>
     </ListItem>
-    <ListItem disablePadding >
+    <ListItem >
       <ListItemText>5</ListItemText>
     </ListItem>
-    <ListItem disablePadding >
+    <ListItem >
       <ListItemText>6</ListItemText>
     </ListItem>
-    <ListItem disablePadding >
+    <ListItem >
       <ListItemText>7</ListItemText>
     </ListItem>
-    <ListItem disablePadding >
+    <ListItem >
       <ListItemText>8</ListItemText>
     </ListItem>
-    <ListItem disablePadding >
+    <ListItem >
       <ListItemText>9</ListItemText>
     </ListItem>
-    <ListItem disablePadding >
+    <ListItem >
       <ListItemText>10</ListItemText>
     </ListItem>
-    <ListItem disablePadding >
+    <ListItem >
       <ListItemText>11</ListItemText>
     </ListItem>
-    <ListItem disablePadding >
+    <ListItem >
       <ListItemText>12</ListItemText>
     </ListItem>
   </List>
