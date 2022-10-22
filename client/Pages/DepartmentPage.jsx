@@ -1,33 +1,65 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 
-import { Alert, Box, Button, CircularProgress, Fab, FormControl, IconButton, InputLabel, Select, Snackbar, TextField, Typography } from '@mui/material'
-import { ArrowForward, ArrowBack, Create, PersonSearch } from '@mui/icons-material'
+import { Box, CircularProgress, Fab, TextField, Tooltip, Typography } from '@mui/material'
+import { Create, PersonSearch } from '@mui/icons-material'
 
-import { getDepartmentStaff } from '../dataHelper.js'
 import NavigationBar from '../Components/NavigationBar.jsx'
+import SaveAndNotify from '../Components/SaveAndNotify.jsx'
+import DepAddRemoveFields from '../Components/DepAddRemoveFields.jsx'
+
+const { getDepartmentInfo, postDepartmentInfo, searchEmployeeInfo } = require('../dataHelper.cjs')
 
 export default function DepartmentPage (props) {
-  const [departmentStaff, setDepartmentStaff] = React.useState([])
-  const [showSnack, setShowSnack] = React.useState(false)
-  const [disableButton, setDisableButton] = React.useState(false)
+  const [departmentInfo, setDepartmentInfo] = React.useState(null)
+  const [searchStaff, setSearchStaff] = React.useState([])
   const [dataCollected, setDataCollected] = React.useState(null)
-  const [selectedUsers, setSelectedUsers] = React.useState([])
+  const [success, setSuccess] = React.useState(false)
+  const [inputInvalid, setInputInvalid] = React.useState(false)
+  const [searchHappened, setSearchHappened] = React.useState(true)
+  const [searchClicked, setSearchClicked] = React.useState(false)
 
-  const handleMultipleChange = (event) => {
-    const { options } = event.target
-    const value = []
-    for (let i = 0; i < options.length; i++) {
-      if (options[i].selected) {
-        value.push(options[i].key)
-      }
+  const searchRef = useRef('')
+
+  const searchEmployees = async () => {
+    if (searchRef.current.value.length > 0 && (searchRef.current.value.match('^[0-9]+$') || searchRef.current.value.match('^[a-zA-Z]+$'))) {
+      setInputInvalid(false)
+      setSearchClicked(true)
+      await searchEmployeeInfo(searchRef.current.value)
+        .then((response) => { setSearchStaff(response) })
+        .catch((error) => {
+          alert('Failed to retrieve search data')
+          console.error(error)
+        })
+      setSearchClicked(false)
+      setSearchHappened(false)
+    } else {
+      setInputInvalid(true)
     }
-    setSelectedUsers(value)
   }
 
-  const collectDepartmentStaff = () => {
-    getDepartmentStaff()
+  const removeEmployees = (selectedUsers) => {
+    setDepartmentInfo({
+      depName: departmentInfo.depName,
+      depEmployees: departmentInfo.depEmployees.filter((employee) => { return !selectedUsers.includes(employee.id) })
+    })
+  }
+
+  const addEmployees = (selectedUsers) => {
+    const temp = departmentInfo.depEmployees.concat(selectedUsers)
+    setDepartmentInfo({
+      depName: departmentInfo.depName,
+      depEmployees: temp.filter((value, index, self) =>
+        index === self.findIndex((t) => (
+          t.id === value.id
+        ))
+      )
+    })
+  }
+
+  const collectDepartmentInfo = () => {
+    getDepartmentInfo()
       .then((response) => {
-        setDepartmentStaff(response)
+        setDepartmentInfo(response)
         setDataCollected(true)
       })
       .catch((error) => {
@@ -37,118 +69,69 @@ export default function DepartmentPage (props) {
       })
   }
 
+  const updateDepartmentInfo = () => {
+    postDepartmentInfo(departmentInfo)
+      .then(() => {
+        setSuccess(true)
+      })
+      .catch((error) => {
+        console.error(error)
+        setSuccess(false)
+      })
+  }
+
   useEffect(() => {
-    collectDepartmentStaff()
+    collectDepartmentInfo()
   }, [])
 
-  // Handles the save button being clicked and showing snackbar
-  const handleSave = () => {
-    setDisableButton(true)
-    setShowSnack(true)
+  if (!dataCollected) {
+    return (
+      <Box data-testid='department-page'>
+        <NavigationBar selected="Department" />
+        <Typography variant="h3" component="h2" align='center' sx={{ mt: 2 }}>
+          No Data Found
+        </Typography>
+      </Box>
+    )
   }
 
-  // Handles enabling save button and hiding snackbar
-  const handleClose = () => {
-    setDisableButton(false)
-    setShowSnack(false)
+  if (!departmentInfo || departmentInfo === undefined) {
+    return (
+      <Box data-testid='department-page'>
+        <NavigationBar selected="Department" />
+        <Box height="100vh" display='flex' justifyContent='center' alignItems='center'>
+          <CircularProgress color='secondary' />
+        </Box>
+      </Box>
+    )
   }
-
-  // if (!dataCollected) {
-  //   return (
-  //     <React.Fragment>
-  //       <NavigationBar selected="Department" />
-  //       <Typography variant="h3" component="h2" align='center' sx={{ mt: 2 }}>
-  //         No Data Found
-  //       </Typography>
-  //     </React.Fragment>
-  //   )
-  // }
-
-  // if (!Array.isArray(departmentStaff) || departmentStaff.length < 1) {
-  //   return (
-  //     <React.Fragment>
-  //       <NavigationBar selected="Department" />
-  //       <Box height="100vh" display='flex' justifyContent='center' alignItems='center'>
-  //         <CircularProgress color='secondary' />
-  //       </Box>
-  //     </React.Fragment>
-  //   )
-  // }
 
   return (
-    <React.Fragment>
+    <Box data-testid='department-page'>
       <NavigationBar selected="Department" />
       <Typography variant="h3" component="h2" align='center' sx={{ mt: 2 }}>
-        Department: The amazing department
+        Department: {departmentInfo.depName}
       </Typography>
       <Box display="flex" justifyContent="space-between" sx={{ mt: 2 }}>
-        <Button variant="contained" color='success' onClick={handleSave} disabled={disableButton}>Save</Button>
+        <SaveAndNotify callbackFunc={updateDepartmentInfo} success={success} />
         <Box flexGrow={1} />
-        <TextField id="employee-search" label="Employee Id/Name" variant="outlined" />
-        <Fab color='primary' sx={{ mx: 1 }}>
-          <PersonSearch />
-        </Fab>
-        <Fab color='secondary'>
-          <Create />
-        </Fab>
+        <TextField error={inputInvalid} id="employee-search" label="Employee Id/Name" variant="outlined" inputRef={searchRef} />
+        <Tooltip title="Search Employees">
+          <div>
+            <Fab disabled={searchClicked} color='primary' sx={{ mx: 1 }} onClick={searchEmployees}>
+              <PersonSearch />
+            </Fab>
+          </div>
+        </Tooltip>
+        <Tooltip title="Create User">
+          <div>
+            <Fab disabled={searchHappened} color='secondary'>
+              <Create />
+            </Fab>
+          </div>
+        </Tooltip>
       </Box>
-      <Box display='flex' justifyContent='space-between' sx={{ mt: 4 }}>
-        <FormControl sx={{ width: 450 }}>
-          <InputLabel shrink htmlFor="in-department">In Department</InputLabel>
-          <Select
-            multiple
-            native
-            height='100%'
-            label="In Department"
-            value={selectedUsers}
-            onChange={handleMultipleChange}
-            inputProps={{
-              id: 'in-department'
-            }}
-          >
-            {names.map((name, i) => (
-              <option key={i} value={name}>
-                {name}
-              </option>
-            ))}
-          </Select>
-        </FormControl>
-        <Box display='flex' sx={{ flexDirection: 'column' }}>
-          <IconButton>
-            <ArrowForward />
-          </IconButton>
-          <br />
-          <IconButton>
-            <ArrowBack />
-          </IconButton>
-        </Box>
-        <FormControl sx={{ width: 450 }}>
-          <InputLabel shrink htmlFor="not-in-department">Not In Department</InputLabel>
-          <Select
-            multiple
-            native
-            label="Not In Department"
-            inputProps={{
-              id: 'not-in-department'
-            }}
-          ></Select>
-        </FormControl>
-      </Box>
-      <Snackbar open={showSnack} autoHideDuration={3000} onClose={handleClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}>
-        <Alert variant='filled' onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-          Saved Changes!
-        </Alert>
-      </Snackbar>
-    </React.Fragment>
+      <DepAddRemoveFields currentEmployees={departmentInfo.depEmployees} searchEmployees={searchStaff} removeEmployees={removeEmployees} addEmployees={addEmployees} />
+    </Box>
   )
 }
-
-const names = [
-  'Tyler Marefke',
-  'Tyler Marefke',
-  'Tyler Marefke',
-  'Tyler Marefke',
-  'Tyler Marefke',
-  'Tyler Marefke',
-  'Tyler Marefke'
-]
