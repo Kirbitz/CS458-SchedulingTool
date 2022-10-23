@@ -65,12 +65,12 @@ export default function NavigationBar (props) {
   )
 }
 
-// Checks that the props passed in match the correct type
+// Validates the props being accepted into this element
 NavigationBar.propTypes = {
   selected: PropTypes.string
 }
 
-// defaults the props to a set value if they are not required
+// Sets the default value of the props if none are provided
 NavigationBar.defaultProps = {
   selected: ''
 }
