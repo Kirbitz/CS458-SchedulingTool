@@ -32,7 +32,7 @@ const loginCallback = async (req, res) => {
     .where('Credentials.credentialsUsername', '=', loginData.username)
     .andWhere('Credentials.credentialsPassword', '=', passwordHash)
     .then(result => {
-      // Returns the an array of Rows
+      // Returns an array of Rows
       return result
     })
 
@@ -40,32 +40,33 @@ const loginCallback = async (req, res) => {
   if (user.length === 0) {
     // Incorrect login info; User not logged in
     // Send status code 401 and JSON, then end the response
-    res.status(401).json({
-      error: {
-        status: 401,
-        message: 'Unauthorized'
-      }
-    }).end()
+    res.status(401)
+      .json({
+        error: {
+          status: 401,
+          message: 'Unauthorized'
+        }
+      })
+      .end()
     return
   }
 
   // The user has correct credentials
   // Sign a token to be stored in Authorization header
   const token = await jwt.sign(
-    {
-      userId: user.credentialsId
-    },
+    { userId: user.credentialsId },
     'secret',
-    {
-      expiresIn: 5 * 60 * 60 // Token valid for 5 hours
-    })
+    { expiresIn: 5 * 60 * 60 }) // Token valid for 5 hours
 
   // Successful login
   // Send status code 200 and JSON, then end the response
-  res.status(200).set('Authorization', token).json({
-    userId: user[0].credentialsId,
-    isManager: user[0].isManager
-  }).end()
+  res.status(200)
+    .set('Authorization', token)
+    .json({
+      userId: user[0].credentialsId,
+      isManager: user[0].isManager
+    })
+    .end()
 }
 
 module.exports = {
