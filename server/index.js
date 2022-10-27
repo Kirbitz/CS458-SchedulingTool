@@ -14,9 +14,10 @@ app.use((req, response, next) => {
 })
 
 app.use(Express.static('public'))
+// rate limit requests to 50 attempts per 15 minutes
+app.use(loginLimiter)
 
 // POST - checks username and password against database
-app.use('/login', loginLimiter)
 app.post('/login', loginCallback)
 
 app.get('*', (req, res) => {
