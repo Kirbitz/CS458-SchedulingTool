@@ -2,6 +2,7 @@ const Express = require('express')
 
 const app = new Express()
 const { loginCallback } = require('./login.js')
+const { loginLimiter } = require('./rateLimiters.js')
 
 // Parse JSON bodies into JavaScript objects
 app.use(Express.json())
@@ -15,6 +16,7 @@ app.use((req, response, next) => {
 app.use(Express.static('public'))
 
 // POST - checks username and password against database
+app.use('/login', loginLimiter)
 app.post('/login', loginCallback)
 
 app.get('*', (req, res) => {

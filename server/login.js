@@ -55,7 +55,7 @@ const loginCallback = async (req, res) => {
   // Sign a token to be stored in Authorization header
   const token = await jwt.sign(
     { userId: user.credentialsId },
-    'secret',
+    process.env.JWTSecret,
     { expiresIn: 5 * 60 * 60 }) // Token valid for 5 hours
 
   // Successful login

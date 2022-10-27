@@ -91,6 +91,14 @@ Returns json data about the login session.
   }
   ```
 
+  OR
+
+  **Code:** `429 TOO MANY REQUESTS`
+
+  **CONTENT:**
+
+  None
+
 ## Sample Call
 
 ```javascript
