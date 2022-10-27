@@ -16,7 +16,7 @@ export default function MasterView (props) {
   // TODO scroll bar for weeks
   // TODO make color coding based on if the shift is filled for that day
   // Add a line for the current time to the timeline component
-    <Box sx={{ color: 'red' }}>
+    <Box>
       <NavigationBar/>
       <Toolbar></Toolbar>
       <Grid container sx={{ mt: '2' }}>

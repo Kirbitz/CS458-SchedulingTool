@@ -11,7 +11,7 @@ export default function Week (props) {
   return (
 
                 <div style={{ position: 'absolute', left: '10px', display: 'flex', flexDirection: 'row' }}>
-                  <Timeline sx={{ border: '2px solid black' }}/>
+                  <Timeline/>
                   <Day weekday={ 'Monday' }/>
                   <Day weekday={ 'Tuesday' }/>
                   <Day weekday={ 'Wednesday' }/>
