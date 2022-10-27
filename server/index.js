@@ -1,5 +1,6 @@
 const Express = require('express')
-const router = require('./TestQueries.js')
+const { genericLimiter } = require('./RateLimiter.js')
+const router = require('./endpoints.js')
 const app = new Express()
 
 // Logs all request made to the server
@@ -9,6 +10,8 @@ app.use((req, response, next) => {
 })
 
 app.use('/data', router)
+
+app.use('/timeBlocks', genericLimiter)
 
 app.use(Express.static('public'))
 
