@@ -1,3 +1,4 @@
+
 import EntryPoint from './EntryPoint.jsx'
 
 const React = require('react')
