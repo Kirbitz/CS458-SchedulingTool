@@ -1,63 +1,98 @@
-const React = require('react')
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import { Grid } from '@mui/material'
-import { Button } from '@mui/material';
-import { Paper } from '@mui/material'; 
-import { FormControlLabel } from '@mui/material';
-import { Checkbox } from '@mui/material';
+import * as React from "react";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-export default function Login (props) {
+const theme = createTheme();
+
+export default function Login () {
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    console.log({
+      email: data.get("email"),
+      password: data.get("password")
+    });
+  };
+  
   return (
 
     // <div style= {{padding:30}}>
-    <React.Fragment>
-      <Paper>
-      <Typography variant ="h1" component = "h2" align = 'center'>
-        Login Form
-      </Typography>
-      <Grid container spacing={3} direction={'column'} justify={'center'} alignItems={'center'} >
-        <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
-        <TextField id="filled-basic" label="UserName" variant="filled" />
-        </Grid>
-        <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
-          <TextField id="filled-basic" label="Password" type='password' variant="filled" />
-        </Grid>
-      </Grid>
-  
-      <Grid container spacing={3} direction={'column'} justify={'center'} alignItems={'center'} item xs={6}>
-        <Button variant="contained"> Log-In </Button>
-      </Grid>
-      
-      </Paper>
-      <body background="https://theohiostar.com/wp-content/uploads/2019/09/UW-Stout_840x480.jpg" alt="Uw-Stout" />
-      {/* <Box sx={{display:'flex-box', justifyContent: 'center', flexDirection: 'column', m: 6, width: 300}}>
-        <TextField id="filled-basic" label="UserName" variant="filled" />
-      </Box>
-      <Box display='flex-box' justifyContent="center" sx={{flexDirection: 'column', m: 6, width:300}}>
-        <TextField id="filled-basic" label="Password" type='password' variant="filled" />
-      </Box> */}
-      
-    </React.Fragment>
-      
-      // <form action="/action_page.php" method="post">
-      //   <div className="imgcontainer">
-      //   </div>
-      //   <div className="container">
-      //     <label htmlFor="uname"><b>Username</b></label>
-      //    <input type="text" placeholder="Enter Username" name="uname" required />
-      //     <label htmlFor="psw"><b>Password</b></label>
-      //     <input type="password" placeholder="Enter Password" name="psw" required />
-      //     <button type="submit">Login</button>
-      //     <label>
-      //       {/* <input type="checkbox" checked="checked" name="remember"> Remember me </input> */}
-      //       <input type="checkbox" defaultChecked="checked" name="remember"/>
-      //     </label>
-      //     <label>
-      //       <a href="#"> Forgot your password?</a>
-      //     </label>
-      //   </div>
-      // </form>
-    // </div>
-  )
+   
+      <ThemeProvider theme = {theme}>
+        <Container component = "main" maxWidth = "xs">
+          <CssBaseline />
+          <Box
+           sx = {{
+            marginTop: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center"
+           }}
+          >
+            <Typography component="h1" variant="h5">
+            Log In
+          </Typography>
+          <Box 
+          component="form"
+          onSubmit={handleSubmit}
+          noValidate
+          sx={{ mt: 1 }}>
+            <TextField margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+            />
+            <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Log In
+            </Button>
+            <Grid Container>
+              <Grid item xs>
+              <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
+              <Grid item>
+              <Link href="#" variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
+            </Grid>
+            </Box>
+          </Box>
+        </Container>
+      </ThemeProvider>
+     
+  );
 }
