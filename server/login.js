@@ -19,22 +19,8 @@ const loginCallback = async (req, res) => {
     }
   }
 
-  // create a bit array
-  const passwordBitArray = sjcl.hash.sha256.hash(loginData.password)
-  // create the password hash
-  const passwordHash = sjcl.codec.hex.fromBits(passwordBitArray)
-
   // Query the database to see if the username/password combo exists
-  const user = await dbClient.select('Credentials.credentialsId', '_UserDepartment.isManager')
-    .from('Credentials')
-    .join('User', 'Credentials.credentialsId', 'User.userId')
-    .join('_UserDepartment', 'User.userId', '_UserDepartment.userId')
-    .where('Credentials.credentialsUsername', '=', loginData.username)
-    .andWhere('Credentials.credentialsPassword', '=', passwordHash)
-    .then(result => {
-      // Returns an array of Rows
-      return result
-    })
+  const user = await module.exports.checkUsernamePassword(loginData.username, loginData.password)
 
   // There is no user with those login credentials
   if (user.length === 0) {
@@ -54,7 +40,7 @@ const loginCallback = async (req, res) => {
   // The user has correct credentials
   // Sign a token to be stored in Authorization header
   const token = await jwt.sign(
-    { userId: user.credentialsId },
+    { userId: user[0].credentialsId },
     process.env.JWTSecret,
     { expiresIn: 5 * 60 * 60 }) // Token valid for 5 hours
 
@@ -69,6 +55,24 @@ const loginCallback = async (req, res) => {
     .end()
 }
 
+const checkUsernamePassword = async (username, password) => {
+  // create a bit array
+  const passwordBitArray = sjcl.hash.sha256.hash(password)
+  // create the password hash
+  const passwordHash = sjcl.codec.hex.fromBits(passwordBitArray)
+
+  return await dbClient.select('Credentials.credentialsId', '_UserDepartment.isManager')
+    .from('Credentials')
+    .join('User', 'Credentials.credentialsId', 'User.userId')
+    .join('_UserDepartment', 'User.userId', '_UserDepartment.userId')
+    .where('Credentials.credentialsUsername', '=', username)
+    .andWhere('Credentials.credentialsPassword', '=', passwordHash)
+    .then(result => {
+      return result // Returns an array of Rows
+    })
+}
+
 module.exports = {
-  loginCallback
+  loginCallback,
+  checkUsernamePassword
 }
