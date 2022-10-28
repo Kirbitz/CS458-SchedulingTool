@@ -37,12 +37,7 @@ const loginCallback = async (req, res) => {
     return
   }
 
-  // The user has correct credentials
-  // Sign a token to be stored in Authorization header
-  const token = await jwt.sign(
-    { userId: user[0].credentialsId },
-    process.env.JWTSecret,
-    { expiresIn: 5 * 60 * 60 }) // Token valid for 5 hours
+  const token = await module.exports.signToken(user[0].credentialsId)
 
   // Successful login
   // Send status code 200 and JSON, then end the response
@@ -72,7 +67,15 @@ const checkUsernamePassword = async (username, password) => {
     })
 }
 
+const signToken = (userId) => {
+  return jwt.sign( // Sign a token to be stored in Authorization header
+    { userId: userId },
+    process.env.JWTSecret,
+    { expiresIn: 5 * 60 * 60 }) // Token valid for 5 hours
+}
+
 module.exports = {
   loginCallback,
-  checkUsernamePassword
+  checkUsernamePassword,
+  signToken
 }

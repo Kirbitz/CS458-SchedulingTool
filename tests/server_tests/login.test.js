@@ -16,6 +16,11 @@ describe('testing loginCallBack from login.js', () => {
           return []
         }
       })
+
+      jest.spyOn(login, 'signToken')
+        .mockImplementation((userId) => {
+          return 'mockeToken'
+        })
   })
 
   it('Logging in existing user', async () => {
