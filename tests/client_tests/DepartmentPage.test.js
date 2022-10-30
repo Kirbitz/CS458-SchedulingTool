@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 
 import DepartmentPage from '../../client/Pages/DepartmentPage.jsx'
 import { BrowserRouter } from 'react-router-dom'
@@ -19,7 +19,7 @@ describe('Tests for <DepartmentPage />', () => {
     ]
   }
 
-  beforeAll(() => {
+  beforeEach(() => {
     mock = new MockAdapter(axios)
     jest.spyOn(console, 'error').mockImplementation(() => {})
     window.alert.mockClear()
@@ -27,26 +27,104 @@ describe('Tests for <DepartmentPage />', () => {
 
   afterEach(() => {
     mock.reset()
+    mock.restore()
+    mock.resetHandlers()
   })
 
   it('Initial Render', async () => {
-    mock.onGet('/myfakeroute').reply(200, depInfo)
+    mock.onGet().reply(200, depInfo)
     await act(async () => { render(<DepartmentPage />, { wrapper: BrowserRouter }) })
 
     expect(screen.getByTestId('department-page').innerHTML).toContain('Department:')
+    expect(mock.history.get.length).toBe(1)
+  })
+
+  it('Data Loading', async () => {
+    mock.onGet().reply(function (config) {
+      return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+          resolve([200, null])
+        }, 2000)
+      })
+    })
+    await act(async () => { render(<DepartmentPage />, { wrapper: BrowserRouter }) })
+
+    expect(screen.getByTestId('department-page').outerHTML).toContain('Progress')
+    expect(mock.history.get.length).toBe(1)
   })
 
   it('Failed to collect data', async () => {
-    mock.onGet('/myfakeroute').networkError()
+    mock.onGet().networkError()
     await act(async () => { render(<DepartmentPage />, { wrapper: BrowserRouter }) })
 
     expect(screen.getByTestId('department-page').innerHTML).toContain('No Data Found')
+    expect(mock.history.get.length).toBe(1)
   })
 
-  // it('Loading wheel is present', async () => {
-  //   mock.onGet('/myfakeroute').reply(200, null)
-  //   await act(async () => { render(<DepartmentPage />, { wrapper: BrowserRouter }) })
+  it('Search for employee data successful input success data fetch', async () => {
+    const input = 'sup'
+    mock.onGet().reply(200, depInfo)
 
-  //   expect(screen.getByTestId('department-page').innerHTML).toContain('No Data Found')
-  // })
+    await act(async () => { render(<DepartmentPage />, { wrapper: BrowserRouter }) })
+    await fireEvent.change(screen.getByLabelText('Employee Id/Name'), { target: { value: input } })
+    await fireEvent.click(screen.getByTestId('search-btn'))
+
+    expect(screen.getByLabelText('Employee Id/Name').outerHTML).toContain(input)
+    expect(mock.history.get.length).toBe(2)
+  })
+
+  it('Search for employee data successful input failed data fetch', async () => {
+    const input = 'sup'
+    mock.onGet().replyOnce(200, depInfo).onGet().networkError()
+
+    await act(async () => { render(<DepartmentPage />, { wrapper: BrowserRouter }) })
+    await fireEvent.change(screen.getByLabelText('Employee Id/Name'), { target: { value: input } })
+    await fireEvent.click(screen.getByTestId('search-btn'))
+
+    await waitFor(() => {
+      expect(screen.getByTestId('create-btn').outerHTML).not.toContain('disabled')
+    })
+    expect(screen.getByLabelText('Employee Id/Name').outerHTML).toContain(input)
+    expect(mock.history.get.length).toBe(2)
+  })
+
+  it('Search for employee data invalid inputs', async () => {
+    mock.onGet().reply(200, depInfo)
+
+    await act(async () => { render(<DepartmentPage />, { wrapper: BrowserRouter }) })
+
+    await fireEvent.change(screen.getByLabelText('Employee Id/Name'), { target: { value: '?><M' } })
+    await fireEvent.click(screen.getByTestId('search-btn'))
+    expect(screen.getByLabelText('Employee Id/Name').outerHTML).toContain('aria-invalid="true"')
+
+    await fireEvent.change(screen.getByLabelText('Employee Id/Name'), { target: { value: 'asdf1234' } })
+    await fireEvent.click(screen.getByTestId('search-btn'))
+    expect(screen.getByLabelText('Employee Id/Name').outerHTML).toContain('aria-invalid="true"')
+
+    expect(mock.history.get.length).toBe(1)
+  })
+
+  it('Updating the list of employees success', async () => {
+    mock.onGet().reply(200, depInfo).onPost().reply(200)
+
+    await act(async () => { render(<DepartmentPage />, { wrapper: BrowserRouter }) })
+
+    await fireEvent.click(screen.getByTestId('remove-btn'))
+    await fireEvent.click(screen.getByTestId('add-btn'))
+    await fireEvent.click(screen.getByTestId('save-btn'))
+
+    expect(mock.history.post.length).toBe(1)
+  })
+
+  it('Updating the list of employees fail', async () => {
+    mock.onGet().reply(200, depInfo).onPost().networkError()
+
+    await act(async () => { render(<DepartmentPage />, { wrapper: BrowserRouter }) })
+
+    await fireEvent.click(screen.getByTestId('remove-btn'))
+    await fireEvent.click(screen.getByTestId('add-btn'))
+    await fireEvent.click(screen.getByTestId('save-btn'))
+
+    expect(mock.history.post.length).toBe(1)
+  })
 })

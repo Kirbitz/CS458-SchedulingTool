@@ -15,7 +15,7 @@ export default function DepartmentPage (props) {
   const [departmentInfo, setDepartmentInfo] = React.useState(null)
   const [searchStaff, setSearchStaff] = React.useState([])
   // State management for successful initial collection of department data
-  const [dataCollected, setDataCollected] = React.useState(null)
+  const [dataCollected, setDataCollected] = React.useState(-1)
   // State management for successful department info update
   const [success, setSuccess] = React.useState(false)
   // State management for search validity and disabled/enable search and create user buttons
@@ -53,17 +53,17 @@ export default function DepartmentPage (props) {
   // Function to run for temp removing employees from a department
   const removeEmployees = (selectedUsers) => {
     setDepartmentInfo({
-      depName: departmentInfo.depName,
-      depEmployees: departmentInfo.depEmployees.filter((employee) => { return !selectedUsers.includes(employee.id) })
+      depName: departmentInfo?.depName,
+      depEmployees: departmentInfo?.depEmployees?.filter((employee) => { return !selectedUsers.includes(employee.id) })
     })
   }
 
   // Function to run for temp adding employees from a department
   const addEmployees = (selectedUsers) => {
-    const temp = departmentInfo.depEmployees.concat(selectedUsers)
+    const temp = departmentInfo?.depEmployees?.concat(selectedUsers)
     setDepartmentInfo({
-      depName: departmentInfo.depName,
-      depEmployees: temp.filter((value, index, self) =>
+      depName: departmentInfo?.depName,
+      depEmployees: temp?.filter((value, index, self) =>
         index === self.findIndex((t) => (
           t.id === value.id
         ))
@@ -131,12 +131,21 @@ export default function DepartmentPage (props) {
     <Box data-testid='department-page'>
       <NavigationBar selected="Department" />
       <Typography variant="h3" component="h2" align='center' sx={{ mt: 2 }}>
-        Department: {departmentInfo.depName}
+        Department: {departmentInfo?.depName}
       </Typography>
       <Box display="flex" justifyContent="space-between" sx={{ mt: 2 }}>
         <SaveAndNotify callbackFunc={updateDepartmentInfo} success={success} />
         <Box flexGrow={1} />
-        <TextField data-testid='search-field' error={inputInvalid} id="employee-search" label="Employee Id/Name" variant="outlined" inputRef={searchRef} />
+        <TextField
+          data-testid='search-field'
+          error={inputInvalid}
+          id="employee-search"
+          inputRef={searchRef}
+          label="Employee Id/Name"
+          name={searchRef.current.value}
+          type="search"
+          variant="outlined"
+        />
         <Tooltip title="Search Employees">
           <div>
             <Fab data-testid='search-btn' disabled={searchClicked} color='primary' sx={{ mx: 1 }} onClick={searchEmployees}>
@@ -152,7 +161,7 @@ export default function DepartmentPage (props) {
           </div>
         </Tooltip>
       </Box>
-      <DepAddRemoveFields currentEmployees={departmentInfo.depEmployees} searchEmployees={searchStaff} removeEmployees={removeEmployees} addEmployees={addEmployees} />
+      <DepAddRemoveFields currentEmployees={departmentInfo?.depEmployees} searchEmployees={searchStaff} removeEmployees={removeEmployees} addEmployees={addEmployees} />
     </Box>
   )
 }

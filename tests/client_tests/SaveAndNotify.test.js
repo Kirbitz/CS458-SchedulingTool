@@ -24,10 +24,11 @@ describe('Tests for <SaveAndNotify />', () => {
 
     await fireEvent.click(component.getByTestId('save-btn'))
 
-    expect(component.getByTestId('alert-success-error').textContent).toBe('Saved Changes!')
+    expect(component.queryByTestId('alert-success-error')).not.toBeNull()
 
+    await fireEvent.click(component.getByTitle('Close'))
     await waitFor(() => {
-      expect(component.baseElement).not.toContain('alert-success-error')
+      expect(component.queryByTestId('alert-success-error')).toBeNull()
     })
   })
 
