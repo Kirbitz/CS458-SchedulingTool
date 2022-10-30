@@ -16,9 +16,9 @@ export default function DepAddRemoveFields (props) {
   const handleMultipleChange = (event) => {
     const { options } = event.target
     const value = []
-    for (let i = 0; i < options.length; i++) {
-      if (options[i].selected) {
-        value.push(options[i].value)
+    for (const option of options) {
+      if (option.selected) {
+        value.push(option.value)
       }
     }
     setSelectedUsers(value)
@@ -29,10 +29,10 @@ export default function DepAddRemoveFields (props) {
     const { options } = event.target
     const value = []
     const pos = []
-    for (let i = 0; i < options.length; i++) {
-      if (options[i].selected) {
-        value.push(searchEmployees[options[i].value])
-        pos.push(options[i].value)
+    for (const option of options) {
+      if (option.selected) {
+        value.push(searchEmployees[option.value])
+        pos.push(option.value)
       }
     }
     setSelectedAddUsers(value)
