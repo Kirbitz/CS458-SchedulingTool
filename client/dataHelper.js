@@ -1,5 +1,6 @@
 import axios from 'axios'
 
+// TODO update call to the correct route
 export function getDepartmentInfo () {
   return new Promise((resolve, reject) => {
     axios.get('/myfakeroute')
@@ -8,6 +9,7 @@ export function getDepartmentInfo () {
   })
 }
 
+// TODO update call to the correct route
 export function postDepartmentInfo (departmentInfo) {
   return new Promise((resolve, reject) => {
     axios.post('/myfakeroute', departmentInfo)
@@ -16,6 +18,7 @@ export function postDepartmentInfo (departmentInfo) {
   })
 }
 
+// TODO update call to the correct route
 export function searchEmployeeInfo (search) {
   return new Promise((resolve, reject) => {
     axios.get(`/myfakeroute/${search}`)
