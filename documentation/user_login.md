@@ -18,9 +18,9 @@ Returns json data about the login session.
 
   _Required:_ User email
 
-  `email: [string]`
+  `username: [string]`
 
-  `joeshmo@example.xyz`
+  `jshmoe1234`
 
   _Required:_ User password
 
@@ -28,7 +28,7 @@ Returns json data about the login session.
 
   `MyPet'sName1234!`
 
-- **Auth required:** Yes, Bearer or express-session set in Authorization header.
+- **Auth required:** Yes, JWT token set in Authorization header
 <!-- Will update once it is finalized. -->
 
 ## Response
@@ -47,6 +47,21 @@ Returns json data about the login session.
   ```
 
 - **Error Response:**
+
+  **Code:** `401 UNAUTHORIZED`
+
+  **Content:**
+  
+  ```json
+  {
+    "error": {
+      "status": 401,
+      "message": "Unauthorized"
+    }
+  }
+  ```
+
+  OR
 
   **Code:** `404 NOT FOUND`
 
@@ -76,6 +91,14 @@ Returns json data about the login session.
   }
   ```
 
+  OR
+
+  **Code:** `429 TOO MANY REQUESTS`
+
+  **CONTENT:**
+
+  None
+
 ## Sample Call
 
 ```javascript
@@ -84,7 +107,7 @@ axios({
   url: '/login',
   responseType: 'json',
   data: {
-    email: 'joeshmo@example.xyz',
+    username: 'jshmoe1234',
     password: "MyPet'sName1234!"
   }
 });
