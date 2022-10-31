@@ -1,4 +1,5 @@
 const Express = require('express')
+const path = require('path')
 
 const app = new Express()
 const { loginCallback } = require('./login.js')
@@ -20,8 +21,8 @@ app.use(loginLimiter)
 // POST - checks username and password against database
 app.post('/login', loginCallback)
 
-app.get('*', (req, res) => {
-  res.redirect('/')
+app.get(['/login', '/dashboard', '/master-schedule', '/employee-schedule', '/staff', '/department', '/settings'], (req, res) => {
+  res.sendFile(path.join(__dirname, '../public', 'index.html'))
 })
 
 module.exports = app
