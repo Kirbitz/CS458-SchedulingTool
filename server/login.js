@@ -56,7 +56,7 @@ const checkUsernamePassword = async (username, password) => {
   // create the password hash
   const passwordHash = sjcl.codec.hex.fromBits(passwordBitArray)
 
-  return await dbClient.select('Credentials.credentialsId', '_UserDepartment.isManager')
+  return dbClient.select('Credentials.credentialsId', '_UserDepartment.isManager')
     .from('Credentials')
     .join('User', 'Credentials.credentialsId', 'User.userId')
     .join('_UserDepartment', 'User.userId', '_UserDepartment.userId')
@@ -67,9 +67,9 @@ const checkUsernamePassword = async (username, password) => {
     })
 }
 
-const signToken = (userId) => {
+const signToken = (_userId) => {
   return jwt.sign( // Sign a token to be stored in Authorization header
-    { userId: userId },
+    { userId: _userId },
     process.env.JWTSecret,
     { expiresIn: 5 * 60 * 60 }) // Token valid for 5 hours
 }

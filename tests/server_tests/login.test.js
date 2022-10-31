@@ -19,7 +19,7 @@ describe('testing loginCallBack from login.js', () => {
 
     jest.spyOn(login, 'signToken')
       .mockImplementation((userId) => {
-        return 'mockeToken'
+        return 'mockToken'
       })
   })
 
