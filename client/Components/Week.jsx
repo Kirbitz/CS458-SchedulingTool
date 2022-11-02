@@ -3,8 +3,6 @@ import React from 'react'
 import Day from './Day.jsx'
 import Timeline from './Timeline.jsx'
 
-// import { Button, Toolbar } from '@mui/material'
-
 // const dateData = [{ weekday: 'Monday', date: 23 }]
 
 // Week component for the master schedule view
