@@ -2,7 +2,9 @@ import React from 'react'
 
 import NavigationBar from '../Components/NavigationBar.jsx'
 import Week from '../Components/Week.jsx'
-import { Grid, Box, Toolbar } from '@mui/material'
+import WeekChanger from '../Components/WeekChanger.jsx'
+
+import { Box, Grid, Toolbar } from '@mui/material'
 
 // import { PersonRoundedIcon } from '@mui/icons-material/PersonRounded'
 
@@ -19,6 +21,7 @@ export default function MasterView (props) {
     <Box>
       <NavigationBar/>
       <Toolbar></Toolbar>
+      <WeekChanger/>
       <Grid container sx={{ mt: '2' }}>
             <Grid item xs={ 11 } sm={ 11 } md={ 11 } lg={ 11 } xl={ 11 }>
               <Box>
@@ -26,6 +29,6 @@ export default function MasterView (props) {
               </Box>
             </Grid>
         </Grid>
-      </Box>
+    </Box>
   )
 }

@@ -8,16 +8,15 @@ import Timeline from './Timeline.jsx'
 // Week component for the master schedule view
 export default function Week (props) {
   return (
-
-                <div style={{ position: 'absolute', left: '10px', display: 'flex', flexDirection: 'row' }}>
-                  <Timeline/>
-                  <Day weekday={ 'Monday' }/>
-                  <Day weekday={ 'Tuesday' }/>
-                  <Day weekday={ 'Wednesday' }/>
-                  <Day weekday={ 'Thursday' }/>
-                  <Day weekday={ 'Friday' }/>
-                  <Day weekday={ 'Saturday' }/>
-                  <Day weekday={ 'Sunday' }/>
-                </div>
+    <div style={{ position: 'absolute', left: '10px', display: 'flex', flexDirection: 'row' }}>
+      <Timeline/>
+      <Day weekday={ 'Monday' }/>
+      <Day weekday={ 'Tuesday' }/>
+      <Day weekday={ 'Wednesday' }/>
+      <Day weekday={ 'Thursday' }/>
+      <Day weekday={ 'Friday' }/>
+      <Day weekday={ 'Saturday' }/>
+      <Day weekday={ 'Sunday' }/>
+    </div>
   )
 }
