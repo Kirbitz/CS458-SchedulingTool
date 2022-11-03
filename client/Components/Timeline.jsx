@@ -4,7 +4,7 @@ import { List, ListItem, ListItemText } from '@mui/material'
 export default function Timeline (props) {
   return (
   // <List style={{ height: '100%', border: '2px solid black' }}>
-      <List style={{ height: '100%' }}>
+      <List style={{ height: '85vh', overflow: 'auto' }}>
     <ListItem >
       <ListItemText primary="Time"/>
     </ListItem>

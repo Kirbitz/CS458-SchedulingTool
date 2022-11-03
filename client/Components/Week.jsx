@@ -2,6 +2,7 @@ import React from 'react'
 
 import Day from './Day.jsx'
 import Timeline from './Timeline.jsx'
+import { Grid } from '@mui/material'
 
 // const dateData = [{ weekday: 'Monday', date: 23 }]
 
