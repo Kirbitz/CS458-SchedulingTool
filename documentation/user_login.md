@@ -16,7 +16,7 @@ Returns json data about the login session.
 
 - **Data Params**
 
-  _Required:_ User email
+  _Required:_ Username
 
   `username: [string]`
 
@@ -28,14 +28,13 @@ Returns json data about the login session.
 
   `MyPet'sName1234!`
 
-- **Auth required:** Yes, JWT token set in Authorization header
-<!-- Will update once it is finalized. -->
+- **Auth required:** No, endpoint will create JWT in Authorization header.
 
 ## Response
 
 - **Success Response:**
 
-  **Code:** `200`
+  **Code:** `200 OK`
 
   **Content:**
 
@@ -60,38 +59,6 @@ Returns json data about the login session.
     }
   }
   ```
-
-  OR
-
-  **Code:** `404 NOT FOUND`
-
-  **Content:**
-
-  ```json
-  {
-    "error": {
-      "status": 404,
-      "message": "Not Found"
-    }
-  }
-  ```
-
-  OR
-
-  **Code:** `500 INTERNAL ERROR`
-
-  **Content:**
-
-  ```json
-  {
-    "error": {
-      "status": 500,
-      "message": "Internal Server Error"
-    }
-  }
-  ```
-
-  OR
 
   **Code:** `429 TOO MANY REQUESTS`
 

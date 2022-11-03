@@ -6,7 +6,8 @@ const dbClient = require('knex')({
     user: process.env.DBUsername,
     password: process.env.DBPassword,
     database: process.env.DBName
-  }
+  },
+  useNullAsDefault: true
 })
 
 module.exports = dbClient
