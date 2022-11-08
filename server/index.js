@@ -25,4 +25,6 @@ app.get(['/login', '/dashboard', '/master-schedule', '/employee-schedule', '/sta
   res.sendFile(path.join(__dirname, '../public', 'index.html'))
 })
 
+app.use('/getEmployees')
+
 module.exports = app
