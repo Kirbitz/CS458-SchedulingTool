@@ -1,7 +1,7 @@
 {
   "buildCommand": "npm run build",
   "functions": {
-    "server/index.js": {
+    "api/*.js": {
       "memory": 3008,
       "maxDuration": 30
     }
