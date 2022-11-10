@@ -13,7 +13,7 @@ export default function Day (props) {
   const buttonColor = '#FFCCCB'
   const btnWidth = '100%'
   const btnHeight = '100%'
-  
+
   // testing borders
   const noBorder = '0px solid black'
   // const solidBlue = '2px solid blue'
