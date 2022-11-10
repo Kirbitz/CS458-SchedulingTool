@@ -28,6 +28,12 @@ Returns json data about the account creation.
 
   `MyPet'sName1234!`
 
+  __Required:__ User ID
+
+  `userID: [int]`
+
+  123456
+
   __Required:__ Name
 
   `name: [string]`
@@ -92,6 +98,19 @@ Returns json data about the account creation.
 
   None
 
+  **Code:** `500 INTERNAL SERVER ERROR`
+
+  **Content:** 
+
+  ```json
+  {
+    "error": {
+      "status": 500,
+      "message": "Internal Server Error"
+    }
+  }
+  ```
+
 ## Sample Call
 
 ```javascript
@@ -102,6 +121,7 @@ axios({
   data: {
     username: 'jshmoe1234',
     password: "MyPet'sName1234!",
+    userid: 123456,
     name: 'Joe Shmoe',
     permissions: 0,
     maxHours: 20,

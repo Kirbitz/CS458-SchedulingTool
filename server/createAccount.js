@@ -2,12 +2,12 @@ const dotenv = require('dotenv')
 dotenv.config()
 
 const sjcl = require('sjcl') // sha256 for encrpytion
-const jwt = require('jsonwebtoken')
+// const jwt = require('jsonwebtoken')
 
 // Database connection with knex
 const dbClient = require('./dbClient')
 
-const createAccountCallback = (req, res) => {
+const createAccountCallback = async (req, res) => {
   // Read the Authorization header for verification
   // const rawAuth = req.header('Authorization')
 
@@ -36,46 +36,67 @@ const createAccountCallback = (req, res) => {
   //   return
   // }
 
-  let newAccountData = req.body
+  const newAccountData = req.body
 
-  
+  try {
+    await module.exports.insertRows(newAccountData)
+    res.json({
+      success: {
+        status: 201,
+        message: 'Created new account'
+      }
+    })
+  } catch (error) {
+    console.log(error)
+    res.json({
+      error: {
+        status: 500,
+        message: 'Internal Server Error'
+      }
+    })
+  }
 }
 
-const createCredentialsRecord = (accountData) => {
+const insertRows = async (accountData) => {
+  await dbClient.transaction(async trx => {
+    // Grab the manager's departmentID
+    const deptID = await getDepartmentId(accountData)
+
+    // Create a User record
+    await createUserRecord(accountData, trx)
+
+    // Create Credentials record
+    await createCredentialsRecord(accountData, trx)
+
+    // Create a _UserDepartment record
+    await createUserDepartmentRecord(accountData, deptID, trx)
+  })
+}
+
+const createCredentialsRecord = (accountData, trx) => {
   // Create a bit array
   const passwordBitArray = sjcl.hash.sha256.hash(accountData.password)
   // Create the password hash
   const passwordHash = sjcl.codec.hex.fromBits(passwordBitArray)
 
   return dbClient.insert({
+    credentialsId: accountData.userid,
     credentialsUsername: accountData.username,
     credentialsPassword: passwordHash
   })
     .into('Credentials')
-    .then(result => {
-      return result[0] // returns the number of rows inserted
-    })
+    .transacting(trx)
 }
 
-const getNewUserId = (accountData) => {
-  return dbClient.select('credentialsId')
-    .from('Credentials')
-    .where('crededentialsUsername', '=', accountData.username)
-    .then(result => {
-      return result // returns the credentialsId
-    })
-}
-
-const createUserRecord = (accountData) => {
+const createUserRecord = (accountData, trx) => {
   return dbClient.insert({
+    userId: accountData.userid,
     userName: accountData.username,
     userPermissions: accountData.permissions,
     userHours: accountData.maxHours
   })
     .into('User')
-    .then(result => {
-      return result[0] // returns the number of rows inserted
-    })
+    .transacting(trx)
 }
 
 const getDepartmentId = (accountData) => {
@@ -84,27 +105,21 @@ const getDepartmentId = (accountData) => {
     .where('userId', '=', accountData.managerId)
     .andWhere('isManager', '=', '1')
     .then(result => {
-      return result // returns the department ID
+      return result[0].deptId // return the department id
     })
 }
 
-const createUserDepartmentRecord = (accountData, _userId, _deptId) => {
+const createUserDepartmentRecord = (accountData, _deptId, trx) => {
   return dbClient.insert({
-    userId: _userId,
+    userId: accountData.userid,
     deptId: _deptId,
-    isManager: accountData.isManager
+    isManager: accountData.permissions
   })
     .into('_UserDepartment')
-    .then(result => {
-      return result // returns the number of rows affected
-    })
+    .transacting(trx)
 }
 
 module.exports = {
   createAccountCallback,
-  createCredentialsRecord,
-  getNewUserId,
-  createUserRecord,
-  getDepartmentId,
-  createUserDepartmentRecord
+  insertRows
 }
