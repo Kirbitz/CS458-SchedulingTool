@@ -5,9 +5,6 @@ import Log from '../../client/Components/Log.jsx'
 
 describe('Tests for  <Login />', () => {
   let count
-  const callback = (updateCount) => {
-    count = updateCount
-  }
   beforeEach(() => {
     count = 0
   })
@@ -21,13 +18,6 @@ describe('Tests for  <Login />', () => {
 
     await fireEvent.input(component.getByTestId('Email Address'))
 
-    expect(component.getByTestId('Email Address').outerHTML).toContain('Au1')
-  })
-  it('Button clicked with count and callback prop provided', async () => {
-    const component = render(<Log count={count} callback ={callback} />)
-
-    await fireEvent.click(component.getByTestId('click-me-btn'))
-
-    expect(count).toBe(1)
+    expect(component.getByTestId('Email Address').outerHTML).toContain('lowercase,uppercase,number')
   })
 })
