@@ -6,7 +6,6 @@ import { Button, Card, Typography, CardContent } from '@mui/material'
 // Week component for the master schedule view
 export default function Day (props) {
   const { weekday } = props
-  // const dd = this.props
 
   // Colors
   // Green #1fd655, Red #FFCCCB, Grey #B4B5B4
@@ -14,10 +13,21 @@ export default function Day (props) {
   const buttonColor = '#FFCCCB'
   const btnWidth = '100%'
   const btnHeight = '100%'
+  
+  // testing borders
+  const noBorder = '0px solid black'
+  // const solidBlue = '2px solid blue'
+  // const dashedGreen = '2px dashed green'
+  // const dashedRed = '2px dashed red'
 
-  return (<div>
-        <h3>{ weekday }</h3>
-        <Card spacing={0} sx={{ width: 250, height: 1170, margin: 0 }}>
+  const divBorder = noBorder
+  const dayHeaderBorder = noBorder
+  const dayCardBorder = noBorder
+
+  return (<div style={{ height: '135vh', width: '13vw', border: divBorder }}>
+        <h3 style={{ margin: 0, height: '5%', border: dayHeaderBorder }}>{ weekday }</h3>
+        <Card spacing={0} sx={{ margin: 0, height: '90%', border: dayCardBorder }}>
+
           <Button sx={{
             color: buttonTextColor,
             width: btnWidth,
