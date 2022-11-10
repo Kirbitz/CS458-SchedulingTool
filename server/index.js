@@ -4,7 +4,7 @@ const path = require('path')
 const app = new Express()
 const { loginCallback } = require('./login')
 const { loginLimiter } = require('./rateLimiters')
-const { createAccountCallback } = require('./createAccount')
+const { validateNewAccountCallback } = require('./validateAccount.js')
 
 // Parse JSON bodies into JavaScript objects
 app.use(Express.json())
@@ -23,7 +23,8 @@ app.use(loginLimiter)
 app.post('/login', loginCallback)
 
 // POST - creates a new account with the given information
-app.post('/create_new_account', createAccountCallback)
+// Chain calls CreateAccountCallback if everything validates
+app.post('/create_new_account', validateNewAccountCallback)
 
 app.get(['/login', '/dashboard', '/master-schedule', '/employee-schedule', '/staff', '/department', '/settings'], (req, res) => {
   res.sendFile(path.join(__dirname, '../public', 'index.html'))

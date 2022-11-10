@@ -2,40 +2,11 @@ const dotenv = require('dotenv')
 dotenv.config()
 
 const sjcl = require('sjcl') // sha256 for encrpytion
-// const jwt = require('jsonwebtoken')
 
 // Database connection with knex
 const dbClient = require('./dbClient')
 
 const createAccountCallback = async (req, res) => {
-  // Read the Authorization header for verification
-  // const rawAuth = req.header('Authorization')
-
-  // // Verify the session token
-  // const authIsVerified = jwt.verify(rawAuth, process.env.JWTSecret,
-  //   (err, decodedAuth) => {
-  //   // Session token not valid if there is an error or decodedAuth is undefined
-  //     if (err || !decodedAuth) {
-  //       return false
-  //     }
-
-  //     return true
-  //   })
-
-  // // Session token is not valid. Send the response and return
-  // if (!authIsVerified) {
-  //   res.status(401)
-  //     .json({
-  //       error: {
-  //         status: 401,
-  //         message: 'Unauthorized'
-  //       }
-  //     })
-  //     .end()
-
-  //   return
-  // }
-
   const newAccountData = req.body
 
   try {
@@ -45,15 +16,16 @@ const createAccountCallback = async (req, res) => {
         status: 201,
         message: 'Created new account'
       }
-    })
+    }).end()
   } catch (error) {
     console.log(error)
-    res.json({
-      error: {
-        status: 500,
-        message: 'Internal Server Error'
-      }
-    })
+    res.status(500)
+      .json({
+        error: {
+          status: 500,
+          message: 'Internal Server Error'
+        }
+      }).end()
   }
 }
 
@@ -103,7 +75,7 @@ const getDepartmentId = (accountData) => {
   return dbClient.select('deptId')
     .from('_UserDepartment')
     .where('userId', '=', accountData.managerId)
-    .andWhere('isManager', '=', '1')
+    .andWhere('isManager', '=', 1)
     .then(result => {
       return result[0].deptId // return the department id
     })

@@ -79,6 +79,20 @@ Returns json data about the account creation.
 
 - **Error Response**
 
+  **Code:** `400 BAD REQUEST`
+
+  **Content:** 
+
+  ```json
+  {
+    "error": {
+      "status": 400,
+      "message": "Bad Request - Non-Unique Fields",
+      "fields": ["field1", "field2"]
+    }
+  }
+  ```
+
   **Code:** `401 UNAUTHORIZED`
 
   **Content:**
@@ -106,7 +120,9 @@ Returns json data about the account creation.
   {
     "error": {
       "status": 500,
-      "message": "Internal Server Error"
+      "message": "Internal Server Error",
+      "sqlError": "{SQL Error}",
+      "sqlErrorCode": "{SQL Error Code}
     }
   }
   ```

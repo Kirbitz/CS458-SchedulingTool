@@ -37,10 +37,22 @@ const loginCallback = async (req, res) => {
     return
   }
 
-  const token = await module.exports.signToken(user[0].credentialsId)
+  const token = await module.exports.signToken(user[0].credentialsId, user[0].isManager)
+
+  jwt.verify(token, process.env.JWTSecret,
+    (err, decodedAuth) => {
+      console.log(decodedAuth)
+      // Session token not valid if there is an error or decodedAuth is undefined
+      if (err || !decodedAuth) {
+        return false
+      }
+
+      return true
+    })
 
   // Successful login
   // Send status code 200 and JSON, then end the response
+  req.headers.Authorization = token
   res.status(200)
     .set('Authorization', token)
     .json({
@@ -67,9 +79,12 @@ const checkUsernamePassword = async (username, password) => {
     })
 }
 
-const signToken = (_userId) => {
+const signToken = (_userId, _isManager) => {
   return jwt.sign( // Sign a token to be stored in Authorization header
-    { userId: _userId },
+    { // Things used to sign the token
+      userId: _userId,
+      isManager: _isManager
+    },
     process.env.JWTSecret,
     { expiresIn: 5 * 60 * 60 }) // Token valid for 5 hours
 }
