@@ -1,5 +1,4 @@
 const Express = require('express')
-const path = require('path')
 
 const app = new Express()
 const { loginCallback } = require('./login.js')
@@ -16,14 +15,9 @@ app.use((req, response, next) => {
 })
 
 app.use(Express.static('public'))
-// rate limit requests to 50 attempts per 15 minutes
-app.use(loginLimiter)
 
-// POST - checks username and password against database
-app.post('/login', loginCallback)
-
-app.get(['/login', '/dashboard', '/master-schedule', '/employee-schedule', '/staff', '/department', '/settings'], (req, res) => {
-  res.sendFile(path.join(__dirname, '../public', 'index.html'))
+app.get('*', (req, res) => {
+  res.redirect('/')
 })
 
 // Get list of employees based on department

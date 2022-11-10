@@ -10,23 +10,9 @@ describe('app testing Base Address Tests', () => {
     expect(response.statusCode).toBe(200)
   })
 
-  it.each`
-  input
-  ${'/dashboard'}
-  ${'/master-schedule'}
-  ${'/employee-schedule'}
-  ${'/staff'}
-  ${'/department'}
-  ${'/settings'}
-  `('Connecting to expected route', async ({ input }) => {
-    const response = await request(myApp).get(input)
+  it('Connecting to unexpected route', async () => {
+    const response = await request(myApp).get('/dummyRoute')
 
-    expect(response.statusCode).toBe(200)
-  })
-
-  it('Connecting to bad request route', async () => {
-    const response = await request(myApp).get('/sansundertale')
-
-    expect(response.statusCode).toBe(404)
+    expect(response.redirect.valueOf()).toBe(true)
   })
 })
