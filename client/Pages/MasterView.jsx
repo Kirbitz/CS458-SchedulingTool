@@ -24,7 +24,7 @@ export default function MasterView (props) {
       <WeekChanger style={{ height: '100vh' }}/>
       <Grid container sx={{ mt: '2' }}>
             <Grid item xs={ 11 } sm={ 11 } md={ 11 } lg={ 11 } xl={ 11 }>
-                <Week/>
+                <Week data-testid='week'/>
             </Grid>
         </Grid>
     </Box>
