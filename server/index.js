@@ -14,7 +14,7 @@ app.use((req, response, next) => {
   next()
 })
 
-app.use(Express.static('public'))
+app.use(Express.static(__dirname, 'public'))
 // rate limit requests to 50 attempts per 15 minutes
 app.use(loginLimiter)
 
