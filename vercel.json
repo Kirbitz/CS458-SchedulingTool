@@ -1,9 +1,3 @@
 {
-  "buildCommand": "npm run build",
-  "redirects": [
-    {
-      "source": "/api/(.*)",
-      "destination": "./server/index.js"
-    }
-  ]
+  "buildCommand": "npm run build"
 }
