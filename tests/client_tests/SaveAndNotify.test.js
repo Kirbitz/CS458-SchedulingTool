@@ -2,7 +2,7 @@ import React from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 
 import SaveAndNotify from '../../client/Components/SaveAndNotify.jsx'
-
+// Tests the cases
 describe('Tests for <SaveAndNotify />', () => {
   it('Initial Render', () => {
     const component = render(<SaveAndNotify />)

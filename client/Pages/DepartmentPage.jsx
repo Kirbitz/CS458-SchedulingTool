@@ -14,7 +14,7 @@ export default function DepartmentPage (props) {
   // State management for current department employees and search employees
   const [departmentInfo, setDepartmentInfo] = React.useState(null)
   const [searchStaff, setSearchStaff] = React.useState([])
-  // State management for successful initial collection of department data
+  // State management for successful initial collection of the department data
   const [dataCollected, setDataCollected] = React.useState(-1)
   // State management for successful department info update
   const [success, setSuccess] = React.useState(false)

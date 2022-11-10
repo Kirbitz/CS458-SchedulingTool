@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import { Alert, Button, Snackbar } from '@mui/material'
 
-// Element that contains a save button and alert element for saving changes and notifying user
+// Element that contains a save button and alert element for saving changes and notifying the user
 export default function SaveAndNotify (props) {
   // callbackFunc is function to be ran when save is clicked
   // success determines the type of alert message to display to the user
