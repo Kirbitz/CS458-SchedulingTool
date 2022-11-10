@@ -1,56 +1,51 @@
-import * as React from "react";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import * as React from 'react'
+import Button from '@mui/material/Button'
+import CssBaseline from '@mui/material/CssBaseline'
+import TextField from '@mui/material/TextField'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Checkbox from '@mui/material/Checkbox'
+import Link from '@mui/material/Link'
+import Grid from '@mui/material/Grid'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import Container from '@mui/material/Container'
+import { createTheme, ThemeProvider } from '@mui/material/styles'
 
-const theme = createTheme();
+const theme = createTheme()
 
 export default function Login () {
   const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    event.preventDefault()
+    const data = new FormData(event.currentTarget)
     console.log({
-      email: data.get("email"),
-      password: data.get("password")
-    });
-  };
-  
+      email: data.get('email'),
+      password: data.get('password')
+    })
+  }
+
   return (
 
-    // <div style= {{padding:30}}>
-   
+  // <div style= {{padding:30}}>
       <ThemeProvider theme = {theme}>
         <Container component = "main" maxWidth = "xs">
           <CssBaseline />
           <Box
-           sx = {{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center"
-           }}
+           sx = {{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}
           >
             <Typography component="h1" variant="h5">
             Log In
           </Typography>
-          <Box 
+          <Box
           component="form"
           onSubmit={handleSubmit}
-          noValidate
+          Validate
           sx={{ mt: 1 }}>
             <TextField margin="normal"
               required
               fullWidth
               id="email"
               label="Email Address"
+              type="email"
               name="email"
               autoComplete="email"
               autoFocus
@@ -88,6 +83,5 @@ export default function Login () {
           </Box>
         </Container>
       </ThemeProvider>
-     
-  );
+  )
 }
