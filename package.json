@@ -22,7 +22,8 @@
     "devBuild": "nodemon --watch client --exec ./node_modules/.bin/esbuild --bundle --sourcemap --target=ES6 --outfile=public/bundle.js client/app.jsx",
     "test": "jest --coverage",
     "devTest": "jest --watchAll --verbose",
-    "testJest": "jest --detectOpenHandles"
+    "testJest": "jest --detectOpenHandles",
+    "exportApi": "cp -avr ./server/api ./"
   },
   "repository": {
     "type": "git",

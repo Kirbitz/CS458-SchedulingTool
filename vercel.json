@@ -1,7 +1,7 @@
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "npm run build && npm run exportApi",
   "functions": {
-    "**/api/*.js": {
+    "api/*.js": {
       "memory": 3008,
       "maxDuration": 30
     }
