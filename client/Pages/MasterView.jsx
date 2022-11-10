@@ -19,7 +19,7 @@ export default function MasterView (props) {
   // TODO make color coding based on if the shift is filled for that day
   // Add a line for the current time to the timeline component
     <Box>
-      <NavigationBar/>
+      <NavigationBar selected="Master" />
       <Toolbar></Toolbar>
       <WeekChanger style={{ height: '100vh' }}/>
       <Grid container sx={{ mt: '2' }}>
