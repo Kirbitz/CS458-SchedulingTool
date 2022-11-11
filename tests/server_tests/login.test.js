@@ -5,6 +5,7 @@ const login = require('../../server/api/login')
 
 describe('testing loginCallBack from login.js', () => {
   beforeAll(() => {
+    jest.spyOn(console, 'log').mockImplementation(() => {})
     jest.spyOn(login, 'checkUsernamePassword')
       .mockImplementation((username, password) => {
         if (username === 'username' && password === 'password') {
