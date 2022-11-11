@@ -1,9 +1,15 @@
 {
-  "buildCommand": "npm run build && npm run exportApi",
+  "buildCommand": "npm run build && npm run buildApi",
+  "functions": {
+    "api/*.js": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  },
   "rewrites": [
     {
-      "source": "/(.*)",
-      "destination": "/server/index.js"
+      "source": "/api/(.*)",
+      "destination": "/api"
     }
   ]
 }
