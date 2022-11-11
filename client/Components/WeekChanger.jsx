@@ -4,22 +4,50 @@ import { IconButton, Grid, Stack } from '@mui/material'
 import { ArrowBack, ArrowForward } from '@mui/icons-material'
 
 export default function WeekChanger (props) {
+  const [week, setWeek] = useState(new Date())
+
+  const [, updateState] = React.useState()
+  const forceRender = React.useCallback(() => updateState({}), [])
+
   function MondayDate (date) {
-    const thisDate = new Date()
-    // console.log('MONDAY DATE (before): ' + date)
+    const thisDate = new Date(date)
     thisDate.setDate((date.getDate() - date.getDay()) + 1) // Monday is 1 and Sunday is 0; subtracting the current day of the week from itself and adding 1 will give us Monday's date.
-    // console.log('MONDAY DATE (after): ' + date)
     return thisDate
   }
   function SundayNextDate (date) {
-    const thisDate = new Date()
-    // console.log('SUNDAY DATE (before): ' + date)
+    const thisDate = new Date(date)
     thisDate.setDate(date.getDate() + (7 - date.getDay())) // Sunday is 0; adding 7 minus the current day of the week will get us this coming Sunday's date.
-    // console.log('SUNDAY DATE (after): ' + date)
     return thisDate
   }
-  const [week] = useState(new Date())
-  // const [week, setWeek] = useState(new Date())
+
+  /* For use in the bi-weekly view. Commented out until it is implemented fully.
+  function SundaySecondDate (date) {
+    const thisDate = new Date()
+    thisDate.setDate(date.getDate() + (14 - date.getDay())) // Sunday is 0; adding 14 minus the current day of the week will get us the date of next week's Sunday.
+    return thisDate
+  }
+  */
+
+  const goBackOneWeek = (date) => {
+    const thisDate = new Date(week)
+    thisDate.setDate(thisDate.getDate() - 7)
+    setWeek(thisDate)
+    forceRender()
+  }
+  const goForwardOneWeek = (date) => {
+    const thisDate = new Date(week)
+    thisDate.setDate(thisDate.getDate() + 7)
+    setWeek(thisDate)
+    forceRender()
+  }
+  /* For use in the bi-weekly view. Commented out until it is implemented fully.
+  function goBackTwoWeeks (date) {
+    date.setDate(date.getDate() - 14)
+  }
+  function goForwardTwoWeeks (date) {
+    date.setDate(date.getDate() + 14)
+  }
+  */
 
   return (
     <Grid container mt={2} justifyContent="center">
@@ -32,16 +60,23 @@ export default function WeekChanger (props) {
         >
           <IconButton
             aria-label="previous-week"
-            // onClick={() => setWeek(week.setDate(week.getDate() - 7))}
+            data-testid="previous-week-button"
+            onClick={goBackOneWeek}
           >
             <ArrowBack/>
           </IconButton>
-          <p>{MondayDate(week).getMonth() + 1}/{MondayDate(week).getDate()} thru {SundayNextDate(week).getMonth() + 1}/{SundayNextDate(week).getDate()}</p>
+          <p
+            id="date-range"
+            data-testid="date-range-text"
+          >
+            {MondayDate(week).getMonth() + 1}/{MondayDate(week).getDate()} thru {SundayNextDate(week).getMonth() + 1}/{SundayNextDate(week).getDate()}
+          </p>
           <IconButton
             aria-label="next-week"
-            // onClick={() => setWeek(week.setDate(week.getDate() + 7))}
+            data-testid="next-week-button"
+            onClick={goForwardOneWeek}
           >
-           <ArrowForward/>
+            <ArrowForward/>
           </IconButton>
         </Stack>
       </Grid>
