@@ -13,7 +13,7 @@ export default function NavigationBar (props) {
 
   // colors to indicate which tab is selected in the navbar
   const selectedColor = 'warning'
-  const nonSelectedColor = 'error'
+  const nonSelectedColor = 'primary'
 
   return (
     <React.Fragment>
