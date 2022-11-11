@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run build && npm run buildApi",
+  "buildCommand": "npm run build",
   "functions": {
     "api/*.js": {
       "memory": 1024,
