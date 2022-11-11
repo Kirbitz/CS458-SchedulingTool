@@ -1,15 +1,4 @@
 {
   "buildCommand": "npm run build",
-  "builds": [
-    {
-      "src": "./server/index.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/"
-    }
-  ]
+  "rewrites": [{ "source": "/api/(.*)", "destination": "/api" }]
 }

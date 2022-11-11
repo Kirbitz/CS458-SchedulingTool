@@ -23,7 +23,7 @@
     "test": "jest --coverage",
     "devTest": "jest --watchAll --verbose",
     "testJest": "jest --detectOpenHandles",
-    "buildApi": "esbuild --bundle --minify --platform=node --outfile=api/bundle.js server/index.js --external:oracledb --external:pg --external:tedious --external:mysql2 --external:better-sqlite3 --external:sqlite3 --external:pg-query-stream"
+    "buildApi": "esbuild --bundle --minify --platform=node --outfile=api/index.js server/index.js --external:oracledb --external:pg --external:tedious --external:mysql2 --external:better-sqlite3 --external:sqlite3 --external:pg-query-stream"
   },
   "repository": {
     "type": "git",
