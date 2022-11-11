@@ -7,7 +7,7 @@ import { act } from 'react-test-renderer'
 
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
-// Tests the cases
+
 describe('Tests for <DepartmentPage />', () => {
   window.alert = jest.fn()
   let mock

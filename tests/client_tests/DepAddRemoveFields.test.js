@@ -2,7 +2,7 @@ import React from 'react'
 import { fireEvent, render, screen } from '@testing-library/react'
 
 import DepAddRemoveFields from '../../client/Components/DepAddRemoveFields.jsx'
-// Tests the cases
+
 describe('Tests for <DepAddRemoveFields />', () => {
   it('Initial Render', () => {
     const component = render(<DepAddRemoveFields />)
