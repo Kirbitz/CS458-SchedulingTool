@@ -23,6 +23,7 @@ const validateNewAccountCallback = async (req, res) => {
   newAccountData.credentialsUsername = newAccountData.username
 
   const badFields = []
+
   const databaseResponse1 = await checkUnique(newAccountData, 'Credentials', 'credentialsUsername')
   const databaseResponse2 = await checkUnique(newAccountData, 'Credentials', 'credentialsId')
 

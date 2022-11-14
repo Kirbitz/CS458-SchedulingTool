@@ -120,9 +120,7 @@ Returns json data about the account creation.
   {
     "error": {
       "status": 500,
-      "message": "Internal Server Error",
-      "sqlError": "{SQL Error}",
-      "sqlErrorCode": "{SQL Error Code}
+      "message": "Internal Server Error"
     }
   }
   ```

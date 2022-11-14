@@ -22,6 +22,7 @@ const createAccountCallback = async (req, res) => {
         }
       }).end()
   } catch (error) {
+    console.log(error)
     // Some kind of error occured, though not unique constraints
     res.status(500)
       .json({
@@ -33,20 +34,31 @@ const createAccountCallback = async (req, res) => {
   }
 }
 
-const insertRows = async (accountData) => {
-  await dbClient.transaction(async trx => {
-    // Grab the manager's departmentID
-    const deptID = await getDepartmentId(accountData, trx)
-
+const insertRows = (accountData) => {
+  dbClient.transaction(async trx => {
     // Create a User record
     await createUserRecord(accountData, trx)
 
     // Create Credentials record
     await createCredentialsRecord(accountData, trx)
 
+    // Grab the manager's departmentID
+    const deptID = await getDepartmentId(accountData, trx)
+
     // Create a _UserDepartment record
     await createUserDepartmentRecord(accountData, deptID[0].deptId, trx)
   })
+}
+
+const createUserRecord = (accountData, trx) => {
+  return dbClient.insert({
+    userId: accountData.userid,
+    userName: accountData.username,
+    userPermissions: accountData.permissions,
+    userHours: accountData.maxHours
+  })
+    .into('User')
+    .transacting(trx)
 }
 
 const createCredentialsRecord = (accountData, trx) => {
@@ -64,26 +76,15 @@ const createCredentialsRecord = (accountData, trx) => {
     .transacting(trx)
 }
 
-const createUserRecord = (accountData, trx) => {
-  return dbClient.insert({
-    userId: accountData.userid,
-    userName: accountData.username,
-    userPermissions: accountData.permissions,
-    userHours: accountData.maxHours
-  })
-    .into('User')
-    .transacting(trx)
-}
-
 const getDepartmentId = (accountData, trx) => {
   return dbClient.select('deptId')
     .from('_UserDepartment')
     .where('userId', '=', accountData.managerId)
     .andWhere('isManager', '=', 1)
+    .transacting(trx)
 }
 
 const createUserDepartmentRecord = (accountData, _deptId, trx) => {
-  console.log('hi')
   return dbClient.insert({
     userId: accountData.userid,
     deptId: _deptId,
