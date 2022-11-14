@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 
 // Database connection with knex
 const dbClient = require('./dbClient')
+const { getJWTSecret } = require('./dataHelper')
 
 // function is asynchronous to allow query to happen before trying to access results
 const loginCallback = async (req, res) => {
@@ -70,7 +71,7 @@ const signToken = (_userId, _isManager) => {
       userId: _userId,
       isManager: _isManager
     },
-    process.env.JWTSecret,
+    getJWTSecret(),
     { expiresIn: 5 * 60 * 60 }) // Token valid for 5 hours
 }
 

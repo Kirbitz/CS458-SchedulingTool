@@ -1,10 +1,10 @@
-const dotenv = require('dotenv')
-dotenv.config()
-
 const myApp = require('../../server/index')
 const supertest = require('supertest')
 const request = supertest(myApp)
 const dbClient = require('../../server/api/dbClient')
+const dataHelper = require('../../server/api/dataHelper')
+
+jest.mock('../../server/api/dataHelper')
 
 jest.mock('../../server/api/dbClient', () => ({
   select: jest.fn().mockReturnThis(),
@@ -16,19 +16,12 @@ jest.mock('../../server/api/dbClient', () => ({
 }))
 
 describe('testing loginCallBack from login.js', () => {
-  const env = process.env
-
   beforeAll(() => {
-    jest.spyOn(console, 'log').mockImplementation(() => {})
-  })
-
-  beforeEach(() => {
-    jest.resetModules()
-    process.env = { ...env }
-  })
-
-  afterEach(() => {
-    process.env = env
+    // jest.spyOn(console, 'log').mockImplementation(() => {})
+    jest.spyOn(dataHelper, 'getJWTSecret').mockImplementation(() => { 
+      console.log('mocked')
+      return 'hello'
+    })
   })
 
   it('Logging in existing user', async () => {

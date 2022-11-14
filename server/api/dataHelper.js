@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken')
 const verifyJWTAuthToken = (req, res) => {
   // Read the Authorization header
   const rawAuth = req.headers.Authorization
-  return jwt.verify(rawAuth, process.env.JWTSecret,
+  return jwt.verify(rawAuth, module.exports.getSecret,
     (err, decodedAuth) => {
       // Session token not valid if there is an error or decodedAuth is undefined
       if (err || !decodedAuth) {
@@ -27,6 +27,11 @@ const verifyJWTAuthToken = (req, res) => {
     })
 }
 
+const getJWTSecret = () => {
+  return process.env.JWTSecret
+}
+
 module.exports = {
-  verifyJWTAuthToken
+  verifyJWTAuthToken,
+  getJWTSecret
 }
