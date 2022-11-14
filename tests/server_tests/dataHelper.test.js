@@ -13,6 +13,10 @@ jest.mock('../../server/api/login')
 describe('Testing dataHelper functions', () => {
   const env = process.env
 
+  beforeAll(() => {
+    jest.spyOn(console, 'log').mockImplementation(() => {})
+  })
+
   beforeEach(() => {
     jest.resetModules()
     process.env = { ...env }
@@ -22,7 +26,8 @@ describe('Testing dataHelper functions', () => {
     process.env = env
   })
 
-  it('JWT should not verify', async () => {
+  it('verifyJWTAuthToken: JWT should not verify', async () => {
+    // using route as an easy way to test
     jest.spyOn(login, 'loginCallback').mockImplementation((req, res) => {
       res.cookie('Authorization', 'badAuth')
       verifyJWTAuthToken(req, res)

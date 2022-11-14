@@ -17,7 +17,7 @@ const loginCallback = async (req, res) => {
   }
 
   // Query the database to see if the username/password combo exists
-  const user = await module.exports.checkUsernamePassword(loginData.username, loginData.password)
+  const user = await checkUsernamePassword(loginData.username, loginData.password)
 
   // There is no user with those login credentials
   if (user.length === 0) {
@@ -34,7 +34,7 @@ const loginCallback = async (req, res) => {
     return
   }
 
-  const token = await module.exports.signToken(user[0].credentialsId, user[0].isManager)
+  const token = await signToken(user[0].credentialsId, user[0].isManager)
 
   // Successful login
   // Send status code 200 and JSON, then end the response
@@ -75,7 +75,5 @@ const signToken = (_userId, _isManager) => {
 }
 
 module.exports = {
-  loginCallback,
-  checkUsernamePassword,
-  signToken
+  loginCallback
 }

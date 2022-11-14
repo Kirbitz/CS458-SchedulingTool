@@ -22,6 +22,7 @@ jest.mock('../../server/api/dbClient', () => ({
 
 describe('Testing validateAccountCallback from validateAccount.js', () => {
   beforeAll(() => {
+    jest.spyOn(console, 'log').mockImplementation(() => {})
     jest.spyOn(dataHelper, 'verifyJWTAuthToken').mockImplementation(jest.fn(() => { }))
     jest.spyOn(createAccount, 'createAccountCallback').mockImplementation(jest.fn((req, res) => { res.status(201).end() }))
   })
@@ -56,5 +57,33 @@ describe('Testing validateAccountCallback from validateAccount.js', () => {
       })
 
     expect(response.statusCode).toBe(400)
+  })
+
+  it('Failed Auth token verification', async () => {
+    jest.spyOn(dataHelper, 'verifyJWTAuthToken').mockImplementationOnce((req, res) => {
+      res.status(401)
+        .json({
+          error: {
+            status: 401,
+            message: 'Unauthorized'
+          }
+        })
+        .end()
+
+      throw new Error('I am an error')
+    })
+
+    const response = await request.post('/api/create_new_account')
+      .send({
+        username: 'jshmoe1234',
+        password: "MyPet'sName1234!",
+        userid: 123456,
+        name: 'Joe Shmoe',
+        permissions: 0,
+        maxHours: 20,
+        managerId: 2
+      })
+
+    expect(response.statusCode).toBe(401)
   })
 })

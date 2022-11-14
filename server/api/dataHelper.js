@@ -4,7 +4,7 @@ dotenv.config()
 const jwt = require('jsonwebtoken')
 
 const verifyJWTAuthToken = (req, res) => {
-  // Read the Authorization cookie
+  // Read the Authorization header
   const rawAuth = req.headers.Authorization
   return jwt.verify(rawAuth, process.env.JWTSecret,
     (err, decodedAuth) => {
@@ -19,9 +19,11 @@ const verifyJWTAuthToken = (req, res) => {
           })
           .end()
 
-        // throw the error
         throw err
       }
+
+      // add the userID to the request body
+      req.body.userId = decodedAuth.userId
     })
 }
 

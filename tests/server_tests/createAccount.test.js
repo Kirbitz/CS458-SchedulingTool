@@ -34,6 +34,7 @@ jest.mock('../../server/api/dbClient', () => ({
 
 describe('Testing createAccountCallback from createAccount.js', () => {
   beforeAll(() => {
+    jest.spyOn(console, 'log').mockImplementation(() => {})
     jest.spyOn(dataHelper, 'verifyJWTAuthToken').mockImplementation(jest.fn(() => { }))
     jest.spyOn(validateAccount, 'validateNewAccountCallback').mockImplementation(jest.fn((req, res) => { createAccount.createAccountCallback(req, res) }))
   })
@@ -53,22 +54,22 @@ describe('Testing createAccountCallback from createAccount.js', () => {
     expect(response.statusCode).toBe(201)
   })
 
-  // it('Failed account creation. Successful Auth validation. Unique username and ID', async () => {
-  //   jest.spyOn(createAccount, 'insertRows').mockImplementation(() => {
-  //     throw new Error('I am an error')
-  //   })
+  it('Failed account creation. Successful Auth validation. Unique username and ID', async () => {
+    jest.spyOn(createAccount, 'insertRows').mockImplementation(() => {
+      throw new Error('I am an error')
+    })
 
-  //   const response = await request.post('/api/create_new_account')
-  //     .send({
-  //       username: 'jshmoe1234',
-  //       password: "MyPet'sName1234!",
-  //       userid: 123456,
-  //       name: 'Joe Shmoe',
-  //       permissions: 0,
-  //       maxHours: 20,
-  //       managerId: 2
-  //     })
+    const response = await request.post('/api/create_new_account')
+      .send({
+        username: 'jshmoe1234',
+        password: "MyPet'sName1234!",
+        userid: 123456,
+        name: 'Joe Shmoe',
+        permissions: 0,
+        maxHours: 20,
+        managerId: 2
+      })
 
-  //   expect(response.statusCode).toBe(500)
-  // })
+    expect(response.statusCode).toBe(500)
+  })
 })

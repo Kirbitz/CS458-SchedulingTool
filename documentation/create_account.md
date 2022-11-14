@@ -28,9 +28,9 @@ Returns json data about the account creation.
 
   `MyPet'sName1234!`
 
-  __Required:__ User ID
+  __Required:__ New User ID
 
-  `userID: [int]`
+  `newUserID: [int]`
 
   123456
 
@@ -51,12 +51,6 @@ Returns json data about the account creation.
   `maxHours: [double]`
 
   20
-
-  __Required:__ Manager ID
-
-  `managerId: [int]`
-
-  2
 
 - **Auth Required:** Yes, JWT set in Authorization header.
 
@@ -139,7 +133,6 @@ axios({
     name: 'Joe Shmoe',
     permissions: 0,
     maxHours: 20,
-    managerId: 2 // Should be the User ID of the current user
   }
 })
 ```
