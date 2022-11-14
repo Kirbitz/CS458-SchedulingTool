@@ -38,7 +38,6 @@ const loginCallback = async (req, res) => {
 
   // Successful login
   // Send status code 200 and JSON, then end the response
-  res.cookie('Authorization', token)
   res.status(200)
     .set('Authorization', token)
     .json({
