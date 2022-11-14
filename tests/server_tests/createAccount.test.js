@@ -6,8 +6,19 @@ const createAccount = require('../../server/api/createAccount')
 
 jest.mock('knex')
 jest.mock('../../server/api/dataHelper')
+
+const mockTrx = {
+  where: jest.fn().mockReturnThis(),
+  select: jest.fn().mockReturnThis(),
+  from: jest.fn().mockReturnThis(),
+  into: jest.fn().mockReturnThis(),
+  andWhere: jest.fn().mockReturnThis(),
+  then: jest.fn(),
+  transacting: jest.fn().mockReturnThis()
+}
+
 jest.mock('../../server/api/dbClient', () => ({
-  transaction: jest.fn((callback) => { jest.fn() }),
+  transaction: jest.fn((callback) => { callback(mockTrx) }),
   where: jest.fn().mockReturnThis(),
   select: jest.fn().mockReturnThis(),
   from: jest.fn().mockReturnThis(),
@@ -19,7 +30,7 @@ jest.mock('../../server/api/dbClient', () => ({
 
 describe('Testing createAccountCallback from createAccount.js', () => {
   beforeAll(() => {
-    jest.spyOn(dataHelper, 'verifyJWTAuthToken').mockImplementation(jest.fn(() => { console.log('mocked') }))
+    jest.spyOn(dataHelper, 'verifyJWTAuthToken').mockImplementation(jest.fn(() => { }))
   })
 
   it('Successful account creation', async () => {

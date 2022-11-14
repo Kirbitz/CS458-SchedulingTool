@@ -44,8 +44,6 @@ const insertRows = async (accountData) => {
     // Create Credentials record
     await createCredentialsRecord(accountData, trx)
 
-    console.log(deptID)
-
     // Create a _UserDepartment record
     await createUserDepartmentRecord(accountData, deptID[0].deptId, trx)
   })
@@ -85,6 +83,7 @@ const getDepartmentId = (accountData, trx) => {
 }
 
 const createUserDepartmentRecord = (accountData, _deptId, trx) => {
+  console.log('hi')
   return dbClient.insert({
     userId: accountData.userid,
     deptId: _deptId,
