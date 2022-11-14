@@ -14,12 +14,13 @@ const createAccountCallback = async (req, res) => {
     await module.exports.insertRows(newAccountData)
 
     // User account successfully created
-    res.json({
-      success: {
-        status: 201,
-        message: 'Created new account'
-      }
-    }).end()
+    res.status(201)
+      .json({
+        success: {
+          status: 201,
+          message: 'Created new account'
+        }
+      }).end()
   } catch (error) {
     // Some kind of error occured, though not unique constraints
     res.status(500)
@@ -35,7 +36,7 @@ const createAccountCallback = async (req, res) => {
 const insertRows = async (accountData) => {
   await dbClient.transaction(async trx => {
     // Grab the manager's departmentID
-    const deptID = await getDepartmentId(accountData)
+    const deptID = await getDepartmentId(accountData, trx)
 
     // Create a User record
     await createUserRecord(accountData, trx)
@@ -43,8 +44,10 @@ const insertRows = async (accountData) => {
     // Create Credentials record
     await createCredentialsRecord(accountData, trx)
 
+    console.log(deptID)
+
     // Create a _UserDepartment record
-    await createUserDepartmentRecord(accountData, deptID, trx)
+    await createUserDepartmentRecord(accountData, deptID[0].deptId, trx)
   })
 }
 
@@ -74,14 +77,11 @@ const createUserRecord = (accountData, trx) => {
     .transacting(trx)
 }
 
-const getDepartmentId = (accountData) => {
+const getDepartmentId = (accountData, trx) => {
   return dbClient.select('deptId')
     .from('_UserDepartment')
     .where('userId', '=', accountData.managerId)
     .andWhere('isManager', '=', 1)
-    .then(result => {
-      return result[0].deptId // return the department id
-    })
 }
 
 const createUserDepartmentRecord = (accountData, _deptId, trx) => {

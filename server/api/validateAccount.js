@@ -3,10 +3,9 @@ dotenv.config()
 
 const { createAccountCallback } = require('./createAccount.js')
 
-const jwt = require('jsonwebtoken')
-
 // Database connection with knex
 const dbClient = require('./dbClient')
+const { verifyJWTAuthToken } = require('./dataHelper')
 
 const validateNewAccountCallback = async (req, res) => {
   // Verify the session token
@@ -24,16 +23,14 @@ const validateNewAccountCallback = async (req, res) => {
   newAccountData.credentialsUsername = newAccountData.username
 
   const badFields = []
+  const databaseResponse1 = await checkUnique(newAccountData, 'Credentials', 'credentialsUsername')
+  const databaseResponse2 = await checkUnique(newAccountData, 'Credentials', 'credentialsId')
 
-  let databaseResponse = await checkUnique(newAccountData, 'Credentials', 'credentialsUsername')
-
-  if (databaseResponse) {
+  if (databaseResponse1) {
     badFields.push('Username')
   }
 
-  databaseResponse = await checkUnique(newAccountData, 'Credentials', 'credentialsId')
-
-  if (databaseResponse) {
+  if (databaseResponse2) {
     badFields.push('User ID')
   }
 
@@ -53,28 +50,6 @@ const validateNewAccountCallback = async (req, res) => {
   createAccountCallback(req, res)
 }
 
-const verifyJWTAuthToken = (req, res) => {
-  // Read the Authorization cookie
-  const rawAuth = req.header('Authorization')
-  return jwt.verify(rawAuth, process.env.JWTSecret,
-    (err, decodedAuth) => {
-      // Session token not valid if there is an error or decodedAuth is undefined
-      if (err || !decodedAuth) {
-        res.status(401)
-          .json({
-            error: {
-              status: 401,
-              message: 'Unauthorized'
-            }
-          })
-          .end()
-
-        // throw the error
-        throw err
-      }
-    })
-}
-
 const checkUnique = (data, table, field) => {
   return dbClient.select(field)
     .from(table)
@@ -87,6 +62,5 @@ const checkUnique = (data, table, field) => {
 }
 
 module.exports = {
-  validateNewAccountCallback,
-  verifyJWTAuthToken
+  validateNewAccountCallback
 }

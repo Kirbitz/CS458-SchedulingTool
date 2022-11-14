@@ -28,7 +28,13 @@ Returns json data about the login session.
 
   `MyPet'sName1234!`
 
-- **Auth required:** No, endpoint will create JWT in Authorization cookie.
+- **Auth Required:** Yes, JWT set in Authorization cookie.
+
+  **Content:** 
+
+  - `userid`
+  
+  - `isManager`
 
 ## Response
 

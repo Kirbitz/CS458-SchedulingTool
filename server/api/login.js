@@ -39,20 +39,9 @@ const loginCallback = async (req, res) => {
 
   const token = await module.exports.signToken(user[0].credentialsId, user[0].isManager)
 
-  jwt.verify(token, process.env.JWTSecret,
-    (err, decodedAuth) => {
-      console.log(decodedAuth)
-      // Session token not valid if there is an error or decodedAuth is undefined
-      if (err || !decodedAuth) {
-        return false
-      }
-
-      return true
-    })
-
   // Successful login
   // Send status code 200 and JSON, then end the response
-  req.headers.Authorization = token
+  res.cookie('Authorization', token)
   res.status(200)
     .set('Authorization', token)
     .json({
