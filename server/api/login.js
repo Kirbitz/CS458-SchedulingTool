@@ -1,6 +1,3 @@
-const dotenv = require('dotenv')
-dotenv.config()
-
 const sjcl = require('sjcl') // sha256 for encryption
 const jwt = require('jsonwebtoken')
 
@@ -65,9 +62,6 @@ const checkUsernamePassword = async (username, password) => {
     .andWhere('Credentials.credentialsPassword', '=', passwordHash)
     .then(result => {
       return result // Returns an array of Rows
-    })
-    .catch(reject => {
-      console.error(reject)
     })
 }
 

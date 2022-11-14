@@ -1,6 +1,3 @@
-const dotenv = require('dotenv')
-dotenv.config()
-
 const { createAccountCallback } = require('./createAccount.js')
 
 // Database connection with knex

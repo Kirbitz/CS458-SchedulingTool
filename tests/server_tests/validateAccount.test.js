@@ -3,7 +3,7 @@ const supertest = require('supertest')
 const request = supertest(myApp)
 const dataHelper = require('../../server/api/dataHelper')
 const createAccount = require('../../server/api/createAccount')
-const validateAccount = require('../../server/api/validateAccount')
+const dbClient = require('../../server/api/dbClient')
 
 jest.mock('knex')
 jest.mock('../../server/api/dataHelper')
@@ -26,7 +26,7 @@ describe('Testing validateAccountCallback from validateAccount.js', () => {
     jest.spyOn(createAccount, 'createAccountCallback').mockImplementation(jest.fn((req, res) => { res.status(201).end() }))
   })
 
-  it('Successful account creation', async () => {
+  it('Successful account validation', async () => {
     const response = await request.post('/api/create_new_account')
       .send({
         username: 'jshmoe1234',
@@ -39,5 +39,22 @@ describe('Testing validateAccountCallback from validateAccount.js', () => {
       })
 
     expect(response.statusCode).toBe(201)
+  })
+
+  it('Failed account validation', async () => {
+    jest.spyOn(dbClient, 'then').mockImplementation(jest.fn().mockReturnValue(1))
+
+    const response = await request.post('/api/create_new_account')
+      .send({
+        username: 'jshmoe1234',
+        password: "MyPet'sName1234!",
+        userid: 123456,
+        name: 'Joe Shmoe',
+        permissions: 0,
+        maxHours: 20,
+        managerId: 2
+      })
+
+    expect(response.statusCode).toBe(400)
   })
 })

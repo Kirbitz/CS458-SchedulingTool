@@ -1,6 +1,3 @@
-const dotenv = require('dotenv')
-dotenv.config()
-
 const sjcl = require('sjcl') // sha256 for encrpytion
 
 // Database connection with knex
