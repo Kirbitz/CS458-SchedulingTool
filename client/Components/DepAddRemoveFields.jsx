@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { Box, FormControl, IconButton, InputLabel, Select } from '@mui/material'
 import { ArrowBack, ArrowForward } from '@mui/icons-material'
 
-// Element display selection boxes for adding or removing employees from department
+// Element display selection boxes for adding or removing employees from a department
 export default function DepAddRemoveFields (props) {
   const { addEmployees, currentEmployees, removeEmployees, searchEmployees } = props
 

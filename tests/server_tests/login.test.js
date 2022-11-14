@@ -1,10 +1,11 @@
 const myApp = require('../../server/index')
 const supertest = require('supertest')
 const request = supertest(myApp)
-const login = require('../../server/login')
+const login = require('../../server/api/login')
 
 describe('testing loginCallBack from login.js', () => {
   beforeAll(() => {
+    jest.spyOn(console, 'log').mockImplementation(() => {})
     jest.spyOn(login, 'checkUsernamePassword')
       .mockImplementation((username, password) => {
         if (username === 'username' && password === 'password') {
@@ -24,7 +25,7 @@ describe('testing loginCallBack from login.js', () => {
   })
 
   it('Logging in existing user', async () => {
-    const response = await request.post('/login')
+    const response = await request.post('/api/login')
       .send({
         username: 'username',
         password: 'password'
@@ -36,7 +37,7 @@ describe('testing loginCallBack from login.js', () => {
   })
 
   it('Logging in with existing username, wrong password', async () => {
-    const response = await request.post('/login')
+    const response = await request.post('/api/login')
       .send({
         username: 'notUsername',
         password: 'notPassword'
@@ -48,7 +49,7 @@ describe('testing loginCallBack from login.js', () => {
   })
 
   it('Logging in with wrong username, correct password', async () => {
-    const response = await request.post('/login')
+    const response = await request.post('/api/login')
       .send({
         username: 'badUsername',
         password: 'test'
@@ -60,7 +61,7 @@ describe('testing loginCallBack from login.js', () => {
   })
 
   it('Log in with no credentials', async () => {
-    const response = await request.post('/login')
+    const response = await request.post('/api/login')
 
     expect(response.statusCode).toEqual(401)
   })

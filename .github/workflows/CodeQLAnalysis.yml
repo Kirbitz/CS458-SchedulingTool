@@ -40,7 +40,7 @@ jobs:
     # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
     #Installs npm packages
     - name: Install dependencies
-      run: npm ci
+      run: npm install
 
     - name: Build Project
       run: npm run build

@@ -11,7 +11,7 @@ import PageRoutes from './Components/PageRoutes.jsx'
 export default function EntryPoint (props) {
   return (
     <BrowserRouter>
-      <Container maxWidth="lg" data-testid="MuiContainer">
+      <Container data-testid="MuiContainer">
         <CssBaseline />
         <PageRoutes />
       </Container>

@@ -18,9 +18,9 @@ Returns json data about the login session.
 
   _Required:_ Username
 
-  `username: [string]`
+  `email: [string]`
 
-  `jshmoe1234`
+  `joeshmo@example.xyz`
 
   _Required:_ User password
 
@@ -28,7 +28,7 @@ Returns json data about the login session.
 
   `MyPet'sName1234!`
 
-- **Auth required:** No, endpoint will create JWT in Authorization header.
+- **Auth required:** No, endpoint will create JWT in Authorization cookie.
 
 ## Response
 
@@ -74,7 +74,7 @@ axios({
   url: '/login',
   responseType: 'json',
   data: {
-    username: 'jshmoe1234',
+    email: 'joeshmo@example.xyz',
     password: "MyPet'sName1234!"
   }
 });

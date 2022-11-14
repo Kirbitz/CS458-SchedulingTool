@@ -1,13 +1,8 @@
 const Express = require('express')
 const path = require('path')
+const dataRouter = require('./api/api.js')
 
 const app = new Express()
-const { loginCallback } = require('./login')
-const { loginLimiter } = require('./rateLimiters')
-const { validateNewAccountCallback } = require('./validateAccount.js')
-
-// Parse JSON bodies into JavaScript objects
-app.use(Express.json())
 
 // Logs all request made to the server
 app.use((req, response, next) => {
@@ -16,11 +11,8 @@ app.use((req, response, next) => {
 })
 
 app.use(Express.static('public'))
-// rate limit requests to 50 attempts per 15 minutes
-app.use(loginLimiter)
 
-// POST - checks username and password against database
-app.post('/login', loginCallback)
+app.use('/api', dataRouter)
 
 // POST - creates a new account with the given information
 // Chain calls CreateAccountCallback if everything validates

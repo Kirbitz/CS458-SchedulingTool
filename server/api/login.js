@@ -77,6 +77,9 @@ const checkUsernamePassword = async (username, password) => {
     .then(result => {
       return result // Returns an array of Rows
     })
+    .catch(reject => {
+      console.error(reject)
+    })
 }
 
 const signToken = (_userId, _isManager) => {
