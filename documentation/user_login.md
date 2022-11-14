@@ -28,7 +28,7 @@ Returns json data about the login session.
 
   `MyPet'sName1234!`
 
-- **Auth Required:** Yes, JWT set in Authorization cookie.
+- **Auth Required:** Yes, JWT set in Authorization header.
 
   **Content:** 
 
