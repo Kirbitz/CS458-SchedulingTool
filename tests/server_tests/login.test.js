@@ -17,11 +17,8 @@ jest.mock('../../server/api/dbClient', () => ({
 
 describe('testing loginCallBack from login.js', () => {
   beforeAll(() => {
-    // jest.spyOn(console, 'log').mockImplementation(() => {})
-    jest.spyOn(dataHelper, 'getJWTSecret').mockImplementation(() => { 
-      console.log('mocked')
-      return 'hello'
-    })
+    jest.spyOn(console, 'log').mockImplementation(() => {})
+    jest.spyOn(dataHelper, 'getJWTSecret').mockImplementation(() => { return 'hello' })
   })
 
   it('Logging in existing user', async () => {
