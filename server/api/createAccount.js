@@ -9,8 +9,11 @@ const dbClient = require('./dbClient')
 const createAccountCallback = async (req, res) => {
   const newAccountData = req.body
 
+  // If a query fails, all queries will be rolled back and error thrown
   try {
     await module.exports.insertRows(newAccountData)
+
+    // User account successfully created
     res.json({
       success: {
         status: 201,
@@ -18,7 +21,7 @@ const createAccountCallback = async (req, res) => {
       }
     }).end()
   } catch (error) {
-    console.log(error)
+    // Some kind of error occured, though not unique constraints
     res.status(500)
       .json({
         error: {

@@ -9,24 +9,11 @@ const jwt = require('jsonwebtoken')
 const dbClient = require('./dbClient')
 
 const validateNewAccountCallback = async (req, res) => {
-  // Read the Authorization header for verification
-  // TODO - Find a way to test this..........
-  const rawAuth = req.header('Authorization')
-
   // Verify the session token
-  const authIsVerified = verifyJWTAuthToken(rawAuth)
-
-  // Session token is not valid. Send the response and return
-  if (!authIsVerified) {
-    res.status(401)
-      .json({
-        error: {
-          status: 401,
-          message: 'Unauthorized'
-        }
-      })
-      .end()
-
+  try {
+    verifyJWTAuthToken(req, res)
+  } catch (err) {
+    // The Auth token could not be verified
     return
   }
 
@@ -66,15 +53,25 @@ const validateNewAccountCallback = async (req, res) => {
   createAccountCallback(req, res)
 }
 
-const verifyJWTAuthToken = (rawAuth) => {
+const verifyJWTAuthToken = (req, res) => {
+  // Read the Authorization cookie
+  const rawAuth = req.header('Authorization')
   return jwt.verify(rawAuth, process.env.JWTSecret,
     (err, decodedAuth) => {
       // Session token not valid if there is an error or decodedAuth is undefined
       if (err || !decodedAuth) {
-        return false
-      }
+        res.status(401)
+          .json({
+            error: {
+              status: 401,
+              message: 'Unauthorized'
+            }
+          })
+          .end()
 
-      return true
+        // throw the error
+        throw err
+      }
     })
 }
 
