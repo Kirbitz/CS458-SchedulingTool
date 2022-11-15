@@ -13,7 +13,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles'
 
 const theme = createTheme()
 
-export default function Login () {
+export default function Log () {
   const handleSubmit = (event) => {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
@@ -25,60 +25,66 @@ export default function Login () {
 
   return (
 
-  // <div style= {{padding:30}}>
+      // <div style= {{padding:30}}>
       <ThemeProvider theme = {theme}>
-        <Container component = "main" maxWidth = "xs">
+        <Container maxWidth = "xs">
           <CssBaseline />
           <Box
-           sx = {{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+              sx = {{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}
           >
             <Typography component="h1" variant="h5">
-            Log In
-          </Typography>
-          <Box
-          component="form"
-          onSubmit={handleSubmit}
-          Validate
-          sx={{ mt: 1 }}>
-            <TextField margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              type="email"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
               Log In
-            </Button>
-            <Grid Container>
-              <Grid item xs>
-              <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
+            </Typography>
+            <Box
+                component="form"
+                onSubmit={handleSubmit}
+
+                sx={{ mt: 1 }}>
+              <TextField margin="normal"
+                         required
+                         fullWidth
+                         id="email"
+                         label="Email Address"
+                         type="email"
+                         name="email"
+                         autoComplete="email"
+                         autoFocus
+                         inputProps={{
+                           'data-testid': 'email-input'
+                         }}
+              />
+              <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  inputProps={{
+                    'data-testid': 'password-input'
+                  }}
+              />
+              <FormControlLabel
+                  control={<Checkbox value="remember" color="primary" />}
+                  label="Remember me"
+              />
+              <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+              >
+                Log In
+              </Button>
+              <Grid>
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    Forgot password?
+                  </Link>
+                </Grid>
               </Grid>
-            </Grid>
             </Box>
           </Box>
         </Container>

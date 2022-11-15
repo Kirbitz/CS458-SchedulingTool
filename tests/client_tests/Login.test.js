@@ -1,23 +1,23 @@
-import React from 'React'
-import { render, fireEvent } from '@testing-library/react'
-
+import { fireEvent, getByLabelText, render, screen } from '@testing-library/react'
 import Log from '../../client/Components/Log.jsx'
 
-describe('Tests for  <Login />', () => {
-  let count
-  beforeEach(() => {
-    count = 0
-  })
+describe('<Log />', () => {
   it('Initial Render', () => {
     const component = render(<Log />)
-    expect(component.baseElement.outerHTML).toContain('Remember Me')
+    expect(component.baseElement.outerHTML).toContain('Remember me')
   })
 
-  it('Textbox On Email provides text', async () => {
-    const component = render(<Log count={count} />)
+  it('Test Password validation for input', async () => {
+    render(<Log />)
+    const passwordInputEl = screen.getByTestId('password-input')
+    const testValue = '#aaAs123@'
 
-    await fireEvent.input(component.getByTestId('Email Address'))
+    fireEvent.change(passwordInputEl, { target: { value: testValue } })
 
-    expect(component.getByTestId('Email Address').outerHTML).toContain('lowercase,uppercase,number')
+    /*
+      regular expression - ^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])
+      this regular expression check password contain lowercase,uppercase,number
+    */
+    expect(passwordInputEl.value).toMatch(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/)
   })
 })
