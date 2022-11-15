@@ -1,11 +1,9 @@
-const dotenv = require('dotenv')
-dotenv.config()
-
 const sjcl = require('sjcl') // sha256 for encryption
 const jwt = require('jsonwebtoken')
 
 // Database connection with knex
 const dbClient = require('./dbClient')
+const { getJWTSecret } = require('./dataHelper')
 
 // function is asynchronous to allow query to happen before trying to access results
 const loginCallback = async (req, res) => {
@@ -20,7 +18,7 @@ const loginCallback = async (req, res) => {
   }
 
   // Query the database to see if the username/password combo exists
-  const user = await module.exports.checkUsernamePassword(loginData.username, loginData.password)
+  const user = await checkUsernamePassword(loginData.username, loginData.password)
 
   // There is no user with those login credentials
   if (user.length === 0) {
@@ -37,7 +35,7 @@ const loginCallback = async (req, res) => {
     return
   }
 
-  const token = await module.exports.signToken(user[0].credentialsId)
+  const token = await signToken(user[0].credentialsId, user[0].isManager)
 
   // Successful login
   // Send status code 200 and JSON, then end the response
@@ -65,20 +63,18 @@ const checkUsernamePassword = async (username, password) => {
     .then(result => {
       return result // Returns an array of Rows
     })
-    .catch(reject => {
-      console.error(reject)
-    })
 }
 
-const signToken = (_userId) => {
+const signToken = (_userId, _isManager) => {
   return jwt.sign( // Sign a token to be stored in Authorization header
-    { userId: _userId },
-    process.env.JWTSecret,
+    { // Things used to sign the token
+      userId: _userId,
+      isManager: _isManager
+    },
+    getJWTSecret(),
     { expiresIn: 5 * 60 * 60 }) // Token valid for 5 hours
 }
 
 module.exports = {
-  loginCallback,
-  checkUsernamePassword,
-  signToken
+  loginCallback
 }
