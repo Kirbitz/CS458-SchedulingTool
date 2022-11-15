@@ -24,7 +24,7 @@ export default function Day (props) {
   const dayHeaderBorder = noBorder
   const dayCardBorder = noBorder
 
-  return (<div style={{ height: '135vh', width: '13vw', border: divBorder }}>
+  return (<div style={{ height: '200vh', width: '13vw', border: divBorder }}>
         <h3 style={{ margin: 0, height: '5%', border: dayHeaderBorder }}>{ weekday }</h3>
         <Card spacing={0} sx={{ margin: 0, height: '90%', border: dayCardBorder }}>
 

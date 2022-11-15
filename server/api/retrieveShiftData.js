@@ -4,9 +4,13 @@ dotenv.config()
 // Database connection with knex
 const dbClient = require('./dbClient')
 
-const dayCallback = async (req, res) => {
+const retrieveShiftData = async (req, res) => {
   let dayData = req.body
 
- // const user = await module.exports.
+// const user = await module.exports.
+}
 
+//
+const funct = async (req, res) => {
+  dbClient.select()
 }
