@@ -4,6 +4,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 
 import NavigationBar from './NavigationBar.jsx'
 import MasterView from '../Pages/MasterView.jsx'
+import ShiftView from '../Pages/ShiftView.jsx'
 import DepartmentPage from '../Pages/DepartmentPage.jsx'
 
 // Set of routes for react to navigate between
@@ -18,6 +19,7 @@ export default function PageRoutes (props) {
       <Route path="/department" element={<DepartmentPage />} />
       <Route path="/settings" element={<NavigationBar selected="Settings" />} />
       <Route path="/login" element={<NavigationBar />} />
+      <Route path="/master-schedule/shift" element={<ShiftView />} />
       <Route path="/*" element={<Navigate to="/" replace />} />
     </Routes>
   )

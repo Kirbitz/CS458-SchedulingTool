@@ -2,10 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import { Button, Card, Typography, CardContent } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 
 // Week component for the master schedule view
 export default function Day (props) {
   const { weekday } = props
+  const navigate = useNavigate() // This hook is used by the button to navigate to the shift view.
 
   // Colors
   // Green #1fd655, Red #FFCCCB, Grey #B4B5B4
@@ -37,6 +39,7 @@ export default function Day (props) {
             height: btnHeight,
             backgroundColor: buttonColor
           }}
+          onClick={() => navigate('/master-schedule/shift')}
         >
         <CardContent>
           <Typography></Typography>
