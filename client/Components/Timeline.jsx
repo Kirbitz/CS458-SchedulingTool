@@ -14,12 +14,12 @@ export default function Timeline (props) {
   })
 
   return (
-  // overflow auto gives scroll bar for the react component
-  <List style={{ height: '85vh' }}>
-    <ListItem >
-      <ListItemText primary="Time"/>
-    </ListItem>
-    {timeItems}
-  </List>
+    // overflow auto gives scroll bar for the react component
+    <List style={{ height: '85vh' }}>
+      <ListItem >
+        <ListItemText primary="Time"/>
+      </ListItem>
+      {timeItems}
+    </List>
   )
 }
