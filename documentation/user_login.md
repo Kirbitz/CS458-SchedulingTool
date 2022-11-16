@@ -16,7 +16,7 @@ Returns json data about the login session.
 
 - **Data Params**
 
-  _Required:_ User email
+  _Required:_ Username
 
   `email: [string]`
 
@@ -28,14 +28,19 @@ Returns json data about the login session.
 
   `MyPet'sName1234!`
 
-- **Auth required:** Yes, Bearer or express-session set in Authorization header.
-<!-- Will update once it is finalized. -->
+- **Auth Required:** Yes, JWT set in Authorization header.
+
+  **Content:** 
+
+  - `userid`
+  
+  - `isManager`
 
 ## Response
 
 - **Success Response:**
 
-  **Code:** `200`
+  **Code:** `200 OK`
 
   **Content:**
 
@@ -48,33 +53,24 @@ Returns json data about the login session.
 
 - **Error Response:**
 
-  **Code:** `404 NOT FOUND`
+  **Code:** `401 UNAUTHORIZED`
 
   **Content:**
-
+  
   ```json
   {
     "error": {
-      "status": 404,
-      "message": "Not Found"
+      "status": 401,
+      "message": "Unauthorized"
     }
   }
   ```
 
-  OR
+  **Code:** `429 TOO MANY REQUESTS`
 
-  **Code:** `500 INTERNAL ERROR`
+  **CONTENT:**
 
-  **Content:**
-
-  ```json
-  {
-    "error": {
-      "status": 500,
-      "message": "Internal Server Error"
-    }
-  }
-  ```
+  None
 
 ## Sample Call
 
