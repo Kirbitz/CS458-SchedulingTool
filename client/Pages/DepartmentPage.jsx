@@ -25,14 +25,20 @@ export default function DepartmentPage (props) {
 
   // Reference for checking data that is added to the search field
   const searchRef = useRef('')
+  const inputChange = () => {
+    if (searchRef.current.value.length > 0 && (searchRef.current.value.match('^[0-9]+$') || searchRef.current.value.match('^[a-zA-Z]+( [a-zA-Z]+)*$'))) {
+      setInputInvalid(false)
+    } else {
+      setInputInvalid(true)
+    }
+  }
 
   // Search employees function for find employees of a user query (query has to either be numeric XOR alpha)
   const searchEmployees = async () => {
     // Checks that the search properly meets the validation requirements
     // Validation Requirements: Box Contains Value and Value is either numeric XOR alpha chars
-    if (searchRef.current.value.length > 0 && (searchRef.current.value.match('^[0-9]+$') || searchRef.current.value.match('^[a-zA-Z]+$'))) {
-      // Updates input validity and disables the search button to prevent multiple clicks
-      setInputInvalid(false)
+    if (!inputInvalid && searchRef.current.value.length > 0) {
+      // Disables the search button to prevent multiple clicks
       setSearchClicked(true)
       // search function for finding data related to entered search value
       await searchEmployeeInfo(searchRef.current.value)
@@ -44,9 +50,6 @@ export default function DepartmentPage (props) {
       // Re-enables search button and enables the create user button
       setSearchClicked(false)
       setSearchHappened(false)
-    } else {
-      // Indicates to the user whether their input was valid
-      setInputInvalid(true)
     }
   }
 
@@ -145,6 +148,7 @@ export default function DepartmentPage (props) {
           name={searchRef.current.value}
           type="search"
           variant="outlined"
+          onChange={inputChange}
         />
         <Tooltip title="Search Employees">
           <div>

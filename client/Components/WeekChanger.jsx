@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { IconButton, Grid, Stack } from '@mui/material'
 import { ArrowBack, ArrowForward } from '@mui/icons-material'
 
+// Component to display and change the currently selected week
 export default function WeekChanger (props) {
   const [week, setWeek] = useState(new Date())
 
@@ -14,6 +15,7 @@ export default function WeekChanger (props) {
     thisDate.setDate((date.getDate() - date.getDay()) + 1) // Monday is 1 and Sunday is 0; subtracting the current day of the week from itself and adding 1 will give us Monday's date.
     return thisDate
   }
+
   function SundayNextDate (date) {
     const thisDate = new Date(date)
     thisDate.setDate(date.getDate() + (7 - date.getDay())) // Sunday is 0; adding 7 minus the current day of the week will get us this coming Sunday's date.
@@ -27,13 +29,14 @@ export default function WeekChanger (props) {
     return thisDate
   }
   */
-
+  // Moves the current week backward by one week
   const goBackOneWeek = (date) => {
     const thisDate = new Date(week)
     thisDate.setDate(thisDate.getDate() - 7)
     setWeek(thisDate)
     forceRender()
   }
+  // Moves the current week forward by one week
   const goForwardOneWeek = (date) => {
     const thisDate = new Date(week)
     thisDate.setDate(thisDate.getDate() + 7)
