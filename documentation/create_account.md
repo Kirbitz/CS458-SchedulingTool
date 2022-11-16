@@ -4,7 +4,7 @@ Returns json data about the account creation.
 
 - **URL:**
 
-  /create_new_account
+  /api/create_new_account
 
 - **Method:**
 
@@ -40,15 +40,9 @@ Returns json data about the account creation.
 
   `Joe Shmoe`
 
-  __Required:__ Permissions
+  __Required:__ Hour Cap
 
-  `permissions: [int: 0 || 1 ]`
-
-  1
-
-  __Required:__ Max Hours
-
-  `maxHours: [double]`
+  `hourCap: [double]`
 
   20
 
@@ -124,15 +118,14 @@ Returns json data about the account creation.
 ```javascript
 axios({
   method: 'POST',
-  url: '/create_new_account',
+  url: '/api/create_new_account',
   reponseType: 'json',
   data: {
     username: 'jshmoe1234',
     password: "MyPet'sName1234!",
     userid: 123456,
     name: 'Joe Shmoe',
-    permissions: 0,
-    maxHours: 20,
+    hourCap: 20,
   }
 })
 ```

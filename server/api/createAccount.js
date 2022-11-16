@@ -51,8 +51,8 @@ const createUserRecord = (accountData, trx) => {
   return dbClient.insert({
     userId: accountData.userid,
     userName: accountData.username,
-    userPermissions: accountData.permissions,
-    userHours: accountData.maxHours
+    userPermissions: 0,
+    userHourCap: accountData.hourCap
   })
     .into('User')
     .transacting(trx)
