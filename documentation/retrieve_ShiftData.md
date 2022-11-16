@@ -18,11 +18,11 @@ Returns json data list for the selected days shifts.
 
   _Required:_ startDay
 
-  `startDay: [date]`
+  `startDate: [date]`
 
   _Required:_ User endDay
 
-  `endDay: [date]`
+  `endDate: [date]`
 
 
 - **Auth required:** Yes, JWT set in Authorization header.
