@@ -93,12 +93,24 @@ describe('Tests for <DepartmentPage />', () => {
 
     await act(async () => { render(<DepartmentPage />, { wrapper: BrowserRouter }) })
 
+    // Tests special symbols input validation
     await fireEvent.change(screen.getByLabelText('Employee Id/Name'), { target: { value: '?><M' } })
-    await fireEvent.click(screen.getByTestId('search-btn'))
     expect(screen.getByLabelText('Employee Id/Name').outerHTML).toContain('aria-invalid="true"')
 
+    // Tests mix input of alphanumeric characters
     await fireEvent.change(screen.getByLabelText('Employee Id/Name'), { target: { value: 'asdf1234' } })
-    await fireEvent.click(screen.getByTestId('search-btn'))
+    expect(screen.getByLabelText('Employee Id/Name').outerHTML).toContain('aria-invalid="true"')
+
+    // Tests space before alpha characters
+    await fireEvent.change(screen.getByLabelText('Employee Id/Name'), { target: { value: ' abc' } })
+    expect(screen.getByLabelText('Employee Id/Name').outerHTML).toContain('aria-invalid="true"')
+
+    // Tests space after alpha characters
+    await fireEvent.change(screen.getByLabelText('Employee Id/Name'), { target: { value: 'abc ' } })
+    expect(screen.getByLabelText('Employee Id/Name').outerHTML).toContain('aria-invalid="true"')
+
+    // Tests numeric characters with space
+    await fireEvent.change(screen.getByLabelText('Employee Id/Name'), { target: { value: ' 123' } })
     expect(screen.getByLabelText('Employee Id/Name').outerHTML).toContain('aria-invalid="true"')
 
     expect(mock.history.get.length).toBe(1)

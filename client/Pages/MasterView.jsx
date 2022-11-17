@@ -4,13 +4,9 @@ import NavigationBar from '../Components/NavigationBar.jsx'
 import Week from '../Components/Week.jsx'
 import WeekChanger from '../Components/WeekChanger.jsx'
 
-import { Box, Grid, Toolbar } from '@mui/material'
+import { Box, Grid } from '@mui/material'
 
-// import { PersonRoundedIcon } from '@mui/icons-material/PersonRounded'
-
-// const dateData = [{ weekday: 'Monday', date: 23 }]
-// Week component for the master schedule view
-
+// MasterView Page that will display information for overseeing and editing employee shifts
 export default function MasterView (props) {
   return (
   // TODO Month label
@@ -20,13 +16,12 @@ export default function MasterView (props) {
   // Add a line for the current time to the timeline component
     <Box>
       <NavigationBar selected="Master" />
-      <Toolbar></Toolbar>
       <WeekChanger style={{ height: '100vh' }}/>
       <Grid container sx={{ mt: '2' }}>
-            <Grid item xs={ 11 } sm={ 11 } md={ 11 } lg={ 11 } xl={ 11 }>
-                <Week data-testid='week'/>
-            </Grid>
+        <Grid item xs={ 11 }>
+          <Week data-testid='week'/>
         </Grid>
+      </Grid>
     </Box>
   )
 }
