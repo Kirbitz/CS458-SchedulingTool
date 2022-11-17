@@ -8,7 +8,6 @@ import { History, Save } from '@mui/icons-material'
 
 /** Notes for Bottom Toolbar:
  * TODO: Refactor Save button to LoadingButton.
- * TODO: Change formatting so buttons are the same height as the Alert field.
  */
 
 /** Bottom toolbar for the Shift View.
