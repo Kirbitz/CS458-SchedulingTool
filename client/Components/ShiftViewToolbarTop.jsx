@@ -6,6 +6,7 @@ import { Add, Close, FilterAlt } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 
 /** Notes for Top Toolbar:
+* TODO: Float toolbar on top of page so it's not inaccessible after scrolling.
 * TODO: Create Time Block Editor before enabling Add Shift button.
 * TODO: Create Filter list before enabling Filter button.
 * TODO: Refactor Filter button into Menu.
