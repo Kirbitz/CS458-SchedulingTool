@@ -21,7 +21,7 @@ export default function ShiftViewToolbarBottom (props) {
   // const [saving, setSaving] = useState(false)
 
   return (
-    <Grid container>
+    <Grid container alignItems="flex-end">
       <Grid item xs={ 6 }>
         <Alert severity="warning">There are no shifts for this day.</Alert>
       </Grid>
