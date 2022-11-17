@@ -60,7 +60,7 @@ const checkUsernamePassword = async (username, password) => {
     .where('Credentials.credentialsUsername', '=', username)
     .andWhere('Credentials.credentialsPassword', '=', passwordHash)
     .then(result => {
-      return result[0] // Returns an array of Rows
+      return result // Returns an array of Rows
     })
 }
 

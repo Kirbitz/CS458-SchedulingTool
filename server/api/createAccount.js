@@ -10,6 +10,8 @@ const createAccountCallback = async (req, res) => {
   try {
     await module.exports.insertRows(newAccountData)
 
+    newAccountData.userId = 3
+
     // User account successfully created
     res.status(201)
       .json({
@@ -43,7 +45,7 @@ const insertRows = (accountData) => {
     const deptID = await getDepartmentId(accountData, trx)
 
     // Create a _UserDepartment record
-    await createUserDepartmentRecord(accountData, deptID[0].deptId, trx)
+    await createUserDepartmentRecord(accountData, deptID, trx)
   })
 }
 
@@ -75,19 +77,22 @@ const createCredentialsRecord = (accountData, trx) => {
 
 const getDepartmentId = (accountData, trx) => {
   return dbClient.select('deptId')
-    .from('_UserDepartment')
-    .where('userId', '=', accountData.managerId)
+    .from('_userDept')
+    .where('userId', '=', accountData.userId)
     .andWhere('isManager', '=', 1)
     .transacting(trx)
+    .then(result => {
+      return result[0].deptId
+    })
 }
 
 const createUserDepartmentRecord = (accountData, _deptId, trx) => {
   return dbClient.insert({
     userId: accountData.userid,
     deptId: _deptId,
-    isManager: accountData.permissions
+    isManager: 0
   })
-    .into('_UserDepartment')
+    .into('_userDept')
     .transacting(trx)
 }
 
