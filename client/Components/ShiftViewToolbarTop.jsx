@@ -27,7 +27,7 @@ export default function ShiftViewToolbarTop (props) {
   const navigate = useNavigate()
   // const { date } = props
   return (
-    <AppBar position="fixed" sx={{ bgcolor: '#ffffff', top: 64 }}>
+    <AppBar position="fixed" sx={{ bgcolor: '#ffffff', color: '#000000', top: 64 }}>
       <Toolbar disableGutters>
         <Grid container>
           <Grid item xs={ 5 }>
