@@ -39,7 +39,9 @@ export default function Day (props) {
             height: btnHeight,
             backgroundColor: buttonColor
           }}
-          onClick={() => navigate('/master-schedule/shift')}
+          onClick={() => {
+            navigate('/master-schedule/shift')
+          }}
         >
         <CardContent>
           <Typography></Typography>
