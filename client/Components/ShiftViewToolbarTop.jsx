@@ -8,7 +8,9 @@ import { useNavigate } from 'react-router-dom'
 /** Notes for Top Toolbar:
 * TODO: Create Time Block Editor before enabling Add Shift button.
 * TODO: Create Filter list before enabling Filter button.
+* TODO: Refactor Filter button into Menu.
 * TODO: Add date below after prop validation.
+* TODO: Add tooltips to buttons.
 * TODO: Validate date prop.
 */
 
@@ -29,7 +31,13 @@ export default function ShiftViewToolbarTop (props) {
           alignItems="center"
           justifyContent="flex-start"
         >
-          <Button variant="contained" endIcon={<Add />} disabled>
+          <Button
+            aria-label="add-shift-button"
+            id="add-shift-button"
+            variant="contained"
+            endIcon={<Add />}
+            disabled
+          >
             Add Shift
           </Button>
           {
@@ -44,7 +52,14 @@ export default function ShiftViewToolbarTop (props) {
           alignItems="center"
           justifyContent="center"
         >
-            <Button sx={{ bgcolor: '#0b233f' }} variant="contained" endIcon={<FilterAlt />} disabled>
+            <Button
+              aria-label="filter-menu"
+              id="filter-menu"
+              sx={{ bgcolor: '#0b233f' }}
+              variant="contained"
+              endIcon={<FilterAlt />}
+              disabled
+            >
               Filter
             </Button>
         </Stack>
@@ -58,6 +73,7 @@ export default function ShiftViewToolbarTop (props) {
         >
           <IconButton
             aria-label="close"
+            id="close-button"
             onClick={() => {
               navigate('/master-schedule')
             }}
