@@ -61,12 +61,18 @@ export default function ShiftViewToolbarBottom (props) {
   const [saving, setSaving] = useState(false)
   alertState = 0
 
+  // Function Transform doesn't seem to work, comment til test confirmation
+
+  // function transform(value) {
+  //   return value <= 1 && value !== 0 ? '?{value * 100}%' : value
+  // }
+
   return (
     <AppBar position="fixed" sx={{ bgcolor: '#ffffff', top: 'auto', bottom: 0 }}>
       <Toolbar disableGutters>
         <Grid container alignItems="flex-end">
           <Grid item xs={ 6 }>
-            <Alert severity={alertSeverity}>{alertText}</Alert>
+            <Alert sx={{ height: 50 }} severity="warning">There are no shifts for this day.</Alert>
           </Grid>
           <Grid item xs={ 6 }>
             <Stack
@@ -76,6 +82,7 @@ export default function ShiftViewToolbarBottom (props) {
               justifyContent="flex-end"
             >
               <Button
+                sx={{ height: 50 }}
                 variant="outlined"
                 aria-label="discard-button"
                 color="error"
@@ -84,6 +91,7 @@ export default function ShiftViewToolbarBottom (props) {
                 Discard Changes
               </Button>
               <LoadingButton
+                sx={{ height: 50 }}
                 variant="contained"
                 aria-label="save-button"
                 color="success"
