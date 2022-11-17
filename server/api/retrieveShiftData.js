@@ -23,8 +23,11 @@ const retrieveShiftData = async (req, res) => {
   // }
   // *****commented out so we don't need to worry about security for now*****
   const testingConnect = await dbClient.select('timeId', 'timeStart', 'timeEnd', 'timeType', 'positionId', 'deptId')
-    .from('TimeBlock').where('timeStart', '>=', dateFrom).where('timeEnd', '<', dateTo).then(result => { return result })
-  console.log(testingConnect)
+    .from('TimeBlock')
+    .where('timeStart', '>=', dateFrom)
+    .where('timeEnd', '<', dateTo)
+    .then(result => { return result })
+  // console.log(testingConnect)
   res.send(testingConnect)
 
 // const user = await module.exports.
