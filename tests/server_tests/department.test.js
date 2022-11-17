@@ -1,5 +1,5 @@
-const MyApp = require('../server/index.js')
-const request = require('supertest')
+const MyApp = require('../../server/index.js')
+const request = require('supertest')(MyApp)
 // const department = require('../server/department.js')
 
 describe('Tests for department.js', () => {
@@ -9,9 +9,9 @@ describe('Tests for department.js', () => {
 
   it('Test for departmentGet function', async () => {
     // I don't know how to mock knex
-    const response = await request(MyApp).get('/getEmployees').send({
+    const response = await request.get('/getEmployees').send({
       deptId: '1'
     })
-    expect(false).toBe(true)
+    expect(response.statusCode).toBe(200)
   })
 })
