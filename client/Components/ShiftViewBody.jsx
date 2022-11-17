@@ -1,9 +1,10 @@
 import React from 'react'
-// import Shift from '../Components/Shift.jsx'
+import Shift from '../Components/Shift.jsx'
 
 /** Notes for Shift View Body:
  * TODO: Validate date prop.
- * TODO: Build literally everything else.
+ * TODO: Reformat the body so it's scrollable rather than fixed.
+ ** Remember, we want this component scrollable, but the bottom toolbar to stay at the bottom.
  */
 
 /** Body of Shift View which contains a scrollable list of all shifts.
@@ -14,6 +15,11 @@ export default function ShiftViewBody (props) {
   // const { date } = props
   return (
     <div>
+    <Shift />
+    <Shift />
+    <Shift />
+    <Shift />
+    <Shift />
     </div>
   )
 }
