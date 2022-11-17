@@ -5,16 +5,24 @@ import { Button, Grid, IconButton, Stack } from '@mui/material'
 import { Add, Close, FilterAlt } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 
-// TODO: Create Time Block Editor before enabling Add Shift button.
-// TODO: Create Filter list before enabling Filter button.
+/** Notes for Top Toolbar:
+* TODO: Create Time Block Editor before enabling Add Shift button.
+* TODO: Create Filter list before enabling Filter button.
+* TODO: Add date below after prop validation.
+* TODO: Validate date prop.
+*/
 
+/** Top toolbar for the Shift View.
+ * Contains Add Shift button, which navigates to the Time Block editor,
+ * a Filter button to filter out shifts in the list, and a Close button
+ * to return to the Master View.
+*/
 export default function ShiftViewToolbarTop (props) {
   const navigate = useNavigate()
-  // TODO: Validate date prop
   // const { date } = props
   return (
     <Grid container>
-      <Grid item xs={ 4 }>
+      <Grid item xs={ 5 }>
         <Stack
           spacing={2}
           direction="row"
@@ -25,12 +33,11 @@ export default function ShiftViewToolbarTop (props) {
             Add Shift
           </Button>
           {
-          // TODO: Add date below after prop validation
           }
           <p>MM/DD/YYYY</p>
         </Stack>
       </Grid>
-      <Grid item xs={ 4 }>
+      <Grid item xs={ 2 }>
         <Stack
           spacing={2}
           direction="row"
@@ -42,7 +49,7 @@ export default function ShiftViewToolbarTop (props) {
             </Button>
         </Stack>
       </Grid>
-      <Grid item xs={ 4 }>
+      <Grid item xs={ 5 }>
         <Stack
           spacing={2}
           direction="row"
