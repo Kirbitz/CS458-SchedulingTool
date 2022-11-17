@@ -1,10 +1,18 @@
-const dbClient = require('./dbClient.js')
+const dbClient = require('./dbClient')
+
+// This function is just to see if I can even write a test
+const getEndpointName = async (req, res) => {
+  res.status(200).json({
+    test: 'good',
+    endpoint: 'department.js'
+  })
+}
 
 // Request should contain a department ID, response should return list of employees in that department
-async function getEmployeesFromDepartment (req, res) {
+const getEmployeesFromDepartment = async (req, res) => {
   const deptId = req.body.deptId
   res.status(200).json(await dbClient.select('ud.userId', 'u.userName')
-    .from('_UserDepartment ud')
+    .from('_UserDept ud')
     .join('User u', 'u.userID', 'ud.userID')
     .where('ud.deptId', '=', deptId)
     .then(result => {
@@ -13,7 +21,7 @@ async function getEmployeesFromDepartment (req, res) {
 }
 
 // Create a department
-async function postDepartment (req, res) {
+const postDepartment = async (req, res) => {
   const request = req.body
   res.status(200).json(await dbClient
     .insert({
@@ -26,7 +34,7 @@ async function postDepartment (req, res) {
 }
 
 // FUNCTIONS FOR CREATING AN EMPLOYEE
-async function postEmployeeCallback (req, res) {
+const postEmployeeCallback = async (req, res) => {
   const employeeData = req.body
   try {
     module.exports.insertEmployees(employeeData)
@@ -43,7 +51,7 @@ async function postEmployeeCallback (req, res) {
   }
 }
 
-async function insertEmployees (data) {
+const insertEmployees = async (data) => {
   await dbClient.transaction(async trx => {
     // Create the User tuple
     await createEmployee(data, trx)
@@ -52,7 +60,7 @@ async function insertEmployees (data) {
   })
 }
 
-async function createEmployee (data, trx) {
+const createEmployee = async (data, trx) => {
   const request = data.body
   await dbClient
     .insert({
@@ -65,7 +73,7 @@ async function createEmployee (data, trx) {
     .transacting(trx)
 }
 
-async function createEmployeeDepartmentJoin (data, trx) {
+const createEmployeeDepartmentJoin = async (data, trx) => {
   const request = data.body
   await dbClient
     .insert({
@@ -78,7 +86,7 @@ async function createEmployeeDepartmentJoin (data, trx) {
 }
 
 // Callback/wrapper for deleting an employee
-async function deleteEmployeeCallback (req, res) {
+const deleteEmployeeCallback = async (req, res) => {
   const employeeData = req.body
   try {
     module.exports.deleteEmployee(employeeData)
@@ -96,7 +104,7 @@ async function deleteEmployeeCallback (req, res) {
 }
 
 // Transaction for deleting employee
-async function deleteEmployee (data) {
+const deleteEmployee = async (data) => {
   await dbClient.transaction(async trx => {
     removeEmployee(data, trx)
     removeEmployeeFromDepartment(data, trx)
@@ -104,7 +112,7 @@ async function deleteEmployee (data) {
 }
 
 // Delete the employee from the user table
-async function removeEmployee (data, trx) {
+const removeEmployee = async (data, trx) => {
   const request = data.body
   await dbClient
     .from('User')
@@ -114,7 +122,7 @@ async function removeEmployee (data, trx) {
 }
 
 // Delete the employee from the junction table
-async function removeEmployeeFromDepartment (data, trx) {
+const removeEmployeeFromDepartment = async (data, trx) => {
   const request = data.body
   await dbClient
     .from('User')
@@ -125,6 +133,7 @@ async function removeEmployeeFromDepartment (data, trx) {
 }
 
 module.exports = {
+  getEndpointName,
   getEmployeesFromDepartment,
   postDepartment,
   postEmployeeCallback,
