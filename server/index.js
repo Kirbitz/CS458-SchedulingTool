@@ -1,4 +1,6 @@
 const Express = require('express')
+const path = require('path')
+const dataRouter = require('./api/api.js')
 
 const app = new Express()
 const { loginCallback } = require('./login.js')
@@ -16,8 +18,10 @@ app.use((req, response, next) => {
 
 app.use(Express.static('public'))
 
-app.get('*', (req, res) => {
-  res.redirect('/')
+app.use('/api', dataRouter)
+
+app.get(['/login', '/dashboard', '/master-schedule', '/employee-schedule', '/staff', '/department', '/settings'], (req, res) => {
+  res.sendFile(path.join(__dirname, '../public', 'index.html'))
 })
 
 // Get list of employees based on department
