@@ -8,7 +8,6 @@ import { History, Save } from '@mui/icons-material'
 
 /** Notes for Bottom Toolbar:
  * TODO: Refactor Save button to LoadingButton.
- * TODO: Create alternate states for Alert bar so it displays other information.
  * TODO: Change formatting so buttons are the same height as the Alert field.
  */
 
@@ -20,10 +19,16 @@ export default function ShiftViewToolbarBottom (props) {
   // Used to change the save LoadingButton into a loading state when the changes are saving
   // const [saving, setSaving] = useState(false)
 
+  // Function Transform doesn't seem to work, comment til test confirmation
+
+  // function transform(value) {
+  //   return value <= 1 && value !== 0 ? '?{value * 100}%' : value
+  // }
+
   return (
     <Grid container alignItems="flex-end">
       <Grid item xs={ 6 }>
-        <Alert severity="warning">There are no shifts for this day.</Alert>
+        <Alert sx={{ height: 50 }} severity="warning">There are no shifts for this day.</Alert>
       </Grid>
       <Grid item xs={ 6 }>
         <Stack
@@ -33,6 +38,7 @@ export default function ShiftViewToolbarBottom (props) {
           justifyContent="flex-end"
         >
           <Button
+            sx={{ height: 50 }}
             variant="outlined"
             aria-label="discard-button"
             color="error"
@@ -41,6 +47,7 @@ export default function ShiftViewToolbarBottom (props) {
             Discard Changes
           </Button>
           <Button
+            sx={{ height: 50 }}
             variant="contained"
             aria-label="save-button"
             color="success"
