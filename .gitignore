@@ -3,3 +3,4 @@
 /coverage/
 **/bundle.*
 /.vscode/
+.vercel
