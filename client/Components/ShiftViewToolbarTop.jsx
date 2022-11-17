@@ -1,7 +1,7 @@
 import React from 'react'
 // import PropTypes from 'prop-types'
 
-import { Button, Grid, IconButton, Stack } from '@mui/material'
+import { AppBar, Button, Grid, IconButton, Stack, Toolbar } from '@mui/material'
 import { Add, Close, FilterAlt } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 
@@ -13,6 +13,9 @@ import { useNavigate } from 'react-router-dom'
 * TODO: Add date below after prop validation.
 * TODO: Add tooltips to buttons.
 * TODO: Validate date prop.
+* * Use AppBar to float this on top of page content.
+* * Remember to add a toolbar so page content isn't stuffed underneath it.
+* * position="fixed" sx={{top: 'auto', bottom: 0}}
 */
 
 /** Top toolbar for the Shift View.
@@ -24,65 +27,69 @@ export default function ShiftViewToolbarTop (props) {
   const navigate = useNavigate()
   // const { date } = props
   return (
-    <Grid container>
-      <Grid item xs={ 5 }>
-        <Stack
-          spacing={2}
-          direction="row"
-          alignItems="center"
-          justifyContent="flex-start"
-        >
-          <Button
-            aria-label="add-shift-button"
-            id="add-shift-button"
-            variant="contained"
-            endIcon={<Add />}
-            disabled
-          >
-            Add Shift
-          </Button>
-          {
-          }
-          <p>MM/DD/YYYY</p>
-        </Stack>
-      </Grid>
-      <Grid item xs={ 2 }>
-        <Stack
-          spacing={2}
-          direction="row"
-          alignItems="center"
-          justifyContent="center"
-        >
-            <Button
-              aria-label="filter-menu"
-              id="filter-menu"
-              sx={{ bgcolor: '#0b233f' }}
-              variant="contained"
-              endIcon={<FilterAlt />}
-              disabled
+    <AppBar position="fixed" sx={{ bgcolor: '#ffffff', top: 64 }}>
+      <Toolbar disableGutters>
+        <Grid container>
+          <Grid item xs={ 5 }>
+            <Stack
+              spacing={2}
+              direction="row"
+              alignItems="center"
+              justifyContent="flex-start"
             >
-              Filter
-            </Button>
-        </Stack>
-      </Grid>
-      <Grid item xs={ 5 }>
-        <Stack
-          spacing={2}
-          direction="row"
-          alignItems="center"
-          justifyContent="flex-end"
-        >
-          <IconButton
-            aria-label="close"
-            id="close-button"
-            onClick={() => {
-              navigate('/master-schedule')
-            }}
-          >
-            <Close />
-          </IconButton>
-        </Stack>
-      </Grid>
-    </Grid>
+              <Button
+                aria-label="add-shift-button"
+                id="add-shift-button"
+                variant="contained"
+                endIcon={<Add />}
+                disabled
+              >
+                Add Shift
+              </Button>
+              {
+              }
+              <p>MM/DD/YYYY</p>
+            </Stack>
+          </Grid>
+          <Grid item xs={ 2 }>
+            <Stack
+              spacing={2}
+              direction="row"
+              alignItems="center"
+              justifyContent="center"
+            >
+                <Button
+                  aria-label="filter-menu"
+                  id="filter-menu"
+                  sx={{ bgcolor: '#0b233f' }}
+                  variant="contained"
+                  endIcon={<FilterAlt />}
+                  disabled
+                >
+                  Filter
+                </Button>
+            </Stack>
+          </Grid>
+          <Grid item xs={ 5 }>
+            <Stack
+              spacing={2}
+              direction="row"
+              alignItems="center"
+              justifyContent="flex-end"
+            >
+              <IconButton
+                aria-label="close"
+                id="close-button"
+                onClick={() => {
+                  navigate('/master-schedule')
+                }}
+              >
+                <Close />
+              </IconButton>
+            </Stack>
+          </Grid>
+        </Grid>
+      </Toolbar>
+    </AppBar>
   )
 }
