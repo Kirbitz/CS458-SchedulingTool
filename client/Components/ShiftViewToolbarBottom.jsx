@@ -8,7 +8,7 @@ import { LoadingButton } from '@mui/lab'
 
 /** Notes for Bottom Toolbar:
  * TODO: Redisplay throbber on Save button when clicked.
- * TODO: Change formatting so buttons are the same height as the Alert field.
+ * TODO: Add debug toolbar to test state change for Alert bar.
  * TODO: Add method to determine initial alert state inside export function based on what data is available from the DB.
  * TODO: Modify changeAlertState function to implement useState hook.
  */
@@ -61,16 +61,10 @@ export default function ShiftViewToolbarBottom (props) {
   const [saving, setSaving] = useState(false)
   alertState = 0
 
-  // Function Transform doesn't seem to work, comment til test confirmation
-
-  // function transform(value) {
-  //   return value <= 1 && value !== 0 ? '?{value * 100}%' : value
-  // }
-
   return (
     <AppBar position="fixed" sx={{ bgcolor: '#ffffff', top: 'auto', bottom: 0 }}>
       <Toolbar disableGutters>
-        <Grid container alignItems="flex-end">
+        <Grid container alignItems="center">
           <Grid item xs={ 6 }>
             <Alert sx={{ height: 50 }} severity="warning">There are no shifts for this day.</Alert>
           </Grid>
@@ -78,11 +72,11 @@ export default function ShiftViewToolbarBottom (props) {
             <Stack
               spacing={2}
               direction="row"
-              alignItems="stretch"
+              alignItems="center"
               justifyContent="flex-end"
             >
               <Button
-                sx={{ height: 50 }}
+                // sx={{ height: 50 }}
                 variant="outlined"
                 aria-label="discard-button"
                 color="error"
@@ -91,13 +85,14 @@ export default function ShiftViewToolbarBottom (props) {
                 Discard Changes
               </Button>
               <LoadingButton
-                sx={{ height: 50 }}
+                // sx={{ height: 50 }}
                 variant="contained"
                 aria-label="save-button"
                 color="success"
                 startIcon={<Save />}
                 loading={saving}
-                loadingIndicator="Saving..."
+                // loadingIndicator="Saving..."
+                loadingPosition="start"
                 onClick={() => setSaving(true)}
               >
                 Save Changes
@@ -109,17 +104,3 @@ export default function ShiftViewToolbarBottom (props) {
     </AppBar>
   )
 }
-/**
- * Leaving the full LoadingButton code here until package issues can be resolved
-<LoadingButton
-  variant="contained"
-  aria-label="save-button"
-  color="success"
-  startIcon={<Save />}
-  loading={saving}
-  loadingIndicator="Saving..."
-  onClick={() => setSaving(true)}
->
-  Save Changes
-</LoadingButton>
-*/
