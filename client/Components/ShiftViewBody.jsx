@@ -4,8 +4,8 @@ import Shift from '../Components/Shift.jsx'
 
 /** Notes for Shift View Body:
  * TODO: Validate date prop.
- * TODO: Reformat the body so it's scrollable rather than fixed.
- ** Remember, we want this component scrollable, but the bottom toolbar to stay at the bottom.
+ * TODO: Add dividers in between each shift so they're visually separate.
+ * TODO: Figure out why shift list has such a big chin.
  */
 
 /** Body of Shift View which contains a scrollable list of all shifts.
