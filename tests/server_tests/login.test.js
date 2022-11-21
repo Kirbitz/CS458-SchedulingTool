@@ -11,7 +11,7 @@ jest.mock('../../server/api/dbClient', () => ({
   where: jest.fn().mockReturnThis(),
   from: jest.fn().mockReturnThis(),
   andWhere: jest.fn().mockReturnThis(),
-  then: jest.fn().mockReturnValue([{ credentialsId: 3, isManager: 1 }]),
+  then: jest.fn().mockReturnValue([{ credentialsId: 3, userPermissions: 1 }]),
   join: jest.fn().mockReturnThis()
 }))
 
