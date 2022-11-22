@@ -79,6 +79,7 @@ export default function Log () {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                data-testid = "logIn-button"
               >
                 Log In
               </Button>

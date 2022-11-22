@@ -1,25 +1,36 @@
-import { fireEvent, getByLabelText, render, screen } from '@testing-library/react'
-import Log from '../../client/Components/Log.jsx'
+import React from 'react'
+import axios from 'axios'
+import MockAdapter from 'axios-mock-adapter'
+import { fireEvent, render, screen } from '@testing-library/react'
+import LogIn from '../../client/Pages/LogIn.jsx'
 
-describe('<Log />', () => {
+describe('Tests for <LogIn />', () => {
+  let mock
+  const returnData = {
+    userId: 5,
+    isManager: true
+  }
+  afterEach(() => {
+    mock.reset()
+    mock.restore()
+    mock.resetHandlers()
+  })
+  beforeEach(() => {
+    mock = new MockAdapter(axios)
+  })
+
   it('Initial Render', () => {
-    const component = render(<Log />)
+    const component = render(<LogIn />)
     expect(component.baseElement.outerHTML).toContain('Remember me')
   })
 
-  it('Test Password validation for input', async () => {
-    render(<Log />)
-    const passwordInputEl = screen.getByTestId('password-input')
-    const testValue = '#aaAs123@'
+  it('Successful Login', async () => {
+    mock.onPost('/api/login').reply(200, returnData)
+    const component = render(<LogIn />)
+    await fireEvent.change(screen.getByLabelText('UserName'), { target: { value: 'test' } })
+    await fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'test' } })
+    await fireEvent.click(component.getByTestId('logIn-button'))
 
-    fireEvent.change(passwordInputEl, { target: { value: testValue } })
-
-    /*
-      regular expression - ^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])
-      this regular expression check password contain lowercase,uppercase,number
-    */
-    expect(passwordInputEl.value).toMatch(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/)
+    expect(mock.history.post.length).toBe(1)
   })
-
-
 })
