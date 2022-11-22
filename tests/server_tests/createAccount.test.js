@@ -46,8 +46,7 @@ describe('Testing createAccountCallback from createAccount.js', () => {
         password: "MyPet'sName1234!",
         userid: 123456,
         name: 'Joe Shmoe',
-        permissions: 0,
-        maxHours: 20,
+        hourCap: 20,
         managerId: 2
       })
 
@@ -65,8 +64,7 @@ describe('Testing createAccountCallback from createAccount.js', () => {
         password: "MyPet'sName1234!",
         userid: 123456,
         name: 'Joe Shmoe',
-        permissions: 0,
-        maxHours: 20,
+        hourCap: 20,
         managerId: 2
       })
 
