@@ -1,50 +1,22 @@
-# Create New Account
+# Time Block Data
 
-Returns json data about the account creation.
+Returns json data of time blocks that belong to either a department or user
 
 - **URL:**
 
-  /api/create_new_account
+  /api/collect_time_blocks
 
 - **Method:**
 
-  `POST`
+  `GET`
 
 - **URL Params:**
 
   None
 
 - **Data Params:**
-
-  __Required:__ Username
-
-  `username: [string]`
-
-  `jshmoe1234`
-
-  __Required:__ Password
-
-  `password: [string]`
-
-  `MyPet'sName1234!`
-
-  __Required:__ New User ID
-
-  `newUserID: [int]`
-
-  123456
-
-  __Required:__ Name
-
-  `name: [string]`
-
-  `Joe Shmoe`
-
-  __Required:__ Hour Cap
-
-  `hourCap: [double]`
-
-  20
+    
+  None
 
 - **Auth Required:** Yes, JWT set in Authorization header.
 
@@ -52,15 +24,19 @@ Returns json data about the account creation.
 
 - **Success Response:**
 
-  **Code:** `201 CREATED`
+  **Code:** `200 OK`
 
   **Content:**
 
   ```json
   {
     "success": {
-      "status": 201,
-      "message": "Created new account"
+      "status": 200,
+      "timeBlocks": [
+        {
+          
+        }
+      ]
     }
   }
   ```
