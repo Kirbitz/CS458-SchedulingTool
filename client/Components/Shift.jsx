@@ -13,6 +13,7 @@ import { Delete, Edit, PersonOff } from '@mui/icons-material'
  */
 
 export default function Shift (props) {
+  //* This is dummy data and will be deleted once prop data passing is complete.
   const deptName = 'Department Name'
   const posName = 'Position Name'
   const startTime = '12:00 PM'
@@ -28,7 +29,7 @@ export default function Shift (props) {
   return (
     <Grid container alignItems="center">
     <Grid item xs={ 5 }>
-      <Stack spacing={ 0 } noWrap>
+      <Stack spacing={ 0 }>
         <p id="first-line">{deptName}: {posName}</p>
         <p id="second-line">{startTime} - {endTime}</p>
       </Stack>
