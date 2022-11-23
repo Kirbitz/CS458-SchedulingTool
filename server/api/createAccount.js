@@ -1,4 +1,4 @@
-const sjcl = require('sjcl') // sha256 for encrpytion
+const sjcl = require('sjcl') // sha256 for encryption
 
 // Database connection with knex
 const dbClient = require('./dbClient')
@@ -22,7 +22,7 @@ const createAccountCallback = async (req, res) => {
       }).end()
   } catch (error) {
     console.log(error)
-    // Some kind of error occured, though not unique constraints
+    // Some kind of error occurred, though not unique constraints
     res.status(500)
       .json({
         error: {
