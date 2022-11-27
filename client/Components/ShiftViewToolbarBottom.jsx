@@ -7,9 +7,10 @@ import { History, Save } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 
 /** Notes for Bottom Toolbar:
- * TODO: Add debug toolbar to test state change for Alert bar.
  * TODO: Add method to determine initial alert state inside export function based on what data is available from the DB.
- * TODO: Debug Alert bar.
+ * TODO: Add timeout function to change state away from "saved successfully!" after a few seconds.
+ * TODO: Remove debug button group when the component is fully functional.
+ * I might be able to remove alertState entirely if there's no use for it.
  * ? Why is the Alert bar not changing as the state is updated? Implement fix from WeekChanger?
 */
 
@@ -18,21 +19,32 @@ import { LoadingButton } from '@mui/lab'
  * and buttons to save and discard their changes.
 */
 export default function ShiftViewToolbarBottom (props) {
-  // let alertState = 0
-  let alertSeverity = 'warning'
-  let alertText = 'There are no shifts for this day.'
-
-  // Used to change the save LoadingButton into a loading state when the changes are saving
+  // Used to change the Save LoadingButton into a loading state when the changes are saving
   const [saving, setSaving] = useState(false)
-  const [alertState, setAlertState] = useState(0)
+  const [alertSeverity, setAlertSeverity] = useState('warning')
+  const [alertText, setAlertText] = useState('There are no shifts for this day.')
 
+  // These are used to test the Alert bar and its ability to change states.
+  // These will be removed once the component is fully functional.
   const debugButtons = [
-    <Button key="-1" onClick={() => { changeAlertState(-1) }}>-1</Button>,
-    <Button key="0" onClick={() => { changeAlertState(0) }}>0</Button>,
-    <Button key="1" onClick={() => { changeAlertState(1) }}>1</Button>,
-    <Button key="2" onClick={() => { changeAlertState(2) }}>2</Button>,
-    <Button key="3" onClick={() => { changeAlertState(3) }}>3</Button>,
-    <Button key="4" onClick={() => { changeAlertState(4) }}>4</Button>
+    <Button key="-1" onClick={() => {
+      changeAlertState(-1)
+    }}>-1</Button>,
+    <Button key="0" onClick={() => {
+      changeAlertState(0)
+    }}>0</Button>,
+    <Button key="1" onClick={() => {
+      changeAlertState(1)
+    }}>1</Button>,
+    <Button key="2" onClick={() => {
+      changeAlertState(2)
+    }}>2</Button>,
+    <Button key="3" onClick={() => {
+      changeAlertState(3)
+    }}>3</Button>,
+    <Button key="4" onClick={() => {
+      changeAlertState(4)
+    }}>4</Button>
   ]
   /** changeAlertState
    * @description Changes alert icon, color, and text depending on changes and assignment status.
@@ -45,44 +57,36 @@ export default function ShiftViewToolbarBottom (props) {
    * State 4: Changes were saved successfully!
   */
   const changeAlertState = (state) => {
-    console.log('Current state is ' + alertState)
     if (state === -1) {
-      alertSeverity = 'error'
-      alertText = 'Failed to retrieve shift data.'
-      setAlertState(-1)
+      setAlertSeverity('error')
+      setAlertText('Failed to retrieve shift data.')
     } else if (state === 0) {
-      alertSeverity = 'warning'
-      alertText = 'There are no shifts for this day.'
-      setAlertState(0)
+      setAlertSeverity('warning')
+      setAlertText('There are no shifts for this day.')
     } else if (state === 1) {
-      alertSeverity = 'success'
-      alertText = 'All shifts have been assigned to a team member!'
-      setAlertState(1)
+      setAlertSeverity('success')
+      setAlertText('All shifts have been assigned to a team member!')
     } else if (state === 2) {
-      alertSeverity = 'warning'
-      alertText = 'You have shifts which are not assigned to anyone!'
-      setAlertState(2)
+      setAlertSeverity('warning')
+      setAlertText('You have shifts which are not assigned to anyone!')
     } else if (state === 3) {
-      alertSeverity = 'info'
-      alertText = 'You have unsaved changes.'
-      setAlertState(3)
+      setAlertSeverity('info')
+      setAlertText('You have unsaved changes.')
     } else if (state === 4) {
-      alertSeverity = 'success'
-      alertText = 'Changes were saved successfully!'
-      setAlertState(4)
-      // Timeout for a few seconds, then switch to state 0 or 1.
+      setAlertSeverity('success')
+      setAlertText('Changes were saved successfully!')
+      // TODO: Timeout for a few seconds, then switch to state 0 or 1.
     } else {
-      alertSeverity = 'error'
-      alertText = 'Invalid alert state.'
+      setAlertSeverity('error')
+      setAlertText('Invalid alert state.')
     }
-    console.log('NEW state is ' + alertState)
   }
   return (
     <AppBar position="fixed" sx={{ bgcolor: '#ffffff', top: 'auto', bottom: 0 }}>
       <Toolbar disableGutters>
         <Grid container alignItems="center">
           <Grid item xs={ 6 }>
-            <Alert sx={{ height: 50 }} severity="warning">There are no shifts for this day.</Alert>
+            <Alert sx={{ height: 50 }} severity={ alertSeverity }>{ alertText }</Alert>
           </Grid>
           <Grid item xs={ 6 }>
             <Stack
@@ -92,7 +96,7 @@ export default function ShiftViewToolbarBottom (props) {
               justifyContent="flex-end"
             >
               <ButtonGroup aria-label="debug-alert-buttons">
-                {debugButtons}
+                { debugButtons }
               </ButtonGroup>
               <Button
                 // sx={{ height: 50 }}
