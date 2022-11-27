@@ -4,13 +4,10 @@ import { Button, Grid, IconButton, Menu, MenuItem, Stack, Tooltip } from '@mui/m
 import { Delete, Edit, KeyboardArrowDown, PersonOff } from '@mui/icons-material'
 
 /** Notes for Shift:
- * TODO: Add employee assignment menu.
  * TODO: Create const objects for conflicting, unassigned, assigned, unsaved colors.
  * TODO: Change assignment menu button color upon state change.
  * TODO: Make employee list scrollable.
- * TODO: Trigger state change in Alert bar on bottom toolbar when a change is made. (Karsten)
  * TODO: Disable text wrapping on first and second lines. (August)
- * TODO: Add tooltip to Unassign button. (Wrap in a span.) (August [Partially done, need Pull to round Out TopTooltip])
  *
  * ! Creating an onClick event for the Unassign button produces a "too many re-renders" error and crashes the page. Re-enabling the (unassigned) option in the menu for now.
  * TODO: Find out why this error is being called and fix.
