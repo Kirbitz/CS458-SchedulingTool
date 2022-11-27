@@ -21,7 +21,7 @@ const createAccountCallback = async (req, res) => {
         }
       }).end()
   } catch (error) {
-    console.log(error)
+    console.error(error)
     // Some kind of error occurred, though not unique constraints
     res.status(500)
       .json({

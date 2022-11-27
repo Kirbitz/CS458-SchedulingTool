@@ -4,7 +4,7 @@
 
 - **URL:**
 
-  /api/collect_time_blocks
+  /api/collect_time_blocks/:startDate/:endDate
 
 - **Method:**
 
@@ -12,7 +12,17 @@
 
 - **URL Params:**
 
-  None
+  __Required:__ Start Date
+
+  `startDate: [YYYY-MM-DD]`
+
+  `20XX-01-01`
+
+  __Required:__ End Date
+
+  `endDate: [YYYY-MM-DD]`
+
+  `20XX-01-01`
 
 - **Data Params:**
     
@@ -34,6 +44,7 @@
       "status": 200,
       "timeBlocks": [
         {
+          "timeId": 1234,
           "timeStart": "YYYY-MM-DD HH:mm:ss",
           "timeEnd": "YYYY-MM-DD HH:mm:ss",
           "timeType": 2,
@@ -54,7 +65,7 @@
   {
     "error": {
       "status": 400,
-      "message": "Bad Request - Data Not Found"
+      "message": "Bad Request - Invalid Parameters"
     }
   }
   ```
@@ -83,7 +94,7 @@
 ```javascript
 axios({
   method: 'GET',
-  url: '/api/create_new_account',
+  url: '/api/collect_time_blocks/20XX-01-01/20XX-01-01',
   responseType: 'json'
 })
 ```
@@ -124,11 +135,17 @@ axios({
 
   2
 
-  __Required:__ Position Name
+  __Optional:__ Position Id
 
-  `positionName: [string]`
+  `positionId: [int]`
 
-  `Grill`
+  `12`
+
+  __Optional:__ Time Id
+
+  `timeId: [int]`
+
+  `1234`
 
 - **Auth Required:** Yes, JWT set in Authorization header.
 
@@ -136,14 +153,14 @@ axios({
 
 - **Success Response:**
 
-  **Code:** `200 OK`
+  **Code:** `201 CREATED`
 
   **Content:**
 
   ```json
   {
     "success": {
-      "status": 200,
+      "status": 201,
       "message": "Time Block Created or Modified"
     }
   }
@@ -159,8 +176,7 @@ axios({
   {
     "error": {
       "status": 400,
-      "message": "Bad Request - Non-Unique Fields",
-      "fields": ["field1", "field2"]
+      "message": "Bad Request - Input Invalid",
     }
   }
   ```
@@ -202,13 +218,13 @@ axios({
 ```javascript
 axios({
   method: 'POST',
-  url: '/api/create_new_account',
+  url: '/api/create_modify_time_blocks',
   responseType: 'json',
   data: {
     timeStart: "20XX-01-01 00:00:00",
     timeEnd: "20XX-01-01 00:00:00",
     timeType: 2,
-    positionName: "Grill"
+    positionId: 12
   }
 })
 ```
@@ -243,15 +259,16 @@ axios({
 
 - **Success Response:**
 
-  **Code:** `200 OK`
+  **Code:** `204 NO CONTENT`
 
   **Content:**
 
   ```json
   {
     "success": {
-      "status": 200,
-      "message": "Time Block Deleted"
+      "status": 204,
+      "message": "Time Block Deleted",
+      "timeId": 123456
     }
   }
   ```
@@ -266,7 +283,7 @@ axios({
   {
     "error": {
       "status": 400,
-      "message": "Bad Request - Data Not Found"
+      "message": "Bad Request - Invalid or Missing Time ID"
     }
   }
   ```
@@ -308,7 +325,7 @@ axios({
 ```javascript
 axios({
   method: 'DELETE',
-  url: '/api/create_new_account',
+  url: '/api/delete_time_blocks',
   responseType: 'json',
   data: {
     timeId: 123456
