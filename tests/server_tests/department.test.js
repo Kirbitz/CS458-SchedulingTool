@@ -1,5 +1,6 @@
 const myIndex = require('../../server/index.js')
 const dbClient = require('../../server/api/dbClient')
+const { postDepartment } = require('../../server/api/department.js')
 const request = require('supertest')(myIndex)
 
 jest.mock('knex')
@@ -25,7 +26,7 @@ jest.mock('../../server/api/dbClient', () => ({
   join: jest.fn().mockReturnThis(),
   insert: jest.fn().mockReturnThis(),
   into: jest.fn().mockReturnThis(),
-  onConflict: jest.fn().mockReturnThis()
+  onConflict: jest.fn(async (callback) => callback())
 }))
 
 describe('Tests for department.js', () => {
@@ -51,12 +52,11 @@ describe('Tests for department.js', () => {
       })
 
     expect(response.statusCode).toBe(200)
-    expect(response.body.userId).toBe(3)
-    expect(response.body.userName).toBe('test')
+    expect(response.body[0].userId).toBe(3)
+    expect(response.body[0].userName).toBe('test')
   })
 
-  it('Test for post employees', async () => {
-    jest.spyOn(dbClient, 'insert').mockImplementationOnce(jest.fn().mockReturnValue([{ deptId: 7 }]))
+  it('Test for postDepartment - Success', async () => {
     const response = await request.post('/api/postDepartment')
       .send({
         deptName: 'testDept',
@@ -65,6 +65,52 @@ describe('Tests for department.js', () => {
       })
 
     expect(response.statusCode).toBe(201)
-    expect(response.body.deptId).toBe(7)
+    expect(response.body.message).toBe('Department created')
+  })
+
+  it('Test for postDepartment - Fail', async () => {
+    jest.spyOn(postDepartment, 'insert').mockImplementation(() => {
+      throw new Error('I am an error')
+    })
+
+    const response = await request.post('/api/postDepartment')
+      .send({
+        deptName: 'testDept',
+        deptLocation: 'testLocation',
+        deptHourCap: '5'
+      })
+
+    expect(response.statusCode).toBe(500)
+  })
+
+  it('Test for getDepartments', async () => {
+    jest.spyOn(dbClient, 'then').mockImplementationOnce(jest.fn().mockReturnValue({
+      deptId: 0,
+      deptName: 'testDept',
+      deptLocation: 'MSC',
+      deptHourCap: 15
+    }))
+    const response = await request.get('/api/getDepartments')
+
+    expect(response.statusCode).toBe(200)
+    expect(response.body.deptId).toBe(0)
+    expect(response.body.deptName).toBe('testDept')
+    expect(response.body.deptLocation).toBe('MSC')
+    expect(response.body.deptHourCap).toBe(15)
+  })
+
+  it('Test for postEmployee - Success', async () => {
+    jest.spyOn(dbClient, 'then').mockImplementationOnce(jest.fn().mockReturnValue([5]))
+    const response = await request.get('/api/postEmployee')
+      .send({
+        userName: 'Garrett Preston',
+        userPermissions: 0,
+        userId: '0705988',
+        deptId: 1,
+        isManager: 0
+      })
+
+    expect(response.statusCode).toBe(201)
+    expect(response.body).toBe(5)
   })
 })

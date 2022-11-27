@@ -1,3 +1,4 @@
+const { response } = require('express')
 const dbClient = require('./dbClient')
 
 // This function is just to see if I can even write a test
@@ -11,28 +12,50 @@ const getEndpointName = async (req, res) => {
 // Request should contain a department ID, response should return list of employees in that department
 const getEmployeesFromDepartment = async (req, res) => {
   const deptId = req.body.deptId
-  res.status(200).json(await dbClient.select('ud.userId', 'u.userName')
-    .from('_UserDept ud')
-    .join('User u', 'u.userID', 'ud.userID')
-    .where('ud.deptId', '=', deptId)
+  res.status(200).json(await dbClient.select('_userDept.userId', 'User.userName')
+    .from('_userDept')
+    .join('User', 'User.userId', '_userDept.userId')
+    .where('_userDept.deptId', '=', deptId)
     .then(result => {
       return result
     }))
 }
 
 // Create a department
-const postDepartment = async (req, res) => {
-  const request = req.body
-  res.status(201).json(await dbClient
+const postDepartmentCallback = async (req, res) => {
+  const employeeData = req.body
+  try {
+    module.exports.postDepartment(employeeData)
+    res.status(201).json({
+      message: 'Department created'
+      // For some reason I can't get the ID back from the knex call
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      error: {
+        message: 'Internal server error while creating department'
+      }
+    })
+  }
+}
+
+const postDepartment = async (req) => {
+  await dbClient
     .insert({
-      deptName: request.deptName,
-      deptLocation: request.deptLocation,
-      deptHourCap: request.deptHourCap
+      deptName: req.deptName,
+      deptLocation: req.deptLocation,
+      deptHourCap: req.deptHourCap
     })
     .into('Department')
-    .onConflict(res.status(409).json({
-      error: 'Conflict while inserting data'
-    })))
+}
+
+// Get department
+const getDepartments = async (req, res) => {
+  res.status(200).json(await dbClient
+    .select('deptId', 'deptName', 'deptLocation', 'deptHourCap')
+    .from('Department')
+    .then(result => { return result }))
 }
 
 // FUNCTIONS FOR CREATING AN EMPLOYEE
@@ -68,7 +91,7 @@ const createEmployee = async (data, trx) => {
     .insert({
       userName: request.userName,
       userPermissions: request.userPermissions,
-      userHours: request.userHours
+      userHours: 0
     },
     ['userId'])
     .into('User')
@@ -137,7 +160,9 @@ const removeEmployeeFromDepartment = async (data, trx) => {
 module.exports = {
   getEndpointName,
   getEmployeesFromDepartment,
+  postDepartmentCallback,
   postDepartment,
+  getDepartments,
   postEmployeeCallback,
   insertEmployees,
   deleteEmployeeCallback,
