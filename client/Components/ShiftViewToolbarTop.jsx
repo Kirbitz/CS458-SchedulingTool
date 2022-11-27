@@ -1,7 +1,7 @@
 import React from 'react'
 // import PropTypes from 'prop-types'
 
-import { AppBar, Button, Grid, IconButton, Stack, Toolbar } from '@mui/material'
+import { AppBar, Button, Grid, IconButton, Stack, Toolbar, Tooltip } from '@mui/material'
 import { Add, Close, FilterAlt } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 
@@ -77,15 +77,17 @@ export default function ShiftViewToolbarTop (props) {
               alignItems="center"
               justifyContent="flex-end"
             >
-              <IconButton
-                aria-label="close"
-                id="close-button"
-                onClick={() => {
-                  navigate('/master-schedule')
-                }}
-              >
-                <Close />
-              </IconButton>
+              <Tooltip title = 'Return to Master Schedule'>
+                <IconButton
+                  aria-label="close"
+                  id="close-button"
+                  onClick={() => {
+                    navigate('/master-schedule')
+                  }}
+                >
+                  <Close />
+                </IconButton>
+              </Tooltip>
             </Stack>
           </Grid>
         </Grid>
