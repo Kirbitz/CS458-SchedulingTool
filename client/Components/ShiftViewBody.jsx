@@ -1,4 +1,4 @@
-import { Box } from '@mui/material'
+import { Box, Divider } from '@mui/material'
 import React from 'react'
 import Shift from '../Components/Shift.jsx'
 
@@ -17,14 +17,25 @@ export default function ShiftViewBody (props) {
   return (
     <Box mt={ 8 } mb={ 8 }>
       <Shift />
+      <Divider />
       <Shift />
+      <Divider />
       <Shift />
+      <Divider />
       <Shift />
+      <Divider />
       <Shift />
+      <Divider />
       <Shift />
+      <Divider />
       <Shift />
+      <Divider />
       <Shift />
+      <Divider />
       <Shift />
+      <Divider />
+      <Shift />
+      <Divider />
       <Shift />
     </Box>
   )
