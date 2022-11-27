@@ -9,6 +9,8 @@ import { LoadingButton } from '@mui/lab'
 /** Notes for Bottom Toolbar:
  * TODO: Add method to determine initial alert state inside export function based on what data is available from the DB.
  * TODO: Add timeout function to change state away from "saved successfully!" after a few seconds.
+ * TODO: Make Discard button functional.
+ * TODO: Add notification to be displayed whenever data fails to save.
  * TODO: Remove debug button group when the component is fully functional.
  * I might be able to remove alertState entirely if there's no use for it.
  * ? Why is the Alert bar not changing as the state is updated? Implement fix from WeekChanger?
