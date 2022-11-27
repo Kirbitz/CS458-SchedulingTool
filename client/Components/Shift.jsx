@@ -67,26 +67,30 @@ export default function Shift (props) {
         justifyContent="flex-end"
         spacing={ 2 }
       >
-        <IconButton
-          aria-label="unassign-button"
-          id="unassign-button"
-          disabled={ !selectedIndex }
-          // onClick={setSelectedIndex(0)} //* Un-comment this line after the Unassign button issue is fixed.
-        >
-          <PersonOff />
-        </IconButton>
-        <Button
-          aria-haspopup="true"
-          aria-label="select-employee-button"
-          id="select-employee-button"
-          elevation={0}
-          variant="contained"
-          endIcon={<KeyboardArrowDown />}
-          onClick={handleClickListItem}
-          // sx={{ width: 150 }}
-        >
-          { employees[selectedIndex] }
-        </Button>
+      <Tooltip title = 'Unassign Employee'>
+        <span>
+          <IconButton
+            aria-label="unassign-button"
+            id="unassign-button"
+            disabled={ !selectedIndex }
+            // onClick={setSelectedIndex(0)} //* Un-comment this line after the Unassign button issue is fixed.
+          >
+            <PersonOff />
+          </IconButton>
+        </span>
+      </Tooltip>
+      <Button
+        aria-haspopup="true"
+        aria-label="select-employee-button"
+        id="select-employee-button"
+        elevation={0}
+        variant="contained"
+        endIcon={<KeyboardArrowDown />}
+        onClick={handleClickListItem}
+        // sx={{ width: 150 }}
+      >
+        { employees[selectedIndex] }
+      </Button>
         <Menu
           aria-label="employee-menu"
           id="employee-menu"
