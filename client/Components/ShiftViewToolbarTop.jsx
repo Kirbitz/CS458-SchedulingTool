@@ -6,16 +6,11 @@ import { Add, Close, FilterAlt } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 
 /** Notes for Top Toolbar:
-* TODO: Float toolbar on top of page so it's not inaccessible after scrolling.
 * TODO: Create Time Block Editor before enabling Add Shift button.
 * TODO: Create Filter list before enabling Filter button.
 * TODO: Refactor Filter button into Menu.
 * TODO: Add date below after prop validation.
-* TODO: Add tooltips to buttons.
 * TODO: Validate date prop.
-* * Use AppBar to float this on top of page content.
-* * Remember to add a toolbar so page content isn't stuffed underneath it.
-* * position="fixed" sx={{top: 'auto', bottom: 0}}
 */
 
 /** Top toolbar for the Shift View.

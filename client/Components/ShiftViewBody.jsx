@@ -4,7 +4,6 @@ import Shift from '../Components/Shift.jsx'
 
 /** Notes for Shift View Body:
  * TODO: Validate date prop.
- * TODO: Add dividers in between each shift so they're visually separate.
  * TODO: Figure out why shift list has such a big chin.
  */
 

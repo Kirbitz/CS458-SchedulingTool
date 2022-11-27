@@ -8,10 +8,7 @@ import ShiftViewBody from '../Components/ShiftViewBody.jsx'
 import { Box, Grid } from '@mui/material'
 
 /** Notes for Shift View date retrieval:
- ** Date is passed on line 15.
  ** UI design PPT is in #diagrams-frontend.
- * TODO: Assemble ShiftViewBody.
- * TODO: Assemble Shift.
  * TODO: Find some way to pass the date to this component depending on which day button is pressed.
  * TODO: Change formatting so bottom toolbar is actually at the bottom of the page.
  * ? Should the date be put in the Master View page or in the Day component?
