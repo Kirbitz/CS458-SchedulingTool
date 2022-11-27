@@ -10,7 +10,6 @@ import { Box, Grid } from '@mui/material'
 /** Notes for Shift View date retrieval:
  ** UI design PPT is in #diagrams-frontend.
  * TODO: Find some way to pass the date to this component depending on which day button is pressed.
- * TODO: Change formatting so bottom toolbar is actually at the bottom of the page.
  * ? Should the date be put in the Master View page or in the Day component?
  * ? Pass the date from Day to Master View using callback, pass date to ShiftView, then navigate?
 */
