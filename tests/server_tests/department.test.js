@@ -1,6 +1,6 @@
 const myIndex = require('../../server/index.js')
 const dbClient = require('../../server/api/dbClient')
-const { postDepartment } = require('../../server/api/department.js')
+const { postDepartment, postDepartmentCallback } = require('../../server/api/department.js')
 const request = require('supertest')(myIndex)
 
 jest.mock('knex')
@@ -69,7 +69,7 @@ describe('Tests for department.js', () => {
   })
 
   it('Test for postDepartment - Fail', async () => {
-    jest.spyOn(postDepartment, 'insert').mockImplementation(() => {
+    jest.spyOn(dbClient, 'postDepartment').mockImplementation(() => {
       throw new Error('I am an error')
     })
 

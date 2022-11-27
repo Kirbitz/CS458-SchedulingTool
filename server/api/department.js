@@ -40,7 +40,7 @@ const postDepartmentCallback = async (req, res) => {
   }
 }
 
-const postDepartment = async (req) => {
+async function postDepartment (req) {
   await dbClient
     .insert({
       deptName: req.deptName,
