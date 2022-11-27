@@ -9,7 +9,8 @@ import { LoadingButton } from '@mui/lab'
 /** Notes for Bottom Toolbar:
  * TODO: Add debug toolbar to test state change for Alert bar.
  * TODO: Add method to determine initial alert state inside export function based on what data is available from the DB.
- * TODO: Modify changeAlertState function to implement useState hook.
+ * TODO: Debug Alert bar.
+ * ? Why is the Alert bar not changing as the state is updated? Implement fix from WeekChanger?
 */
 
 /** Bottom toolbar for the Shift View.
@@ -44,7 +45,7 @@ export default function ShiftViewToolbarBottom (props) {
    * State 4: Changes were saved successfully!
   */
   const changeAlertState = (state) => {
-    console.log("Current state is " + alertState)
+    console.log('Current state is ' + alertState)
     if (state === -1) {
       alertSeverity = 'error'
       alertText = 'Failed to retrieve shift data.'
@@ -74,7 +75,7 @@ export default function ShiftViewToolbarBottom (props) {
       alertSeverity = 'error'
       alertText = 'Invalid alert state.'
     }
-    console.log("NEW state is " + alertState)
+    console.log('NEW state is ' + alertState)
   }
   return (
     <AppBar position="fixed" sx={{ bgcolor: '#ffffff', top: 'auto', bottom: 0 }}>
