@@ -3,6 +3,7 @@ import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 import { fireEvent, render, screen } from '@testing-library/react'
 import LogIn from '../../client/Pages/LogIn.jsx'
+import { act } from 'react-test-renderer'
 
 describe('Tests for <LogIn />', () => {
   let mock
@@ -17,6 +18,9 @@ describe('Tests for <LogIn />', () => {
   })
   beforeEach(() => {
     mock = new MockAdapter(axios)
+    delete window.location
+    window.location = new URL('https://hello.com')
+    jest.spyOn(console, 'error').mockImplementation(() => {})
   })
 
   it('Initial Render', () => {
@@ -26,11 +30,15 @@ describe('Tests for <LogIn />', () => {
 
   it('Successful Login', async () => {
     mock.onPost('/api/login').reply(200, returnData)
-    const component = render(<LogIn />)
-    await fireEvent.change(screen.getByLabelText('UserName'), { target: { value: 'test' } })
-    await fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'test' } })
-    await fireEvent.click(component.getByTestId('logIn-button'))
+    await act(async () => { render(<LogIn />) })
+    await fireEvent.change(screen.getByTestId('UserNameInput').getElementsByClassName('MuiInputBase-input')[0], { target: { value: 'test' } })
+    await fireEvent.change(screen.getByTestId('Password-input').getElementsByClassName('MuiInputBase-input')[0], { target: { value: 'test' } })
+    await fireEvent.click(screen.getByTestId('logIn-button'))
 
     expect(mock.history.post.length).toBe(1)
+  })
+
+  it('Successfully Displays Error', async () => {
+    
   })
 })
