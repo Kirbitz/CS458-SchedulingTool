@@ -3,11 +3,13 @@ import {
   Button, TextField, FormControlLabel, Checkbox,
   Link, Grid, Box, Typography, Container, Snackbar, Alert
 } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 
 import { userLogin } from '../dataHelper.js'
 
 export default function Log () {
   const [showAlert, setShowAlert] = React.useState(false)
+  const navigate = useNavigate()
 
   const displayError = () => {
     setShowAlert(true)
@@ -18,7 +20,7 @@ export default function Log () {
     const data = new FormData(event.currentTarget)
     if (data.get('userName').match('^[a-zA-Z0-9]+$') && data.get('password').match('^[a-zA-Z0-9 ~!@#$^&*_+?.,]+$')) {
       await userLogin({ username: data.get('userName'), password: data.get('password') })
-        .then(() => { window.location.href = '/dashboard' })
+        .then(() => { navigate('/dashboard') })
         .catch((error) => {
           console.error(error)
           displayError()
@@ -101,6 +103,7 @@ export default function Log () {
             <Alert
             severity="error"
             onClose={handleClose}
+            data-testid="Invalid-Credentials"
             >
               Invalid Credentials
             </Alert>
