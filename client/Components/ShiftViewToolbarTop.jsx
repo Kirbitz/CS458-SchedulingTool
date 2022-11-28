@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router-dom'
 // a Filter button to filter out shifts in the list, and a Close button
 // to return to the Master View
 export default function ShiftViewToolbarTop (props) {
+  const selectedDate = new Date()
   const navigate = useNavigate()
   // const { date } = props
   return (
@@ -26,7 +27,7 @@ export default function ShiftViewToolbarTop (props) {
         <Grid container>
           <Grid item xs={ 5 }>
             <Stack
-              spacing={2}
+              spacing={ 2 }
               direction="row"
               alignItems="center"
               justifyContent="flex-start"
@@ -40,9 +41,7 @@ export default function ShiftViewToolbarTop (props) {
               >
                 Add Shift
               </Button>
-              {
-              }
-              <p>MM/DD/YYYY</p>
+              <p id="selected-date">{selectedDate.getMonth() + 1}/{selectedDate.getDate()}/{selectedDate.getFullYear()}</p>
             </Stack>
           </Grid>
           <Grid item xs={ 2 }>
