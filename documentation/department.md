@@ -210,101 +210,9 @@ axios({
 })
 ```
 
-# Post Employee
-
-Allows you to create an user in the database
-
-- **URL:**
-
-  /postEmployee
-
-- **Method:**
-
-  `POST`
-
-- **URL Params:**
-
-  None
-
-- **Data Params**
-
-  _Required:_ User ID - must be able to contain leading 0
-
-  `userId: [string]`
-
-  `0705988`
-
-  _Required:_ Department ID
-
-  `deptId: [int]`
-
-  `2`
-
-  _Required:_ Employee Name
-
-  `userName: [string]`
-
-  `Garrett Preston`
-
-  _Required:_ userPermissions
-  
-  `userPermissions: [int]`
-
-  `0`
-
-  _Required:_ isManager
-
-  `isManager: [bool]`
-
-  `false`
-
-- **Auth Required:** Posting user must be a manager
-
-## Response
-
-- **Success Response:**
-
-  **Code:** `201 CREATED`
-
-  **Content:**
-
-  ```json
-  {
-    "message": "Employee created"
-  }
-  ```
-
-- **Fail Response**
-
-  **Code:** `500 Internal Server Error`
-
-  **Content:**
-
-  ```json
-  {
-    "message": "Internal server error while creating employee"
-  }
-  ```
-
-## Sample Call
-
-```javascript
-axios({
-  method: 'POST'
-  url: '/postEmployee',
-  responseType: 'json',
-  data: {
-    "userId": "0705988",
-    "deptId": 1,
-    "isManager": false,
-    "userPermissions": 0
-  }
-})
-```
-
 # Delete Employee
 
-Allows you to delete a user in the database
+Allows you to delete a user in the database, as well as entries in associated child tables
 
 - **URL:**
 
@@ -339,6 +247,18 @@ Allows you to delete a user in the database
   ```json
   {
     "message": "Employee deleted"
+  }
+  ```
+
+- **Not Found Response**
+
+  **Code:** `404 Not Found`
+
+  **Content:**
+
+  ```json
+  {
+    "message": "No employee with id 1112 found"
   }
   ```
 

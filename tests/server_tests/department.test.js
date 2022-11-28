@@ -1,6 +1,6 @@
 const myIndex = require('../../server/index.js')
 const dbClient = require('../../server/api/dbClient')
-// const { postDepartment, postDepartmentCallback } = require('../../server/api/department.js')
+// const department = require('../../server/api/department.js')
 const request = require('supertest')(myIndex)
 
 jest.mock('knex')
@@ -26,7 +26,8 @@ jest.mock('../../server/api/dbClient', () => ({
   join: jest.fn().mockReturnThis(),
   insert: jest.fn().mockReturnThis(),
   into: jest.fn().mockReturnThis(),
-  onConflict: jest.fn(async (callback) => callback())
+  onConflict: jest.fn(async (callback) => callback()),
+  delete: jest.fn().mockReturnThis()
 }))
 
 describe('Tests for department.js', () => {
@@ -57,6 +58,7 @@ describe('Tests for department.js', () => {
   })
 
   it('Test for postDepartment - Success', async () => {
+    jest.spyOn(dbClient, 'insert').mockReturnValue(15)
     const response = await request.post('/api/postDepartment')
       .send({
         deptName: 'testDept',
@@ -65,11 +67,11 @@ describe('Tests for department.js', () => {
       })
 
     expect(response.statusCode).toBe(201)
-    expect(response.body.message).toBe('Department created')
+    expect(response.body.message).toBe('Department created with ID: 15')
   })
 
   it('Test for postDepartment - Fail', async () => {
-    jest.spyOn(dbClient, 'postDepartment').mockImplementation(() => {
+    jest.spyOn(dbClient, 'insert').mockImplementation(() => {
       throw new Error('I am an error')
     })
 
@@ -81,6 +83,7 @@ describe('Tests for department.js', () => {
       })
 
     expect(response.statusCode).toBe(500)
+    expect(response.body.error.message).toBe('Internal server error while creating department')
   })
 
   it('Test for getDepartments', async () => {
@@ -97,20 +100,5 @@ describe('Tests for department.js', () => {
     expect(response.body.deptName).toBe('testDept')
     expect(response.body.deptLocation).toBe('MSC')
     expect(response.body.deptHourCap).toBe(15)
-  })
-
-  it('Test for postEmployee - Success', async () => {
-    jest.spyOn(dbClient, 'then').mockImplementationOnce(jest.fn().mockReturnValue([5]))
-    const response = await request.get('/api/postEmployee')
-      .send({
-        userName: 'Garrett Preston',
-        userPermissions: 0,
-        userId: '0705988',
-        deptId: 1,
-        isManager: 0
-      })
-
-    expect(response.statusCode).toBe(201)
-    expect(response.body).toBe(5)
   })
 })

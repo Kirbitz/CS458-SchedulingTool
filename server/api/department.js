@@ -15,19 +15,22 @@ const getEmployeesFromDepartment = async (req, res) => {
     .from('_userDept')
     .join('User', 'User.userId', '_userDept.userId')
     .where('_userDept.deptId', deptId)
-    .then(result => {
-      return result
-    }))
+    .then((result) => { return result }))
 }
 
 // Create a department
 const postDepartmentCallback = async (req, res) => {
-  const employeeData = req.body
+  const data = req.body
   try {
-    module.exports.postDepartment(employeeData)
+    const response = await dbClient
+      .into('Department')
+      .insert({
+        deptName: data.deptName,
+        deptLocation: data.deptLocation,
+        deptHourCap: data.deptHourCap
+      })
     res.status(201).json({
-      message: 'Department created'
-      // For some reason I can't get the ID back from the knex call
+      message: 'Department created with ID: ' + response
     })
   } catch (error) {
     console.log(error)
@@ -39,16 +42,6 @@ const postDepartmentCallback = async (req, res) => {
   }
 }
 
-async function postDepartment (req) {
-  await dbClient
-    .insert({
-      deptName: req.deptName,
-      deptLocation: req.deptLocation,
-      deptHourCap: req.deptHourCap
-    })
-    .into('Department')
-}
-
 // Get department
 const getDepartments = async (req, res) => {
   res.status(200).json(await dbClient
@@ -57,67 +50,30 @@ const getDepartments = async (req, res) => {
     .then(result => { return result }))
 }
 
-// FUNCTIONS FOR CREATING AN EMPLOYEE
-const postEmployeeCallback = async (req, res) => {
-  const employeeData = req.body
-  try {
-    module.exports.insertEmployees(employeeData)
-    res.status(201).json({
-      message: 'Employee created'
-    })
-  } catch (error) {
-    console.log(error)
-    res.status(500).json({
-      error: {
-        message: 'Internal server error while creating employee'
-      }
-    })
-  }
-}
-
-const insertEmployees = async (data) => {
-  await dbClient.transaction(async trx => {
-    // Create the User tuple
-    await createEmployee(data, trx)
-    // Fill the join table based on the current manager/department
-    await createEmployeeDepartmentJoin(data, trx)
-  })
-}
-
-const createEmployee = async (data, trx) => {
-  const request = data.body
-  await dbClient
-    .insert({
-      userName: request.userName,
-      userPermissions: request.userPermissions,
-      userHours: 0
-    },
-    ['userId'])
-    .into('User')
-    .transacting(trx)
-}
-
-const createEmployeeDepartmentJoin = async (data, trx) => {
-  const request = data.body
-  await dbClient
-    .insert({
-      userId: request.userId,
-      deptId: request.deptId,
-      isManager: request.isManager
-    })
-    .into('_UserDepartment')
-    .transacting(trx)
-}
-
 // Callback/wrapper for deleting an employee
 const deleteEmployeeCallback = async (req, res) => {
-  const employeeData = req.body
+  // Grab the data
+  const data = req.body
   try {
-    module.exports.deleteEmployee(employeeData)
+    // Execute query and get rows affected
+    const response = await dbClient
+      .from('User')
+      .del()
+      .where('userId', data.userId)
+
+    // If no rows are affected, 404
+    if (response === 0) {
+      res.status(404).json({
+        message: 'No employee with id ' + data.userId + ' found'
+      })
+      return
+    }
+    // Otherwise, good job
     res.status(202).json({
       message: 'Employee deleted'
     })
   } catch (error) {
+    // Catch all for unexpected stuff
     console.log(error)
     res.status(500).json({
       error: {
@@ -127,42 +83,10 @@ const deleteEmployeeCallback = async (req, res) => {
   }
 }
 
-// Transaction for deleting employee
-const deleteEmployee = async (data) => {
-  await dbClient.transaction(trx => {
-    removeEmployee(data, trx)
-    removeEmployeeFromDepartment(data, trx)
-  })
-}
-
-// Delete the employee from the user table
-const removeEmployee = async (data, trx) => {
-  await dbClient
-    .from('User')
-    .where('userId', data.userId)
-    .delete()
-    .transacting(trx)
-  console.log('Deleted from User')
-}
-
-// Delete the employee from the junction table
-const removeEmployeeFromDepartment = async (data, trx) => {
-  await dbClient
-    .from('_userDept')
-    .where('userId', data.userId)
-    .delete()
-    .transacting(trx)
-  console.log('Deleted from _userDept')
-}
-
 module.exports = {
   getEndpointName,
   getEmployeesFromDepartment,
   postDepartmentCallback,
-  postDepartment,
   getDepartments,
-  postEmployeeCallback,
-  insertEmployees,
-  deleteEmployeeCallback,
-  deleteEmployee
+  deleteEmployeeCallback
 }
