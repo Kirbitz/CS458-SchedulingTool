@@ -4,7 +4,7 @@ Returns json data about the login session.
 
 - **URL:**
 
-  /login
+  /api/login
 
 - **Method:**
 
@@ -18,11 +18,11 @@ Returns json data about the login session.
 
   _Required:_ Username
 
-  `email: [string]`
+  `username: [string]`
 
-  `joeshmo@example.xyz`
+  `jshmoe1234`
 
-  _Required:_ User password
+  _Required:_ Password
 
   `password: [string]`
 
@@ -77,7 +77,7 @@ Returns json data about the login session.
 ```javascript
 axios({
   method: 'POST',
-  url: '/login',
+  url: '/api/login',
   responseType: 'json',
   data: {
     email: 'joeshmo@example.xyz',

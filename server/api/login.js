@@ -43,7 +43,7 @@ const loginCallback = async (req, res) => {
     .set('Authorization', token)
     .json({
       userId: user[0].credentialsId,
-      isManager: user[0].isManager
+      isManager: user[0].userPermissions
     })
     .end()
 }
@@ -54,10 +54,9 @@ const checkUsernamePassword = async (username, password) => {
   // create the password hash
   const passwordHash = sjcl.codec.hex.fromBits(passwordBitArray)
 
-  return dbClient.select('Credentials.credentialsId', '_UserDepartment.isManager')
+  return dbClient.select('Credentials.credentialsId', 'User.userPermissions')
     .from('Credentials')
     .join('User', 'Credentials.credentialsId', 'User.userId')
-    .join('_UserDepartment', 'User.userId', '_UserDepartment.userId')
     .where('Credentials.credentialsUsername', '=', username)
     .andWhere('Credentials.credentialsPassword', '=', passwordHash)
     .then(result => {
