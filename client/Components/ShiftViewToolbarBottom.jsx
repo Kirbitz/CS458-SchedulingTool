@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 // import PropTypes from 'prop-types'
 
-import { Alert, AppBar, Button, ButtonGroup, Grid, Stack, Toolbar } from '@mui/material'
+import { Alert, AppBar, Button, ButtonGroup, Grid, Stack, Toolbar, Typography } from '@mui/material'
 import { History, Save } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 
@@ -26,22 +26,25 @@ export default function ShiftViewToolbarBottom (props) {
   // These are used to test the Alert bar and its ability to change states.
   // These will be removed once the component is fully functional.
   const debugButtons = [
-    <Button key="-1" onClick={() => {
+    <Button variant="contained" color="error" key="-1" onClick={() => {
       changeAlertState(-1)
     }}>-1</Button>,
-    <Button key="0" onClick={() => {
+    <Button variant="contained" color="error" key="X" onClick={() => {
+      changeAlertState('X')
+    }}>X</Button>,
+    <Button variant="contained" key="0" onClick={() => {
       changeAlertState(0)
     }}>0</Button>,
-    <Button key="1" onClick={() => {
+    <Button variant="contained" key="1" onClick={() => {
       changeAlertState(1)
     }}>1</Button>,
-    <Button key="2" onClick={() => {
+    <Button variant="contained" key="2" onClick={() => {
       changeAlertState(2)
     }}>2</Button>,
-    <Button key="3" onClick={() => {
+    <Button variant="contained" key="3" onClick={() => {
       changeAlertState(3)
     }}>3</Button>,
-    <Button key="4" onClick={() => {
+    <Button variant="contained" key="4" onClick={() => {
       changeAlertState(4)
     }}>4</Button>
   ]
@@ -82,11 +85,15 @@ export default function ShiftViewToolbarBottom (props) {
       <Toolbar disableGutters>
         <Grid container alignItems="center">
           <Grid item xs={ 6 }>
-            <Alert sx={{ height: 50 }} severity={ alertSeverity }>{ alertText }</Alert>
+            <Alert severity={ alertSeverity }>
+            <Typography noWrap>
+              { alertText }
+            </Typography>
+            </Alert>
           </Grid>
           <Grid item xs={ 6 }>
             <Stack
-              spacing={2}
+              spacing={ 2 }
               direction="row"
               alignItems="center"
               justifyContent="flex-end"
@@ -101,20 +108,24 @@ export default function ShiftViewToolbarBottom (props) {
                 color="error"
                 startIcon={ <History /> }
               >
-                Discard Changes
+                <Typography noWrap>
+                  Discard Changes
+                </Typography>
               </Button>
               <LoadingButton
                 // sx={{ height: 50 }}
                 variant="contained"
                 aria-label="save-button"
                 color="success"
-                startIcon={<Save />}
+                startIcon={ <Save /> }
                 loading={saving}
                 // loadingIndicator="Saving..."
                 loadingPosition="start"
-                onClick={() => setSaving(true)}
+                onClick={ () => setSaving(true) }
               >
-                Save Changes
+                <Typography noWrap>
+                  Save Changes
+                </Typography>
               </LoadingButton>
             </Stack>
           </Grid>
