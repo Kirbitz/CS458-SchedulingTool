@@ -5,12 +5,10 @@ import Shift from '../Components/Shift.jsx'
 /** Notes for Shift View Body:
  * TODO: Validate date prop.
  * TODO: Figure out why shift list has such a big chin.
+ * TODO: Automate shift population process.
  */
 
-/** Body of Shift View which contains a scrollable list of all shifts.
-* Shifts have additional functions which allow shift editing, shift
-* assignment, shift unassignment, and shift deletion.
-*/
+// Component which houses shift components and is scrollable
 export default function ShiftViewBody (props) {
   // const { date } = props
   return (

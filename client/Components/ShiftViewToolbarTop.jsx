@@ -13,11 +13,10 @@ import { useNavigate } from 'react-router-dom'
 * TODO: Validate date prop.
 */
 
-/** Top toolbar for the Shift View.
- * Contains Add Shift button, which navigates to the Time Block editor,
- * a Filter button to filter out shifts in the list, and a Close button
- * to return to the Master View.
-*/
+// Component which comprises the top toolbar for the Shift View
+// Contains Add Shift button, which navigates to the Time Block editor,
+// a Filter button to filter out shifts in the list, and a Close button
+// to return to the Master View
 export default function ShiftViewToolbarTop (props) {
   const navigate = useNavigate()
   // const { date } = props
@@ -36,7 +35,7 @@ export default function ShiftViewToolbarTop (props) {
                 aria-label="add-shift-button"
                 id="add-shift-button"
                 variant="contained"
-                endIcon={<Add />}
+                endIcon={ <Add /> }
                 disabled
               >
                 Add Shift
@@ -48,7 +47,7 @@ export default function ShiftViewToolbarTop (props) {
           </Grid>
           <Grid item xs={ 2 }>
             <Stack
-              spacing={2}
+              spacing={ 2 }
               direction="row"
               alignItems="center"
               justifyContent="center"
@@ -58,7 +57,7 @@ export default function ShiftViewToolbarTop (props) {
                   id="filter-menu"
                   sx={{ bgcolor: '#0b233f' }}
                   variant="contained"
-                  endIcon={<FilterAlt />}
+                  endIcon={ <FilterAlt /> }
                   disabled
                 >
                   Filter
@@ -67,7 +66,7 @@ export default function ShiftViewToolbarTop (props) {
           </Grid>
           <Grid item xs={ 5 }>
             <Stack
-              spacing={2}
+              spacing={ 2 }
               direction="row"
               alignItems="center"
               justifyContent="flex-end"
