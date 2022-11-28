@@ -2,7 +2,7 @@ const Express = require('express')
 const RateLimiters = require('./rateLimiters.js')
 const { loginCallback } = require('./login.js')
 const { validateNewAccountCallback } = require('./validateAccount.js')
-const { getEndpointName, getEmployeesFromDepartment, postDepartmentCallback, postEmployeeCallback, getDepartments } = require('./department.js')
+const { getEndpointName, getEmployeesFromDepartment, postDepartmentCallback, postEmployeeCallback, getDepartments, deleteEmployeeCallback } = require('./department.js')
 
 const router = new Express.Router()
 router.use(Express.urlencoded({ extended: true }))
@@ -20,6 +20,8 @@ router.post('/postDepartment', postDepartmentCallback)
 router.get('/getDepartments', getDepartments)
 // Create employees and place them in the department of the creating manager
 router.post('/postEmployee', postEmployeeCallback)
+// Delete an employee and the respective join table entry
+router.delete('/deleteEmployee', deleteEmployeeCallback)
 
 router.get('/testDepartment', getEndpointName)
 

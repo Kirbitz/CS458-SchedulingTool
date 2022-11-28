@@ -1,4 +1,3 @@
-const { response } = require('express')
 const dbClient = require('./dbClient')
 
 // This function is just to see if I can even write a test
@@ -15,7 +14,7 @@ const getEmployeesFromDepartment = async (req, res) => {
   res.status(200).json(await dbClient.select('_userDept.userId', 'User.userName')
     .from('_userDept')
     .join('User', 'User.userId', '_userDept.userId')
-    .where('_userDept.deptId', '=', deptId)
+    .where('_userDept.deptId', deptId)
     .then(result => {
       return result
     }))
@@ -130,7 +129,7 @@ const deleteEmployeeCallback = async (req, res) => {
 
 // Transaction for deleting employee
 const deleteEmployee = async (data) => {
-  await dbClient.transaction(async trx => {
+  await dbClient.transaction(trx => {
     removeEmployee(data, trx)
     removeEmployeeFromDepartment(data, trx)
   })
@@ -138,23 +137,22 @@ const deleteEmployee = async (data) => {
 
 // Delete the employee from the user table
 const removeEmployee = async (data, trx) => {
-  const request = data.body
   await dbClient
     .from('User')
-    .where('userId', '=', request.userId)
-    .del()
+    .where('userId', data.userId)
+    .delete()
     .transacting(trx)
+  console.log('Deleted from User')
 }
 
 // Delete the employee from the junction table
 const removeEmployeeFromDepartment = async (data, trx) => {
-  const request = data.body
   await dbClient
-    .from('User')
-    .where('userId', '=', request.userId)
-    .andWhere('deptId', '=', request.deptId)
-    .del()
+    .from('_userDept')
+    .where('userId', data.userId)
+    .delete()
     .transacting(trx)
+  console.log('Deleted from _userDept')
 }
 
 module.exports = {

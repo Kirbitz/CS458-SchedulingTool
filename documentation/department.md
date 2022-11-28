@@ -300,3 +300,69 @@ axios({
     "userPermissions": 0
   }
 })
+```
+
+# Delete Employee
+
+Allows you to delete a user in the database
+
+- **URL:**
+
+  /deleteEmployee
+
+- **Method:**
+
+  `DELETE`
+
+- **URL Params:**
+
+  None
+
+- **Data Params**
+
+  _Required:_ User ID - must be able to contain leading 0
+
+  `userId: [string]`
+
+  `0705988`
+
+- **Auth Required:** Deleting user must be a manager
+
+## Response
+
+- **Success Response:**
+
+  **Code:** `202 ACCEPTED`
+
+  **Content:**
+
+  ```json
+  {
+    "message": "Employee deleted"
+  }
+  ```
+
+- **Fail Response**
+
+  **Code:** `500 Internal Server Error`
+
+  **Content:**
+
+  ```json
+  {
+    "message": "Internal server error while deleting employee"
+  }
+  ```
+
+## Sample Call
+
+```javascript
+axios({
+  method: 'DELETE'
+  url: '/deleteEmployee',
+  responseType: 'json',
+  data: {
+    "userId": "0705988"
+  }
+})
+```

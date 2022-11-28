@@ -1,6 +1,6 @@
 const myIndex = require('../../server/index.js')
 const dbClient = require('../../server/api/dbClient')
-const { postDepartment, postDepartmentCallback } = require('../../server/api/department.js')
+// const { postDepartment, postDepartmentCallback } = require('../../server/api/department.js')
 const request = require('supertest')(myIndex)
 
 jest.mock('knex')
