@@ -1,21 +1,17 @@
 import React, { useState } from 'react'
 
-import { Button, Grid, IconButton, Menu, MenuItem, Stack, Tooltip } from '@mui/material'
-import { Delete, Edit, KeyboardArrowDown, PersonOff } from '@mui/icons-material'
+import { Button, Grid, IconButton, Menu, MenuItem, Stack, Tooltip, Typography } from '@mui/material'
+import { Delete, Edit, PersonOff } from '@mui/icons-material'
 
 /** Notes for Shift:
  * TODO: Create const objects for conflicting, unassigned, assigned, unsaved colors.
  * TODO: Change assignment menu button color upon state change.
  * TODO: Make employee list scrollable.
- * TODO: Disable text wrapping on first and second lines. (August)
- *
- * ! Creating an onClick event for the Unassign button produces a "too many re-renders" error and crashes the page. Re-enabling the (unassigned) option in the menu for now.
- * TODO: Find out why this error is being called and fix.
  */
 
 // Component to display shift information and provide access to tools for shift assignment and editing
 export default function Shift (props) {
-  //* This is dummy data and will be deleted once prop data passing is complete.
+  //* This is dummy data and will be changed once prop data passing is complete.
   const deptName = 'Department Name'
   const posName = 'Position Name'
   const startTime = '12:00 PM'
@@ -26,10 +22,14 @@ export default function Shift (props) {
   const employees = [
     '[unassigned]',
     'Abraham Abrahamsen',
+    'Bob Robertson',
     'Cindy Cindyson',
     'Erica Ericcson',
+    'Francisco Domingo Carlos Andres Sebastián d\'Anconia',
     'Joe Johnson',
-    'Karlee Carlson'
+    'Karlee Carlson',
+    'Mark Marcussen',
+    'Zoey Zimmerman'
   ]
   //* End of dummy data
 
@@ -57,8 +57,10 @@ export default function Shift (props) {
     <Grid container alignItems="center">
       <Grid item xs={ 5 }>
         <Stack spacing={ 0 }>
-          <p id="first-line">{deptName}: {posName}</p>
-          <p id="second-line">{startTime} - {endTime}</p>
+          <Typography noWrap>
+            <p id="first-line">{deptName}: {posName}</p>
+            <p id="second-line">{startTime} - {endTime}</p>
+          </Typography>
         </Stack>
       </Grid>
       <Grid item xs={ 7 }>
@@ -68,30 +70,33 @@ export default function Shift (props) {
           justifyContent="flex-end"
           spacing={ 2 }
         >
-        <Tooltip title = 'Unassign Employee'>
-          <span>
-            <IconButton
-              aria-label="unassign-button"
-              id="unassign-button"
-              disabled={ !selectedIndex }
-              // onClick={setSelectedIndex(0)} //* Un-comment this line after the Unassign button issue is fixed.
-            >
-              <PersonOff />
-            </IconButton>
-          </span>
-        </Tooltip>
-        <Button
-          aria-haspopup="true"
-          aria-label="select-employee-button"
-          id="select-employee-button"
-          elevation={0}
-          variant="contained"
-          endIcon={ <KeyboardArrowDown /> }
-          onClick={ handleClickListItem }
-          // sx={{ width: 150 }}
-        >
-          { employees[selectedIndex] }
-        </Button>
+          <Tooltip title = 'Unassign Employee'>
+            <span>
+              <IconButton
+                aria-label="unassign-button"
+                id="unassign-button"
+                disabled={ !selectedIndex }
+                onClick={ () => { setSelectedIndex(0) } }
+              >
+                <PersonOff />
+              </IconButton>
+            </span>
+          </Tooltip>
+
+          <Button
+            aria-haspopup="true"
+            aria-label="select-employee-button"
+            id="select-employee-button"
+            elevation={ 0 }
+            variant="contained"
+            // endIcon={ <KeyboardArrowDown /> }
+            onClick={ handleClickListItem }
+            sx={{ width: 250 }}
+          >
+            <Typography noWrap>
+              { employees[selectedIndex] }
+            </Typography>
+          </Button>
           <Menu
             aria-label="employee-menu"
             id="employee-menu"
@@ -108,10 +113,10 @@ export default function Shift (props) {
           >
             {employees.map((employee, index) => (
               <MenuItem
-                key={employee}
-                // disabled={index === 0} //* Un-comment this line after the Unassign button issue is fixed.
-                selected={index === selectedIndex}
-                onClick={(event) => handleMenuItemClick(event, index)}
+                key={ employee }
+                // disabled={ index === 0 }
+                selected={ index === selectedIndex }
+                onClick={ (event) => { handleMenuItemClick(event, index) } }
               >
                 {employee}
               </MenuItem>
