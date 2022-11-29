@@ -234,6 +234,12 @@ Allows you to delete a user in the database, as well as entries in associated ch
 
   `0705988`
 
+  _Required:_ Department ID
+
+  `deptId: [int]`
+
+  `3`
+
 - **Auth Required:** Deleting user must be a manager
 
 ## Response
@@ -282,7 +288,8 @@ axios({
   url: '/deleteEmployee',
   responseType: 'json',
   data: {
-    "userId": "0705988"
+    'userId': '0705988',
+    'deptId': '3'
   }
 })
 ```

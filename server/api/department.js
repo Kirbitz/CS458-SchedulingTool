@@ -1,13 +1,5 @@
 const dbClient = require('./dbClient')
 
-// This function is just to see if I can even write a test
-const getEndpointName = async (req, res) => {
-  res.status(200).json({
-    test: 'good',
-    endpoint: 'department.js'
-  })
-}
-
 // Request should contain a department ID, response should return list of employees in that department
 const getEmployeesFromDepartment = async (req, res) => {
   const deptId = req.body.deptId
@@ -51,15 +43,16 @@ const getDepartments = async (req, res) => {
 }
 
 // Callback/wrapper for deleting an employee
-const deleteEmployeeCallback = async (req, res) => {
+const deleteEmployeeFromDeptCallback = async (req, res) => {
   // Grab the data
   const data = req.body
   try {
     // Execute query and get rows affected
     const response = await dbClient
-      .from('User')
-      .del()
+      .from('_userDept')
       .where('userId', data.userId)
+      .andWhere('deptId', data.deptId)
+      .del()
 
     // If no rows are affected, 404
     if (response === 0) {
@@ -84,9 +77,8 @@ const deleteEmployeeCallback = async (req, res) => {
 }
 
 module.exports = {
-  getEndpointName,
   getEmployeesFromDepartment,
   postDepartmentCallback,
   getDepartments,
-  deleteEmployeeCallback
+  deleteEmployeeFromDeptCallback
 }

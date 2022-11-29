@@ -27,20 +27,12 @@ jest.mock('../../server/api/dbClient', () => ({
   insert: jest.fn().mockReturnThis(),
   into: jest.fn().mockReturnThis(),
   onConflict: jest.fn(async (callback) => callback()),
-  delete: jest.fn().mockReturnThis()
+  del: jest.fn().mockReturnThis()
 }))
 
 describe('Tests for department.js', () => {
   beforeAll(() => {
     // jest.spyOn(console, 'log').mockImplementation(() => {})
-  })
-
-  it('Test endpoint with supertest', async () => {
-    const response = await request.get('/api/testDepartment')
-
-    expect(response.statusCode).toBe(200)
-    expect(response.body.test).toBe('good')
-    expect(response.body.endpoint).toBe('department.js')
   })
 
   it('Test for getEmployeesByDepartment', async () => {
@@ -100,5 +92,44 @@ describe('Tests for department.js', () => {
     expect(response.body.deptName).toBe('testDept')
     expect(response.body.deptLocation).toBe('MSC')
     expect(response.body.deptHourCap).toBe(15)
+  })
+
+  it('Test for deleteEmployee - success', async () => {
+    jest.spyOn(dbClient, 'del').mockImplementation(jest.fn().mockReturnValue(1))
+    const response = await request.delete('/api/deleteEmployee')
+      .send({
+        userId: 40,
+        deptId: 14
+      })
+
+    expect(response.statusCode).toBe(202)
+    expect(response.body.message).toBe('Employee deleted')
+  })
+
+  it('Test for deleteEmployee - not found', async () => {
+    jest.spyOn(dbClient, 'del').mockImplementation(jest.fn().mockReturnValue(0))
+    const response = await request.delete('/api/deleteEmployee')
+      .send({
+        userId: 40,
+        deptId: 14
+      })
+
+    expect(response.statusCode).toBe(404)
+    expect(response.body.message).toBe('No employee with id 40 found')
+  })
+
+  it('Test for deleteEmployee - fail', async () => {
+    jest.spyOn(dbClient, 'del').mockImplementation(() => {
+      throw new Error('I am an error')
+    })
+
+    const response = await request.delete('/api/deleteEmployee')
+      .send({
+        userId: 40,
+        deptId: 14
+      })
+
+    expect(response.statusCode).toBe(500)
+    expect(response.body.error.message).toBe('Internal server error while deleting employee')
   })
 })
