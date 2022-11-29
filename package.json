@@ -20,7 +20,7 @@
     "devServe": "nodemon --watch server/index.js --watch server server/server.js",
     "build": "esbuild --bundle --minify --target=ES6 --outfile=public/bundle.js client/app.jsx",
     "devBuild": "nodemon --watch client --exec ./node_modules/.bin/esbuild --bundle --sourcemap --target=ES6 --outfile=public/bundle.js client/app.jsx",
-    "test": "jest --coverage",
+    "test": "jest --coverage --silent=false",
     "devTest": "jest --watchAll --verbose",
     "testJest": "jest --detectOpenHandles",
     "buildApi": "esbuild --bundle --platform=node --outfile=api/index.js server/index.js --external:oracledb --external:pg --external:tedious --external:mysql2 --external:better-sqlite3 --external:sqlite3 --external:pg-query-stream"

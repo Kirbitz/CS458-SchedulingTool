@@ -41,7 +41,6 @@ describe('testing loginCallBack from login.js', () => {
         username: 'notUsername',
         password: 'notPassword'
       })
-
     expect(response.statusCode).toEqual(401)
     expect(response.body.error.status).toEqual(401)
     expect(response.body.error.message).toEqual('Unauthorized')
