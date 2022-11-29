@@ -38,7 +38,7 @@ describe('Tests for department.js', () => {
   })
 
   it('Test for postDepartment - Success', async () => {
-    jest.spyOn(dbClient, 'insert').mockReturnValue(15)
+    jest.spyOn(dbClient, 'insert').mockReturnValue([15])
     const response = await request.post('/api/postDepartment')
       .send({
         deptName: 'testDept',
@@ -48,6 +48,7 @@ describe('Tests for department.js', () => {
 
     expect(response.statusCode).toBe(201)
     expect(response.body.message).toBe('Department created with ID: 15')
+    expect(response.body.deptId).toBe(15)
   })
 
   it('Test for postDepartment - Fail', async () => {

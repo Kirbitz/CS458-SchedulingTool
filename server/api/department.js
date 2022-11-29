@@ -22,7 +22,8 @@ const postDepartmentCallback = async (req, res) => {
         deptHourCap: data.deptHourCap
       })
     res.status(201).json({
-      message: 'Department created with ID: ' + response
+      message: 'Department created with ID: ' + response,
+      deptId: response[0]
     })
   } catch (error) {
     console.log(error)

@@ -113,9 +113,24 @@ axios({
   Returns the deptId for the created department
   
   ```json
-  [
-    5
-  ]
+  {
+    "message": "Department created with ID: 15",
+    "deptId": 15
+  }
+  ```
+
+- **Fail Response:**
+
+  **Code:** `500 Internal Server Error`
+
+  **Content:**
+
+  Returns an error message
+
+  ```json
+  {
+    "message": "Internal server error while creating department"
+  }
   ```
 
 ## Sample Call
