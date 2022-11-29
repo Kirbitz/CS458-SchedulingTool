@@ -5,19 +5,7 @@ const request = require('supertest')(myIndex)
 
 jest.mock('knex')
 
-const mockTrx = {
-  where: jest.fn().mockReturnThis(),
-  insert: jest.fn().mockReturnThis(),
-  select: jest.fn().mockReturnThis(),
-  from: jest.fn().mockReturnThis(),
-  into: jest.fn().mockReturnThis(),
-  andWhere: jest.fn().mockReturnThis(),
-  then: jest.fn().mockReturnThis(),
-  transacting: jest.fn().mockReturnThis()
-}
-
 jest.mock('../../server/api/dbClient', () => ({
-  transaction: jest.fn(async (callback) => { await callback(mockTrx) }),
   select: jest.fn().mockReturnThis(),
   where: jest.fn().mockReturnThis(),
   from: jest.fn().mockReturnThis(),
