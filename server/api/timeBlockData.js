@@ -36,7 +36,7 @@ const collectTimeBlockData = async (req, res) => {
   }
 
   try {
-    verifyJWTAuthToken()
+    verifyJWTAuthToken(req, res)
   } catch (err) {
     return
   }
@@ -55,7 +55,7 @@ const collectTimeBlockData = async (req, res) => {
 const createModifyTimeBlockData = async (req, res) => {
   const timeData = req.body
 
-  if (!timeData.timeStart || !timeData.timeEnd || !timeData.timeType) {
+  if (!timeData.timeStart || !timeData.timeEnd || !(timeData.timeType + 1)) {
     res.status(400)
       .json({
         error: {
@@ -66,7 +66,17 @@ const createModifyTimeBlockData = async (req, res) => {
     return
   }
 
-  const regex = '^\\d{4}\\-(0?[1-9]|1[012])\\-(0?[1-9]|[12][0-9]|3[01])[Z ]$'
+  timeData.timeStart = timeData.timeStart.replace('Z', ' ').replace('T', '')
+  timeData.timeEnd = timeData.timeEnd.replace('Z', ' ').replace('T', '')
+
+  // Regex pattern, yyyy-mm-dd HH:MM:ss
+  // yyyy - any number
+  // mm - number between 01 and 12
+  // dd - number between 01 and 31
+  // HH - number between 00 and 23
+  // MM - number between 01 and 59
+  // ss - number between 00 and 59
+  const regex = '^\\d{4}\\-(0?[1-9]|1[012])\\-(0?[1-9]|[12][0-9]|3[01]) (0?[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$'
 
   if (!timeData.timeStart.match(regex) || !timeData.timeEnd.match(regex) || !Number.isInteger(timeData.timeType)) {
     res.status(400)
@@ -80,7 +90,7 @@ const createModifyTimeBlockData = async (req, res) => {
   }
 
   try {
-    verifyJWTAuthToken()
+    verifyJWTAuthToken(req, res)
   } catch (err) {
     return
   }
@@ -103,7 +113,7 @@ const deleteTimeBlockData = async (req, res) => {
   }
 
   try {
-    verifyJWTAuthToken()
+    verifyJWTAuthToken(req, res)
   } catch (err) {
     return
   }
@@ -111,10 +121,10 @@ const deleteTimeBlockData = async (req, res) => {
   try {
     await deleteTimeBlockInDB(_timeId)
 
-    res.status(200)
+    res.status(202)
       .json({
         success: {
-          status: 200,
+          status: 202,
           message: 'Time Block Deleted',
           timeId: _timeId
         }
@@ -147,35 +157,42 @@ const getTimeBlocksFromDB = async (startDate, endDate) => {
 
 const createModifyTimeBlockInDB = async (res, timeData) => {
   try {
-    dbClient.transaction(async trx => {
-      if (checkOptionalInt(res, timeData.positionId)) {
+    await dbClient.transaction(async trx => {
+      // Checks the time id is not equal to zero
+      // Zero indicates the time block was not created by a manager
+      if (timeData.timeId !== 0) {
         const _deptId = await getDepartmentId(timeData, trx)
-
-        dbClient('TimeBlock')
-          .insert({
-            timeId: timeData?.timeId,
-            timeStart: timeData.timeStart,
-            timeEnd: timeData.timeEnd,
-            timeType: timeData.timeType,
-            positionId: timeData.positionId,
-            deptId: _deptId
-          })
+        await dbClient.insert({
+          timeId: timeData?.timeId,
+          timeStart: timeData.timeStart,
+          timeEnd: timeData.timeEnd,
+          timeType: timeData.timeType,
+          positionId: timeData?.positionId,
+          deptId: _deptId,
+          userId: timeData.userId
+        })
+          .into('TimeBlock')
           .onConflict('timeId')
           .merge()
           .transacting(trx)
+          .catch(err => { throw err })
       } else {
-        dbClient('TimeBlock')
-          .insert({
-            timeId: timeData?.timeId,
-            timeStart: timeData.timeStart,
-            timeEnd: timeData.timeEnd,
-            timeType: timeData.timeType
-          })
+        await dbClient.insert({
+          timeId: timeData?.timeId,
+          timeStart: timeData.timeStart,
+          timeEnd: timeData.timeEnd,
+          timeType: timeData.timeType,
+          positionId: null,
+          deptId: null,
+          userId: timeData.userId
+        })
+          .into('TimeBlock')
           .onConflict('timeId')
           .merge()
           .transacting(trx)
+          .catch(err => { throw err })
       }
-    })
+    }).catch(err => { throw err })
     res.status(200)
       .json({
         success: {
@@ -196,11 +213,21 @@ const createModifyTimeBlockInDB = async (res, timeData) => {
 }
 
 const deleteTimeBlockInDB = async (_timeId) => {
-  return dbClient('TimeBlock')
+  return dbClient.from('TimeBlock')
     .where({ timeId: _timeId })
-    .del({ includeTriggerModifications: true })
-    .then(response => { return response })
+    .del()
     .catch(err => { throw err })
+}
+
+const checkManagerPermissions = async (_userId) => {
+  const permission = await dbClient.select('userPermissions')
+    .from('User')
+    .where('userId', '=', _userId)
+    .then(result => {
+      return result
+    })
+
+  return permission > 0
 }
 
 const getDepartmentId = (accountData, trx) => {
@@ -212,22 +239,6 @@ const getDepartmentId = (accountData, trx) => {
     .then(result => {
       return result[0].deptId
     })
-}
-
-const checkOptionalInt = (res, data) => {
-  if (data) {
-    if (!Number.isInteger(data)) {
-      res.status(400)
-        .json({
-          error: {
-            status: 400,
-            message: 'Invalid Data Provided'
-          }
-        }).end()
-      return false
-    }
-  }
-  return true
 }
 
 module.exports = {
