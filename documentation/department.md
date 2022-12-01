@@ -14,15 +14,11 @@
 
 - **Data Params**
 
-  _Required:_ Department ID
-
-  `deptID: [int]`
-
-  `1`
+  None
 
 - **Auth Required:**
 
-  Only database authorization
+  JWT set in authorization header
 
 - **Content:**
 
@@ -58,9 +54,7 @@ axios({
   method: 'GET',
   url: '/getEmployees',
   responseType: 'json',
-  data: {
-    deptId: 1
-  }
+  data: { }
 });
 ```
 
@@ -100,7 +94,7 @@ axios({
 
 - **Auth Required:**
 
-  Only database authorization
+  JWT set in authorization header
 
 ## Response
 
@@ -170,7 +164,7 @@ Returns json data for all existing departments
 
 - **Auth Required:**
 
-  Only database authorization
+  JWT set in authorization header
 
 ## Response
 
@@ -255,7 +249,7 @@ Allows you to delete a user in the database, as well as entries in associated ch
 
   `3`
 
-- **Auth Required:** Deleting user must be a manager
+- **Auth Required:** JWT set in authorization header
 
 ## Response
 

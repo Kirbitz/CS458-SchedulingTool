@@ -1,16 +1,18 @@
 const myIndex = require('../../server/index.js')
 const dbClient = require('../../server/api/dbClient')
-// const department = require('../../server/api/department.js')
+const dataHelper = require('../../server/api/dataHelper')
 const request = require('supertest')(myIndex)
 
 jest.mock('knex')
+jest.mock('../../server/api/dataHelper')
 
 jest.mock('../../server/api/dbClient', () => ({
   select: jest.fn().mockReturnThis(),
   where: jest.fn().mockReturnThis(),
+  whereIn: jest.fn().mockReturnThis(),
   from: jest.fn().mockReturnThis(),
   andWhere: jest.fn().mockReturnThis(),
-  then: jest.fn().mockReturnValue([{ userId: 3, userName: 'test' }]),
+  then: jest.fn().mockReturnValue(),
   join: jest.fn().mockReturnThis(),
   insert: jest.fn().mockReturnThis(),
   into: jest.fn().mockReturnThis(),
@@ -19,22 +21,35 @@ jest.mock('../../server/api/dbClient', () => ({
 }))
 
 describe('Tests for department.js', () => {
-  beforeAll(() => {
+  beforeEach(() => {
     // jest.spyOn(console, 'log').mockImplementation(() => {})
+    jest.spyOn(dataHelper, 'verifyJWTAuthToken').mockImplementation(jest.fn(() => { }))
   })
 
-  it('Test for getEmployeesByDepartment', async () => {
+  it('Test for getEmployeesByDepartment - Success', async () => {
     // Set up mocking for this test
+    jest.spyOn(dbClient, 'then').mockImplementationOnce(jest.fn().mockReturnValue([5]))
     jest.spyOn(dbClient, 'then').mockImplementationOnce(jest.fn().mockReturnValue([{ userId: 3, userName: 'test' }]))
 
     const response = await request.get('/api/getEmployees')
-      .send({
-        deptId: 1
-      })
+      .send({})
 
     expect(response.statusCode).toBe(200)
     expect(response.body[0].userId).toBe(3)
     expect(response.body[0].userName).toBe('test')
+  })
+
+  it('Test for getEmployeesByDepartment - fail', async () => {
+    // Set up mocking for this test
+    jest.spyOn(dbClient, 'then').mockImplementationOnce(jest.fn().mockReturnValue())
+    jest.spyOn(dbClient, 'join').mockImplementation(() => {
+      throw new Error('I am an error')
+    })
+
+    const response = await request.get('/api/getEmployees')
+      .send({})
+
+    expect(response.statusCode).toBe(500)
   })
 
   it('Test for postDepartment - Success', async () => {
@@ -68,7 +83,7 @@ describe('Tests for department.js', () => {
   })
 
   it('Test for getDepartments', async () => {
-    jest.spyOn(dbClient, 'then').mockImplementationOnce(jest.fn().mockReturnValue({
+    jest.spyOn(dbClient, 'from').mockImplementationOnce(jest.fn().mockReturnValue({
       deptId: 0,
       deptName: 'testDept',
       deptLocation: 'MSC',
@@ -99,7 +114,7 @@ describe('Tests for department.js', () => {
     jest.spyOn(dbClient, 'del').mockImplementation(jest.fn().mockReturnValue(0))
     const response = await request.delete('/api/deleteEmployee')
       .send({
-        userId: 40,
+        employeeId: 40,
         deptId: 14
       })
 

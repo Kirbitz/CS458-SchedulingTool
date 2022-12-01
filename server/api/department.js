@@ -1,17 +1,55 @@
 const dbClient = require('./dbClient')
+const { verifyJWTAuthToken } = require('./dataHelper')
 
 // Request should contain a department ID, response should return list of employees in that department
 const getEmployeesFromDepartment = async (req, res) => {
-  const deptId = req.body.deptId
-  res.status(200).json(await dbClient.select('_userDept.userId', 'User.userName')
+  // Verify and add the user ID to the request
+  try {
+    verifyJWTAuthToken(req, res)
+  } catch (error) {
+    return
+  }
+
+  // Main code for endpoint
+  try {
+    // Get the departments that the user belongs to and place the IDs into an array
+    const tempIds = await getDepartmentsFromUserId(req.body.userId, res)
+    const deptIds = []
+    tempIds.forEach(element => {
+      deptIds.push(element.deptId)
+    })
+    // Query the employees from the departments the logged in user is a manager of
+    res.status(200).json(await dbClient.select('_userDept.userId', 'User.userName')
+      .from('_userDept')
+      .whereIn('_userDept.deptId', deptIds)
+      .andWhere('isManager', 1)
+      .join('User', 'User.userId', '_userDept.userId')
+      .then((result) => { return result }))
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      message: 'Error while getting employees from department'
+    })
+  }
+}
+
+// Use the userId from the token to get the departments that user manages. Return the list of deptIds
+const getDepartmentsFromUserId = async (userId, res) => {
+  return (dbClient.select('_userDept.deptId')
     .from('_userDept')
-    .join('User', 'User.userId', '_userDept.userId')
-    .where('_userDept.deptId', deptId)
+    .where('userId', userId)
     .then((result) => { return result }))
 }
 
 // Create a department
 const postDepartmentCallback = async (req, res) => {
+  // Verify and add the user ID to the request
+  try {
+    verifyJWTAuthToken(req, res)
+  } catch (error) {
+    return
+  }
+
   const data = req.body
   try {
     const response = await dbClient
@@ -37,28 +75,41 @@ const postDepartmentCallback = async (req, res) => {
 
 // Get department
 const getDepartments = async (req, res) => {
+  // Verify and add the user ID to the request
+  try {
+    verifyJWTAuthToken(req, res)
+  } catch (error) {
+    return
+  }
+
   res.status(200).json(await dbClient
     .select('deptId', 'deptName', 'deptLocation', 'deptHourCap')
-    .from('Department')
-    .then(result => { return result }))
+    .from('Department'))
 }
 
 // Callback/wrapper for deleting an employee
 const deleteEmployeeFromDeptCallback = async (req, res) => {
+  // Verify and add the user ID to the request
+  try {
+    verifyJWTAuthToken(req, res)
+  } catch (error) {
+    return
+  }
+
   // Grab the data
   const data = req.body
   try {
     // Execute query and get rows affected
     const response = await dbClient
       .from('_userDept')
-      .where('userId', data.userId)
+      .where('userId', data.employeeId)
       .andWhere('deptId', data.deptId)
       .del()
 
     // If no rows are affected, 404
     if (response === 0) {
       res.status(404).json({
-        message: 'No employee with id ' + data.userId + ' found'
+        message: 'No employee with id ' + data.employeeId + ' found'
       })
       return
     }
@@ -79,6 +130,7 @@ const deleteEmployeeFromDeptCallback = async (req, res) => {
 
 module.exports = {
   getEmployeesFromDepartment,
+  getDepartmentsFromUserId,
   postDepartmentCallback,
   getDepartments,
   deleteEmployeeFromDeptCallback
