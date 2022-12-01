@@ -28,9 +28,9 @@ Returns json data containing a list of time blocks and employees.
 
 - **Success Response:**
 
-**Code:** `200 OK`
+  **Code:** `200 OK`
 
-**Content:**
+  **Content:**
 
 ```json
 {
@@ -40,7 +40,7 @@ Returns json data containing a list of time blocks and employees.
       "startTime": "01:00:00",
       "endTime": "23:00:00",
       "positionID": 1,
-      "position": "Grill",
+      "positionName": "Grill",
       "assignedToID": 5,
       "assignedToName": "Joe Schmoe",
     },
