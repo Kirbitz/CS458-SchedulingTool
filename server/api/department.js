@@ -1,6 +1,38 @@
 const dbClient = require('./dbClient')
 const { verifyJWTAuthToken } = require('./dataHelper')
 
+// Query for searching employees
+const searchEmployeesCallback = async (req, res) => {
+  // Verify and add the user ID to the request
+  try {
+    verifyJWTAuthToken(req, res)
+  } catch (error) {
+    return
+  }
+
+  try {
+    const searchData = req.params.search
+    if (searchData.match('([a-zA-Z\\s])') || searchData.match('([\\d])')) {
+      res.status(200).json(await dbClient.select('User.userId', 'User.userName')
+        .from('User')
+        .whereLike('User.userId', '%{searchData}%')
+        .orWhereLike('User.userName', '%{searchData}%'))
+    } else {
+      throw new Error('Invalid Search')
+    }
+  } catch (error) {
+    if (error.message === 'Invalid Search') {
+      res.status(400).json({
+        message: 'Invalid combination of characters: use alphabetical or digits - not both'
+      })
+    } else {
+      res.status(500).json({
+        message: 'Server error while searching for employees'
+      })
+    }
+  }
+}
+
 // Request should contain a department ID, response should return list of employees in that department
 const getEmployeesFromDepartment = async (req, res) => {
   // Verify and add the user ID to the request
@@ -129,6 +161,7 @@ const deleteEmployeeFromDeptCallback = async (req, res) => {
 }
 
 module.exports = {
+  searchEmployeesCallback,
   getEmployeesFromDepartment,
   getDepartmentsFromUserId,
   postDepartmentCallback,
