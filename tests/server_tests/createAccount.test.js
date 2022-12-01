@@ -35,6 +35,7 @@ jest.mock('../../server/api/dbClient', () => ({
 describe('Testing createAccountCallback from createAccount.js', () => {
   beforeAll(() => {
     jest.spyOn(console, 'log').mockImplementation(() => {})
+    jest.spyOn(console, 'error').mockImplementation(() => {})
     jest.spyOn(dataHelper, 'verifyJWTAuthToken').mockImplementation(jest.fn(() => { }))
     jest.spyOn(validateAccount, 'validateNewAccountCallback').mockImplementation(jest.fn((req, res) => { createAccount.createAccountCallback(req, res) }))
   })

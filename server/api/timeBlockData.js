@@ -3,7 +3,9 @@ const { verifyJWTAuthToken } = require('./dataHelper')
 // Database connection with knex
 const dbClient = require('./dbClient')
 
+// Collects the timeBlock data from database between a provided start and end date
 const collectTimeBlockData = async (req, res) => {
+  // Collects start and end dates from URI parameters
   const startDate = req.params.startDate
   const endDate = req.params.endDate
 
@@ -13,6 +15,8 @@ const collectTimeBlockData = async (req, res) => {
   // dd - number between 01 and 31
   const regex = '^\\d{4}\\-(0?[1-9]|1[012])\\-(0?[1-9]|[12][0-9]|3[01])$'
 
+  // Checks the start and end dates exist
+  // Returns 400 if either is missing
   if (!startDate || !endDate) {
     res.status(400)
       .json({
@@ -24,6 +28,8 @@ const collectTimeBlockData = async (req, res) => {
     return
   }
 
+  // Checks the start and end dates follow a proper date format
+  // Returns 400 if either is in an invalid format
   if (!startDate.match(regex) || !endDate.match(regex)) {
     res.status(400)
       .json({
@@ -35,12 +41,14 @@ const collectTimeBlockData = async (req, res) => {
     return
   }
 
+  // Validates the user is logged in through JWT authentication
   try {
     verifyJWTAuthToken(req, res)
   } catch (err) {
     return
   }
 
+  // Collects timeBlock data from database
   const _timeBlocks = await getTimeBlocksFromDB(`${startDate}T00:00:00Z`, `${endDate}T23:59:59Z`)
 
   res.status(200)
@@ -52,9 +60,12 @@ const collectTimeBlockData = async (req, res) => {
     }).end()
 }
 
+// Create or modifies a timeBlock based on user input and permissions
 const createModifyTimeBlockData = async (req, res) => {
+  // Collects data passed in from body
   const timeData = req.body
 
+  // Validates required data exists based on documentation
   if (!timeData.timeStart || !timeData.timeEnd || !(timeData.timeType + 1)) {
     res.status(400)
       .json({
@@ -66,6 +77,7 @@ const createModifyTimeBlockData = async (req, res) => {
     return
   }
 
+  // Removes potential artifacts from date string
   timeData.timeStart = timeData.timeStart.replace('Z', ' ').replace('T', '')
   timeData.timeEnd = timeData.timeEnd.replace('Z', ' ').replace('T', '')
 
@@ -78,6 +90,7 @@ const createModifyTimeBlockData = async (req, res) => {
   // ss - number between 00 and 59
   const regex = '^\\d{4}\\-(0?[1-9]|1[012])\\-(0?[1-9]|[12][0-9]|3[01]) (0?[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$'
 
+  // Validates required parameters based on documentation
   if (!timeData.timeStart.match(regex) || !timeData.timeEnd.match(regex) || !Number.isInteger(timeData.timeType)) {
     res.status(400)
       .json({
@@ -89,18 +102,23 @@ const createModifyTimeBlockData = async (req, res) => {
     return
   }
 
+  // Validates the user is logged in through JWT authentication
   try {
     verifyJWTAuthToken(req, res)
   } catch (err) {
     return
   }
 
+  // Runs final part in method connecting to db as to account for potential failure handling
   await createModifyTimeBlockInDB(res, timeData)
 }
 
+// Deletes a specific timeBlock from the database
 const deleteTimeBlockData = async (req, res) => {
+  // Grabs the id of the timeBlock to be deleted
   const _timeId = req.body.timeId
 
+  // Validates the time Id exists and is a number
   if (!_timeId || !Number.isInteger(_timeId)) {
     res.status(400)
       .json({
@@ -112,12 +130,15 @@ const deleteTimeBlockData = async (req, res) => {
     return
   }
 
+  // Validates the user is logged in through JWT authentication
   try {
     verifyJWTAuthToken(req, res)
   } catch (err) {
     return
   }
 
+  // Tries to remove timeBlock from database
+  // Throws 500 error if the removal fails
   try {
     await deleteTimeBlockInDB(_timeId)
 
@@ -155,8 +176,10 @@ const getTimeBlocksFromDB = async (startDate, endDate) => {
     })
 }
 
+// Creates/Modifies a TimeBlock in DB
 const createModifyTimeBlockInDB = async (res, timeData) => {
   try {
+    // Checks if the time block failed due to user permissions
     let failedWithoutError = false
     await dbClient.transaction(async trx => {
       // Checks the time id is not equal to zero
@@ -164,6 +187,7 @@ const createModifyTimeBlockInDB = async (res, timeData) => {
       if (timeData.timeId !== 0) {
         // Checks the user permissions are manager or above
         if (checkManagerPermissions(timeData.userId)) {
+          // Collects department data based on the manager
           const _deptId = await getDepartmentId(timeData, trx)
           await dbClient.insert({
             timeId: timeData?.timeId,
@@ -200,6 +224,7 @@ const createModifyTimeBlockInDB = async (res, timeData) => {
       }
     }).catch(err => { throw err })
 
+    // Checks for change and/or successful user permissions
     if (failedWithoutError) {
       res.status(401)
         .json({
@@ -230,6 +255,7 @@ const createModifyTimeBlockInDB = async (res, timeData) => {
   }
 }
 
+// Removes a timeBlock in the DB based on timeId
 const deleteTimeBlockInDB = async (_timeId) => {
   return dbClient.from('TimeBlock')
     .where({ timeId: _timeId })
@@ -237,6 +263,7 @@ const deleteTimeBlockInDB = async (_timeId) => {
     .catch(err => { throw err })
 }
 
+// Checks the permission level of the user is manager or above
 const checkManagerPermissions = async (_userId) => {
   const data = await dbClient.select('userPermissions')
     .from('User')
@@ -248,6 +275,7 @@ const checkManagerPermissions = async (_userId) => {
   return data.permission > 0
 }
 
+// Grabs department Id of a user
 const getDepartmentId = (accountData, trx) => {
   return dbClient.select('deptId')
     .from('_userDept')

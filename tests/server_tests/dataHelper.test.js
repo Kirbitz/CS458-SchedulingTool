@@ -16,7 +16,7 @@ describe('Testing dataHelper functions', () => {
   it('verifyJWTAuthToken: JWT should not verify', async () => {
     // using route as an easy way to test
     jest.spyOn(login, 'loginCallback').mockImplementation((req, res) => {
-      res.cookie('Authorization', 'badAuth')
+      // res.cookie('Authorization', 'badAuth')
       dataHelper.verifyJWTAuthToken(req, res)
     })
 
