@@ -157,25 +157,31 @@ const getTimeBlocksFromDB = async (startDate, endDate) => {
 
 const createModifyTimeBlockInDB = async (res, timeData) => {
   try {
+    let failedWithoutError = false
     await dbClient.transaction(async trx => {
       // Checks the time id is not equal to zero
       // Zero indicates the time block was not created by a manager
       if (timeData.timeId !== 0) {
-        const _deptId = await getDepartmentId(timeData, trx)
-        await dbClient.insert({
-          timeId: timeData?.timeId,
-          timeStart: timeData.timeStart,
-          timeEnd: timeData.timeEnd,
-          timeType: timeData.timeType,
-          positionId: timeData?.positionId,
-          deptId: _deptId,
-          userId: timeData.userId
-        })
-          .into('TimeBlock')
-          .onConflict('timeId')
-          .merge()
-          .transacting(trx)
-          .catch(err => { throw err })
+        // Checks the user permissions are manager or above
+        if (checkManagerPermissions(timeData.userId)) {
+          const _deptId = await getDepartmentId(timeData, trx)
+          await dbClient.insert({
+            timeId: timeData?.timeId,
+            timeStart: timeData.timeStart,
+            timeEnd: timeData.timeEnd,
+            timeType: timeData.timeType,
+            positionId: timeData?.positionId,
+            deptId: _deptId,
+            userId: timeData.employeeId
+          })
+            .into('TimeBlock')
+            .onConflict('timeId')
+            .merge()
+            .transacting(trx)
+            .catch(err => { throw err })
+        } else {
+          failedWithoutError = true
+        }
       } else {
         await dbClient.insert({
           timeId: timeData?.timeId,
@@ -193,13 +199,25 @@ const createModifyTimeBlockInDB = async (res, timeData) => {
           .catch(err => { throw err })
       }
     }).catch(err => { throw err })
-    res.status(200)
-      .json({
-        success: {
-          status: 200,
-          message: 'Time Block Created or Modified'
-        }
-      }).end()
+
+    if (failedWithoutError) {
+      res.status(401)
+        .json({
+          error: {
+            status: 401,
+            message: 'Unauthorized'
+          }
+        })
+        .end()
+    } else {
+      res.status(200)
+        .json({
+          success: {
+            status: 200,
+            message: 'Time Block Created or Modified'
+          }
+        }).end()
+    }
   } catch (err) {
     console.error(err)
     res.status(500)
@@ -220,14 +238,14 @@ const deleteTimeBlockInDB = async (_timeId) => {
 }
 
 const checkManagerPermissions = async (_userId) => {
-  const permission = await dbClient.select('userPermissions')
+  const data = await dbClient.select('userPermissions')
     .from('User')
     .where('userId', '=', _userId)
     .then(result => {
       return result
     })
 
-  return permission > 0
+  return data.permission > 0
 }
 
 const getDepartmentId = (accountData, trx) => {

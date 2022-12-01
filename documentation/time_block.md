@@ -147,6 +147,12 @@ axios({
 
   `1234`
 
+  __Optional:__ Employee Id
+
+  `employeeId: [int]`
+
+  `1234`
+
 - **Auth Required:** Yes, JWT set in Authorization header.
 
 ## Response
@@ -224,7 +230,9 @@ axios({
     timeStart: "20XX-01-01 00:00:00",
     timeEnd: "20XX-01-01 00:00:00",
     timeType: 2,
-    positionId: 12
+    positionId: 12,
+    timeId: 123,
+    employeeId: 1234
   }
 })
 ```
