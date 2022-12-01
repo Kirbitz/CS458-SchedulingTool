@@ -1,11 +1,15 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 
 import { IconButton, Grid, Stack } from '@mui/material'
 import { ArrowBack, ArrowForward } from '@mui/icons-material'
 
 // Component to display and change the currently selected week
 export default function WeekChanger (props) {
-  const [week, setWeek] = useState(new Date())
+  const [week, setWeek] = useState(props.date)
+
+  // Used to pass a new date to the parent page after a button press
+  const passNewDate = props.passNewDate
 
   const [, updateState] = React.useState()
   const forceRender = React.useCallback(() => updateState({}), [])
@@ -34,6 +38,7 @@ export default function WeekChanger (props) {
     const thisDate = new Date(week)
     thisDate.setDate(thisDate.getDate() - 7)
     setWeek(thisDate)
+    passNewDate(thisDate)
     forceRender()
   }
   // Moves the current week forward by one week
@@ -41,6 +46,7 @@ export default function WeekChanger (props) {
     const thisDate = new Date(week)
     thisDate.setDate(thisDate.getDate() + 7)
     setWeek(thisDate)
+    passNewDate(thisDate)
     forceRender()
   }
   /* For use in the bi-weekly view. Commented out until it is implemented fully.
@@ -85,4 +91,14 @@ export default function WeekChanger (props) {
       </Grid>
     </Grid>
   )
+}
+// Checks that the props passed in match the correct type
+WeekChanger.propTypes = {
+  date: PropTypes.date,
+  passNewDate: PropTypes.func
+}
+
+// defaults the props to a set value if they are not required
+WeekChanger.defaultProps = {
+  week: new Date()
 }
