@@ -22,6 +22,12 @@ Returns json data containing a list of time blocks and employees.
 
   `2022-12-1 00:00:00`
 
+  __Required:__ Position ID
+
+  `positionId: [int]`
+
+  `1`
+
 - **Auth Required:** Yes, JWT set in Authorization header.
 
 ## Response
@@ -51,10 +57,7 @@ Returns json data containing a list of time blocks and employees.
   "employees": [
     {
       "employeeID": 5,
-      "employeeName": "Joe Schmoe",
-      "positionIDs": [
-        1, 2, 3, 4
-      ]
+      "employeeName": "Joe Schmoe"
     },
     {
       // ... As many as found
