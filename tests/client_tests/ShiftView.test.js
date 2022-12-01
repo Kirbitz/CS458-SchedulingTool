@@ -1,4 +1,4 @@
-// Day component exists
+// ShiftView component exists
 import ShiftView from '../../client/Pages/ShiftView.jsx'
 import React from 'react'
 import { render } from '@testing-library/react'
