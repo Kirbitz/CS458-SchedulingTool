@@ -6,7 +6,6 @@ import { Delete, Edit, PersonOff } from '@mui/icons-material'
 /** Notes for Shift:
  * TODO: Create const objects for conflicting, unassigned, assigned, unsaved colors.
  * TODO: Change assignment menu button color upon state change.
- * TODO: Make employee list scrollable.
  */
 
 // Component to display shift information and provide access to tools for shift assignment and editing
@@ -90,14 +89,14 @@ export default function Shift (props) {
             elevation={ 0 }
             variant="contained"
             // endIcon={ <KeyboardArrowDown /> }
-            onClick={ handleClickListItem }
+              onClick={ handleClickListItem }
             sx={{ width: 250 }}
           >
             <Typography noWrap>
               { employees[selectedIndex] }
             </Typography>
           </Button>
-          <Menu
+          <Menu sx={{ 'overflow-y': scroll }}
             aria-label="employee-menu"
             id="employee-menu"
             anchorEl={ anchorEl }

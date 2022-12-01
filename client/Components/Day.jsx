@@ -3,13 +3,13 @@ import PropTypes from 'prop-types'
 
 import { Button, Card, Typography, CardContent } from '@mui/material'
 // temp comment out use navigate because tests are failing, does not like without context of router
-// import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 // TODO: Find some way to use useNavigate() and still pass testing.
 // Week component for the master schedule view
 export default function Day (props) {
   const { weekday } = props
-  // const navigate = useNavigate() // This hook is used by the button to navigate to the shift view.
+  const navigate = useNavigate() // This hook is used by the button to navigate to the shift view.
 
   // Colors
   // Green #1fd655, Red #FFCCCB, Grey #B4B5B4
@@ -42,7 +42,7 @@ export default function Day (props) {
             backgroundColor: buttonColor
           }}
           onClick={() => {
-            // navigate('/master-schedule/shift')
+            navigate('/master-schedule/shift')
           }}
         >
         <CardContent>
