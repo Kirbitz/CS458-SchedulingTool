@@ -11,12 +11,14 @@ const searchEmployeesCallback = async (req, res) => {
   }
 
   try {
-    const searchData = req.params.search
+    const searchData = (req.params.search).trim()
+    console.log('Search data:', searchData)
     if (searchData.match('([a-zA-Z\\s])') || searchData.match('([\\d])')) {
+      console.log('Exectuing query')
       res.status(200).json(await dbClient.select('User.userId', 'User.userName')
         .from('User')
-        .whereLike('User.userId', '%{searchData}%')
-        .orWhereLike('User.userName', '%{searchData}%'))
+        .whereILike('User.userId', `%${searchData}%`)
+        .orWhereILike('User.userName', `%${searchData}%`))
     } else {
       throw new Error('Invalid Search')
     }
