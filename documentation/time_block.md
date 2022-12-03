@@ -65,7 +65,7 @@
   {
     "error": {
       "status": 400,
-      "message": "Bad Request - Invalid Parameters"
+      "message": "Bad Request - Missing or Invalid Parameters"
     }
   }
   ```
@@ -88,6 +88,19 @@
   **Content:**
 
   None
+
+  **Code:** `500 INTERNAL SERVER ERROR`
+
+  **Content:** 
+
+  ```json
+  {
+    "error": {
+      "status": 500,
+      "message": "Internal Server Error"
+    }
+  }
+  ```
 
 ## Sample Call
 
@@ -182,7 +195,7 @@ axios({
   {
     "error": {
       "status": 400,
-      "message": "Bad Request - Input Invalid",
+      "message": "Bad Request - Input Missing or Invalid",
     }
   }
   ```
@@ -267,14 +280,14 @@ axios({
 
 - **Success Response:**
 
-  **Code:** `204 NO CONTENT`
+  **Code:** `202 DELETED`
 
   **Content:**
 
   ```json
   {
     "success": {
-      "status": 204,
+      "status": 202,
       "message": "Time Block Deleted",
       "timeId": 123456
     }

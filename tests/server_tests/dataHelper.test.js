@@ -1,11 +1,4 @@
-const myApp = require('../../server/index')
-const supertest = require('supertest')
-const request = supertest(myApp)
-
 const dataHelper = require('../../server/api/dataHelper')
-const login = require('../../server/api/login')
-
-jest.mock('../../server/api/login')
 
 describe('Testing dataHelper functions', () => {
   beforeAll(() => {
@@ -14,20 +7,15 @@ describe('Testing dataHelper functions', () => {
   })
 
   it('verifyJWTAuthToken: JWT should not verify', async () => {
+    let err
     // using route as an easy way to test
-    jest.spyOn(login, 'loginCallback').mockImplementation((req, res) => {
-      // res.cookie('Authorization', 'badAuth')
-      dataHelper.verifyJWTAuthToken(req, res)
-    })
+    const req = { headers: { authorization: 'BadAuth' } }
+    try {
+      dataHelper.verifyJWTAuthToken(req)
+    } catch (_err) {
+      err = _err
+    }
 
-    process.env.JWTSecret = 'testSecret'
-
-    const response = await request.post('/api/login')
-      .send({
-        username: 'username',
-        password: 'password'
-      })
-
-    expect(response.statusCode).toBe(401)
+    expect(err).toBeInstanceOf(Error)
   })
 })
