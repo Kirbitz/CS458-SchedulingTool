@@ -49,6 +49,9 @@ const collectTimeBlockData = async (req, res) => {
 // Create or modifies a timeBlock based on user input and permissions
 const createModifyTimeBlockData = async (req, res) => {
   try {
+    // Validates the user is logged in through JWT authentication
+    verifyJWTAuthToken(req)
+
     // Collects data passed in from body
     const timeData = req.body
 
@@ -76,9 +79,6 @@ const createModifyTimeBlockData = async (req, res) => {
       throw new Error('Missing/Invalid Data', { cause: { error: { status: 400, message: 'Required Data Is Invalid' } } })
     }
 
-    // Validates the user is logged in through JWT authentication
-    verifyJWTAuthToken(req)
-
     // Runs final part in method connecting to db as to account for potential failure handling
     await createModifyTimeBlockInDB(res, timeData)
 
@@ -97,6 +97,9 @@ const createModifyTimeBlockData = async (req, res) => {
 // Deletes a specific timeBlock from the database
 const deleteTimeBlockData = async (req, res) => {
   try {
+    // Validates the user is logged in through JWT authentication
+    verifyJWTAuthToken(req)
+
     // Grabs the id of the timeBlock to be deleted
     const _timeId = req.body.timeId
 
@@ -104,9 +107,6 @@ const deleteTimeBlockData = async (req, res) => {
     if (!_timeId || !Number.isInteger(_timeId)) {
       throw new Error('Missing/Invalid Data', { cause: { error: { status: 400, message: 'Bad Request - Invalid or Missing Time ID' } } })
     }
-
-    // Validates the user is logged in through JWT authentication
-    verifyJWTAuthToken(req)
 
     // Tries to remove timeBlock from database
     await deleteTimeBlockInDB(_timeId)
