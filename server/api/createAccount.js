@@ -101,7 +101,7 @@ const insertRows = async (accountData) => {
     await createCredentialsRecord(accountData, trx)
 
     // Grab the manager's departmentID
-    const deptID = await getDepartmentId(accountData, trx)
+    const deptID = await getDepartmentId(accountData)
 
     // Create a _UserDepartment record
     await createUserDepartmentRecord(accountData, deptID, trx)

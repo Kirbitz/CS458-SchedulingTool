@@ -6,6 +6,9 @@ const dbClient = require('./dbClient')
 // Collects the timeBlock data from database between a provided start and end date
 const collectTimeBlockData = async (req, res) => {
   try {
+    // Validates the user is logged in through JWT authentication
+    verifyJWTAuthToken(req)
+
     // Collects start and end dates from URI parameters
     const startDate = req.params.startDate
     const endDate = req.params.endDate
@@ -27,9 +30,6 @@ const collectTimeBlockData = async (req, res) => {
     if (!startDate.match(regex) || !endDate.match(regex)) {
       throw new Error('Missing/Invalid Data', { cause: { error: { status: 400, message: 'Invalid start date or end date' } } })
     }
-
-    // Validates the user is logged in through JWT authentication
-    verifyJWTAuthToken(req)
 
     // Collects timeBlock data from database
     const _timeBlocks = await getTimeBlocksFromDB(`${startDate}T00:00:00Z`, `${endDate}T23:59:59Z`)
