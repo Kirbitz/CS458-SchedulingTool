@@ -1,15 +1,15 @@
 name: "CodeQL"
 
+paths-ignore:
+  - '**/**/*.test.js'
+  - '**/*.md'
+
 on:
   push:
     branches: [ "main" ]
-    paths-ignore:
-      - '/tests/**'
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ "main" ]
-    paths-ignore:
-      - '/tests/**'
   schedule:
     - cron: '42 14 * * 5'
 
