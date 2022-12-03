@@ -147,7 +147,7 @@ const createModifyTimeBlockInDB = async (res, timeData) => {
       // Checks the user permissions are manager or above
       if (timeData.isManager > 0) {
         // Collects department data based on the manager
-        const _deptId = await getDepartmentId(timeData, trx)
+        const _deptId = await getDepartmentId(timeData)
         await dbClient.insert({
           timeId: timeData?.timeId,
           timeStart: timeData.timeStart,
