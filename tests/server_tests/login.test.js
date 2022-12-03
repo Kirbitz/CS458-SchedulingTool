@@ -19,6 +19,7 @@ jest.mock('../../server/api/dbClient', () => ({
 describe('Tests for login.js', () => {
   beforeAll(() => {
     jest.spyOn(console, 'log').mockImplementation(() => {})
+    jest.spyOn(console, 'error').mockImplementation(() => {})
     jest.spyOn(dataHelper, 'getJWTSecret').mockImplementation(() => { return 'hello' })
   })
 
