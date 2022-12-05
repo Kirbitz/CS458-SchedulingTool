@@ -17,12 +17,18 @@ export default function WeekChanger (props) {
   function MondayDate (date) {
     const thisDate = new Date(date)
     thisDate.setDate((date.getDate() - date.getDay()) + 1) // Monday is 1 and Sunday is 0; subtracting the current day of the week from itself and adding 1 will give us Monday's date.
+    if (date.getDay() === 0) { // Since Sunday = 0, we need to go back one week if we're making Monday the first day of the week.
+      thisDate.setDate(thisDate.getDate() - 7)
+    }
     return thisDate
   }
 
   function SundayNextDate (date) {
     const thisDate = new Date(date)
     thisDate.setDate(date.getDate() + (7 - date.getDay())) // Sunday is 0; adding 7 minus the current day of the week will get us this coming Sunday's date.
+    if (date.getDay() === 0) { // Since Sunday = 0, we need to go back one week if we're making Monday the first day of the week.
+      thisDate.setDate(thisDate.getDate() - 7)
+    }
     return thisDate
   }
 
@@ -94,7 +100,7 @@ export default function WeekChanger (props) {
 }
 // Checks that the props passed in match the correct type
 WeekChanger.propTypes = {
-  date: PropTypes.date,
+  date: PropTypes.instanceOf(Date),
   passNewDate: PropTypes.func
 }
 
