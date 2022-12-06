@@ -14,7 +14,7 @@ Returns json data about the login session.
 
   None
 
-- **Data Params**
+- **Data Params:**
 
   _Required:_ Username
 

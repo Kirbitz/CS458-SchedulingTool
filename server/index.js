@@ -7,6 +7,9 @@ const app = new Express()
 
 app.use(cors())
 
+// Parse JSON bodies into JavaScript objects
+app.use(Express.json())
+
 // Logs all request made to the server
 app.use((req, response, next) => {
   console.log(`${req.method} at ${req.path}`)
