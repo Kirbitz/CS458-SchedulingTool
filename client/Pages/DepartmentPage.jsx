@@ -118,7 +118,7 @@ export default function DepartmentPage (props) {
   }
 
   // Runs a loading wheel to indicate that data is being fetched
-  if (!departmentInfo || departmentInfo === undefined) {
+  if (!departmentInfo) {
     return (
       <Box data-testid='department-page'>
         <NavigationBar selected="Department" />
