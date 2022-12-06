@@ -148,7 +148,7 @@ describe('Tests for department.js', () => {
       })
 
     expect(response.statusCode).toBe(404)
-    expect(response.body.message).toBe('No employee with id 40 found')
+    expect(response.body.message).toBe('No employee with that id found')
   })
 
   it('Test for deleteEmployee - fail', async () => {

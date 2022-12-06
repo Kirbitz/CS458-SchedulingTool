@@ -13,7 +13,6 @@ const searchEmployeesCallback = async (req, res) => {
   try {
     // Get the search data from the URL and check that it is a valid search item
     const searchData = (req.params.search).trim()
-    console.log(searchData)
     if (searchData.match('^[a-zA-Z]+$') || searchData.match('/^[0-9]+$/')) {
       console.log('Executing query')
       // This query searches for a user name or ID that is LIKE the search data
@@ -149,7 +148,7 @@ const deleteEmployeeFromDeptCallback = async (req, res) => {
     // If no rows are affected, 404
     if (response === 0) {
       res.status(404).json({
-        message: 'No employee with id ' + data.employeeId + ' found'
+        message: 'No employee with that id found'
       })
       return
     }
