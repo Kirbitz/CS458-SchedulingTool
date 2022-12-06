@@ -6,7 +6,7 @@ import Timeline from './Timeline.jsx'
 
 // Week component for the master schedule view
 export default function Week (props) {
-  const weekdates = props.weekdates
+  const { weekdates } = props
 
   // Maps each day and date of the week to a Day component
   const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day, index) => {

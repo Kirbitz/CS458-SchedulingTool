@@ -8,7 +8,8 @@ import { useNavigate } from 'react-router-dom'
 // TODO: Find some way to use useNavigate() and still pass testing.
 // Week component for the master schedule view
 export default function Day (props) {
-  const { weekday, date } = props
+  const { weekday } = props
+  // const { weekday, date } = props
   const navigate = useNavigate() // This hook is used by the button to navigate to the shift view.
 
   // console.log('Date for this Day is: ' + date)
