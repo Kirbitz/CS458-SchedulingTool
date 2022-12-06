@@ -23,6 +23,7 @@ export default function DepartmentPage (props) {
   const [inputInvalid, setInputInvalid] = React.useState(false)
   const [searchHappened, setSearchHappened] = React.useState(true)
   const [searchClicked, setSearchClicked] = React.useState(false)
+  // State management for open and close register modal
   const [registerOpen, setRegisterOpen] = React.useState(false)
   // Reference for checking data that is added to the search field
   const searchRef = useRef('')
@@ -130,9 +131,12 @@ export default function DepartmentPage (props) {
   //   )
   // }
 
+  // This function will close the register modal
   const handleRegistrationClose = () => {
     setRegisterOpen(false)
   }
+
+  // This function will open the register modal
   const handleRegistrationOpen = () => {
     setRegisterOpen(true)
   }
