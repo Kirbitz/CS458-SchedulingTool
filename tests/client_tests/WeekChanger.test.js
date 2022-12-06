@@ -6,7 +6,7 @@ import { fireEvent, render } from '@testing-library/react'
 
 describe('Tests for <WeekChanger />', () => {
   it('Initial Render', () => {
-    const component = render(<WeekChanger />)
+    const component = render(<WeekChanger date={ new Date() }/>)
     const mondayDate = new Date()
     const sundayNextDate = new Date()
 
@@ -20,7 +20,7 @@ describe('Tests for <WeekChanger />', () => {
   })
 
   it('Previous Week Button Test', async () => {
-    const component = render(<WeekChanger />)
+    const component = render(<WeekChanger date={ new Date() }/>)
     const mondayDate = new Date()
     const sundayNextDate = new Date()
     mondayDate.setDate(((mondayDate.getDate() - mondayDate.getDay()) + 1) - 7)
@@ -33,7 +33,7 @@ describe('Tests for <WeekChanger />', () => {
     )
   })
   it('Next Button Test', async () => {
-    const component = render(<WeekChanger />)
+    const component = render(<WeekChanger date={ new Date() } />)
     const mondayDate = new Date()
     const sundayNextDate = new Date()
     mondayDate.setDate(((mondayDate.getDate() - mondayDate.getDay()) + 1) + 7)

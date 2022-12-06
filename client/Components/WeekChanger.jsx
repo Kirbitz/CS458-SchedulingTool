@@ -6,10 +6,8 @@ import { ArrowBack, ArrowForward } from '@mui/icons-material'
 
 // Component to display and change the currently selected week
 export default function WeekChanger (props) {
-  const [week, setWeek] = useState(props.date)
-
-  // Used to pass a new date to the parent page after a button press
-  const passNewDate = props.passNewDate
+  const { date, passNewDate } = props
+  const [week, setWeek] = useState(date)
 
   const [, updateState] = React.useState()
   const forceRender = React.useCallback(() => updateState({}), [])
@@ -101,10 +99,10 @@ export default function WeekChanger (props) {
 // Checks that the props passed in match the correct type
 WeekChanger.propTypes = {
   date: PropTypes.instanceOf(Date),
-  passNewDate: PropTypes.func
+  passNewDate: PropTypes.func.isRequired
 }
 
 // defaults the props to a set value if they are not required
 WeekChanger.defaultProps = {
-  week: new Date()
+  date: new Date()
 }

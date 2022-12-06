@@ -9,7 +9,3 @@ it('Test for <Shift /> init render', async () => {
 
   expect(document.body).toBe(component.baseElement)
 })
-
-if('handleClickListItem', async () => {
-
-})
