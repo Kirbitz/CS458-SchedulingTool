@@ -80,7 +80,7 @@ const createModifyTimeBlockData = async (req, res) => {
     }
 
     // Runs final part in method connecting to db as to account for potential failure handling
-    await createModifyTimeBlockInDB(res, timeData)
+    await createModifyTimeBlockInDB(timeData)
 
     res.status(201)
       .json({
@@ -139,7 +139,7 @@ const getTimeBlocksFromDB = async (startDate, endDate) => {
 }
 
 // Creates/Modifies a TimeBlock in DB
-const createModifyTimeBlockInDB = async (res, timeData) => {
+const createModifyTimeBlockInDB = async (timeData) => {
   await dbClient.transaction(async trx => {
     // Checks the time id is not equal to zero
     // Zero indicates the time block was not created by a manager
