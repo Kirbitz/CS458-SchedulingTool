@@ -32,9 +32,7 @@ describe('Testing for shiftViewGETCallback', () => {
     })
   })
 
-  afterEach(() => {})
-
-  it('ShiftVewGETCallback - Success 200', async () => {
+  beforeEach(() => {
     dbClient.then.mockReturnValueOnce([
       {
         timeId: 1,
@@ -52,7 +50,11 @@ describe('Testing for shiftViewGETCallback', () => {
         userId: 1
       }
     ])
+  })
 
+  afterEach(() => {})
+
+  it('ShiftVewGETCallback - Success 200', async () => {
     const response = await request.get('/api/shift_view')
       .send({
         date: '2022-12-06 00:00:00',
@@ -64,24 +66,6 @@ describe('Testing for shiftViewGETCallback', () => {
   })
 
   it('ShiftVewGETCallback - Status 400 Missing/Invalid', async () => {
-    dbClient.then.mockReturnValueOnce([
-      {
-        timeId: 1,
-        timeStart: '2022-12-06 01:00:00',
-        timeEnd: '2022-12-06 23:00:00',
-        positionName: 'Grill',
-        userId: 1,
-        userName: 'Joe Schmoe'
-      }
-    ])
-
-    dbClient.then.mockReturnValueOnce([
-      {
-        userName: 'Joe Schmoe',
-        userId: 1
-      }
-    ])
-
     const response = await request.get('/api/shift_view')
       .send({
         positionId: 1
@@ -92,24 +76,6 @@ describe('Testing for shiftViewGETCallback', () => {
   })
 
   it('ShiftVewGETCallback - Status 401 Unauthorized', async () => {
-    dbClient.then.mockReturnValueOnce([
-      {
-        timeId: 1,
-        timeStart: '2022-12-06 01:00:00',
-        timeEnd: '2022-12-06 23:00:00',
-        positionName: 'Grill',
-        userId: 1,
-        userName: 'Joe Schmoe'
-      }
-    ])
-
-    dbClient.then.mockReturnValueOnce([
-      {
-        userName: 'Joe Schmoe',
-        userId: 1
-      }
-    ])
-
     const response = await request.get('/api/shift_view')
       .send({
         date: '2022-12-06 00:00:00',
