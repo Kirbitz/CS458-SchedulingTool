@@ -100,11 +100,8 @@ const insertRows = async (accountData) => {
     // Create Credentials record
     await createCredentialsRecord(accountData, trx)
 
-    // Grab the manager's departmentID
-    const deptID = await getDepartmentId(accountData)
-
     // Create a _UserDepartment record
-    await createUserDepartmentRecord(accountData, deptID, trx)
+    await createUserDepartmentRecord(accountData, trx)
   }).catch(err => { throw err })
 }
 
@@ -136,21 +133,10 @@ const createCredentialsRecord = (accountData, trx) => {
     .catch(err => { throw err })
 }
 
-const getDepartmentId = (accountData) => {
-  return dbClient.select('deptId')
-    .from('_userDept')
-    .where('userId', '=', accountData.userId)
-    .andWhere('isManager', '=', 1)
-    .then(result => {
-      return result[0].deptId
-    })
-    .catch(err => { throw err })
-}
-
-const createUserDepartmentRecord = (accountData, _deptId, trx) => {
+const createUserDepartmentRecord = (accountData, trx) => {
   return dbClient.insert({
     userId: accountData.newUserId,
-    deptId: _deptId,
+    deptId: accountData.deptId,
     isManager: 0
   })
     .into('_userDept')

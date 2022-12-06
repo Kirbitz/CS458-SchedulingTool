@@ -7,7 +7,7 @@ const dbClient = require('./dbClient')
 const collectTimeBlockData = async (req, res) => {
   try {
     // Validates the user is logged in through JWT authentication
-    verifyJWTAuthToken(req)
+    await verifyJWTAuthToken(req)
 
     // Collects start and end dates from URI parameters
     const startDate = req.params.startDate

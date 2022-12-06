@@ -16,6 +16,7 @@ const verifyJWTAuthToken = (req) => {
       // add the userID to the request body
       req.body.userId = decodedAuth.userId
       req.body.isManager = decodedAuth.isManager
+      req.body.deptId = decodedAuth.deptId
     })
 }
 

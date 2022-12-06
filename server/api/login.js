@@ -25,7 +25,7 @@ const loginCallback = async (req, res) => {
       throw new Error('Unauthorized', { cause: { error: { status: 401, message: 'Unauthorized' } } })
     }
 
-    const token = await signToken(user[0].credentialsId, user[0].userPermissions)
+    const token = await signToken(user[0].credentialsId, user[0].userPermissions, user[0].deptId)
 
     // Successful login
     // Send status code 200 and JSON, then end the response
@@ -33,7 +33,8 @@ const loginCallback = async (req, res) => {
       .set('Authorization', token)
       .json({
         userId: user[0].credentialsId,
-        isManager: user[0].userPermissions
+        isManager: user[0].userPermissions,
+        deptId: user[0].deptId
       })
       .end()
   } catch (err) {
@@ -69,9 +70,10 @@ const checkUsernamePassword = async (username, password) => {
   // create the password hash
   const passwordHash = sjcl.codec.hex.fromBits(passwordBitArray)
 
-  return dbClient.select('Credentials.credentialsId', 'User.userPermissions')
+  return dbClient.select('Credentials.credentialsId', 'User.userPermissions', '_userDept.deptId')
     .from('Credentials')
     .join('User', 'Credentials.credentialsId', 'User.userId')
+    .join('_userDept', 'User.userId', '_userDept.userId')
     .where('Credentials.credentialsUsername', '=', username)
     .andWhere('Credentials.credentialsPassword', '=', passwordHash)
     .then(result => {
@@ -80,11 +82,12 @@ const checkUsernamePassword = async (username, password) => {
     .catch(err => { throw err })
 }
 
-const signToken = (_userId, _isManager) => {
+const signToken = (_userId, _isManager, _deptId) => {
   return jwt.sign( // Sign a token to be stored in Authorization header
     { // Things used to sign the token
       userId: _userId,
-      isManager: _isManager
+      isManager: _isManager,
+      deptId: _deptId
     },
     getJWTSecret(),
     { expiresIn: 5 * 60 * 60 }) // Token valid for 5 hours
