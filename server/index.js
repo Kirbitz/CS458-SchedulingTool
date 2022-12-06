@@ -1,8 +1,11 @@
 const Express = require('express')
 const path = require('path')
-const dataRouter = require('../server/api/api.js')
+const dataRouter = require('./api/api.js')
+const cors = require('cors')
 
 const app = new Express()
+
+app.use(cors())
 
 // Parse JSON bodies into JavaScript objects
 app.use(Express.json())

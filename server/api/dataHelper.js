@@ -3,27 +3,19 @@ dotenv.config()
 
 const jwt = require('jsonwebtoken')
 
-const verifyJWTAuthToken = (req, res) => {
+const verifyJWTAuthToken = (req) => {
   // Read the Authorization header
-  const rawAuth = req.headers.authorization?.replace('Bearer ', '')
-  return jwt.verify(rawAuth, module.exports.getJWTSecret(),
+  const rawAuth = req.headers.Authorization ?? req.headers.authorization?.replace('Bearer ', '')
+  return jwt.verify(rawAuth, getJWTSecret(),
     (err, decodedAuth) => {
       // Session token not valid if there is an error or decodedAuth is undefined
       if (err || !decodedAuth) {
-        res.status(401)
-          .json({
-            error: {
-              status: 401,
-              message: 'Unauthorized'
-            }
-          })
-          .end()
-
-        throw err
+        throw new Error('Unauthorized', { thrown: err, cause: { error: { status: 401, message: 'Unauthorized' } } })
       }
 
       // add the userID to the request body
       req.body.userId = decodedAuth.userId
+      req.body.isManager = decodedAuth.isManager
     })
 }
 

@@ -1,7 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { Alert, Button, Snackbar } from '@mui/material'
+import { Alert, Snackbar } from '@mui/material'
+import { LoadingButton } from '@mui/lab'
 
 // Element that contains a save button and alert element for saving changes and notifying the user
 export default function SaveAndNotify (props) {
@@ -11,11 +12,11 @@ export default function SaveAndNotify (props) {
 
   // State for displaying the alert message to the user and for disabling the save button on click
   const [showSnack, setShowSnack] = React.useState(false)
-  const [disableButton, setDisableButton] = React.useState(false)
+  const [currentlyLoading, setCurrentlyLoading] = React.useState(false)
 
   // Handles the save button being clicked, running callbackFunc and showing snackbar
   const handleSave = () => {
-    setDisableButton(true)
+    setCurrentlyLoading(true)
     if (callbackFunc) {
       callbackFunc()
     }
@@ -24,13 +25,13 @@ export default function SaveAndNotify (props) {
 
   // Handles enabling save button and hiding snackbar
   const handleClose = () => {
-    setDisableButton(false)
+    setCurrentlyLoading(false)
     setShowSnack(false)
   }
 
   return (
     <React.Fragment>
-      <Button data-testid='save-btn' variant="contained" color='success' onClick={handleSave} disabled={disableButton}>Save</Button>
+      <LoadingButton data-testid='save-btn' variant="contained" color='success' onClick={handleSave} loading={currentlyLoading} sx={{ width: '8%' }}>Save</LoadingButton>
       <Snackbar open={showSnack} autoHideDuration={3000} onClose={handleClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}>
         <Alert data-testid='alert-success-error' variant='filled' onClose={handleClose} severity={success ? 'success' : 'error'} sx={{ width: '100%' }}>
           {success ? 'Saved Changes!' : 'Failed To Save!'}

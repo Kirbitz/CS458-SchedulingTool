@@ -119,7 +119,7 @@ Returns json data about the account creation.
 axios({
   method: 'POST',
   url: '/api/create_new_account',
-  reponseType: 'json',
+  responseType: 'json',
   data: {
     username: 'jshmoe1234',
     password: "MyPet'sName1234!",
