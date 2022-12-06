@@ -12,6 +12,8 @@ jest.mock('../../server/api/dbClient', () => ({
   whereIn: jest.fn().mockReturnThis(),
   from: jest.fn().mockReturnThis(),
   andWhere: jest.fn().mockReturnThis(),
+  whereILike: jest.fn().mockReturnThis(),
+  orWhereILike: jest.fn().mockReturnThis(),
   then: jest.fn().mockReturnValue(),
   join: jest.fn().mockReturnThis(),
   insert: jest.fn().mockReturnThis(),
@@ -23,7 +25,34 @@ jest.mock('../../server/api/dbClient', () => ({
 describe('Tests for department.js', () => {
   beforeEach(() => {
     // jest.spyOn(console, 'log').mockImplementation(() => {})
-    jest.spyOn(dataHelper, 'verifyJWTAuthToken').mockImplementation(jest.fn(() => { }))
+    jest.spyOn(dataHelper, 'verifyJWTAuthToken').mockImplementation(jest.fn(() => {}))
+  })
+
+  it('Test for searchEmployees - Success', async () => {
+    // Set up mocking
+    jest.spyOn(dbClient, 'orWhereILike').mockImplementationOnce(jest.fn().mockReturnValue([{ userId: 3, userName: 'test' }]))
+
+    const response = await request.get('/api/searchEmployees/test')
+
+    expect(response.statusCode).toBe(200)
+  })
+
+  it('Test for searchEmployees - Invalid Search', async () => {
+    // No mocking needed
+    const response = await request.get('/api/searchEmployees/1234-sadjn_.')
+
+    expect(response.statusCode).toBe(400)
+  })
+
+  it('Test for searchEmployees - Fail', async () => {
+    // Set up mocking
+    jest.spyOn(dbClient, 'orWhereILike').mockImplementation(() => {
+      throw new Error('I am an error')
+    })
+
+    const response = await request.get('/api/searchEmployees/test')
+
+    expect(response.statusCode).toBe(500)
   })
 
   it('Test for getEmployeesByDepartment - Success', async () => {

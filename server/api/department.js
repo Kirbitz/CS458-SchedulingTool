@@ -12,9 +12,9 @@ const searchEmployeesCallback = async (req, res) => {
 
   try {
     const searchData = (req.params.search).trim()
-    console.log('Search data:', searchData)
-    if (searchData.match('([a-zA-Z\\s])') || searchData.match('([\\d])')) {
-      console.log('Exectuing query')
+    console.log(searchData)
+    if (searchData.match('^[a-zA-Z]+$') || searchData.match('/^[0-9]+$/')) {
+      console.log('Executing query')
       res.status(200).json(await dbClient.select('User.userId', 'User.userName')
         .from('User')
         .whereILike('User.userId', `%${searchData}%`)
