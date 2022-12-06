@@ -8,6 +8,7 @@ const { getJWTSecret } = require('./dataHelper')
 // function is asynchronous to allow query to happen before trying to access results
 const loginCallback = async (req, res) => {
   try {
+    console.log(dbClient)
     const loginData = req.body
 
     // Throw an error if no username or password passed in

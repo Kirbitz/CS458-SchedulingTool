@@ -16,10 +16,30 @@ Returns json data about shift assignment
 
 - **Data Params:**
 
-  __Required:__ Time Block ID
+  [
+    {
+      timeBlockId: 1,
+      userId: 1
+    },
+    {
+
+    }
+  ]
+
+  __Required:__ Records
   
-    `timeBlockId: [int]`
-    `1234`
+    `records: object`
+    ```json
+    {
+      "records": [
+        {
+          "timeBlockId": 1,
+          "employeeId": 1
+        },
+        // ...
+      ]
+    }
+    ```
   
   __Required:__ Employee ID
 
@@ -101,8 +121,8 @@ axios({
   url: '/api/shift_view',
   reponseType: 'json',
   data: {
-    timeBlockId: '1234',
-    employeeId: "1234",
+    timeBlockId: 1234,
+    employeeId: 1234,
   }
 })
 ```

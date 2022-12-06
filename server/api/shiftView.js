@@ -86,30 +86,32 @@ const shiftViewPOSTCallback = async (req, res) => {
   try {
     await verifyJWTAuthToken(req, res)
 
+    const shiftData = req.body
+
     // get timeblock id and user id
-    if (!req.body.timeBlockId || !req.body.userId) {
+    if (shiftData.records?.length === 0) {
       throw new Error('Missing/Invalid', { cause: { error: { status: 400, message: 'Missing Required Data' } } })
     }
 
-    if (!req.body.isManager) {
+    if (!shiftData?.isManager) {
       throw new Error('Unauthorized', { cause: { error: { status: 401, message: 'Invalid Authorization Level' } } })
     }
 
-    const timeblockId = req.body.timeBlockId
-    const userId = req.body.userId
+    for (let i = 0; i < shiftData.records.length; ++i) {
+      if (!shiftData.records[i].timeBlockId || !shiftData.records[i].employeeId) {
+        console.log('error')
+        throw new Error('Missing/Invalid', { cause: { error: { status: 400, message: 'Missing Required Data' } } })
+      }
 
-    await assignShiftToUser(timeblockId, userId)
+      await assignShiftToUser(shiftData.records[i].timeBlockId, shiftData.records[i].employeeId)
+    }
 
     // return success
     res.status(200)
       .json({
         success: {
           status: 200,
-          message: 'Assigned Successfully',
-          body: {
-            timeBlockId: timeblockId,
-            userId
-          }
+          message: 'Assigned Successfully'
         }
       })
       .end()
@@ -165,8 +167,8 @@ const getEmployees = (shiftViewData) => {
     })
 }
 
-const assignShiftToUser = (timeblockId, userId) => {
-  return dbClient('TimeBlock').where('timeId', '=', timeblockId)
+const assignShiftToUser = (timeBlockId, userId) => {
+  return dbClient.from('TimeBlock').where('timeId', '=', timeBlockId)
     .update('userId', userId)
 }
 
