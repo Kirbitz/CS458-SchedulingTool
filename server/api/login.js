@@ -7,45 +7,60 @@ const { getJWTSecret } = require('./dataHelper')
 
 // function is asynchronous to allow query to happen before trying to access results
 const loginCallback = async (req, res) => {
-  let loginData = req.body
+  try {
+    const loginData = req.body
 
-  // Throw an error if no username or password passed in
-  if (Object.keys(loginData).length === 0) {
-    loginData = {
-      username: '',
-      password: ''
+    // Throw an error if no username or password passed in
+    if (!loginData.username || !loginData.password) {
+      throw new Error('Missing/Invalid', { cause: { error: { status: 400, message: 'Missing Required Data' } } })
     }
-  }
 
-  // Query the database to see if the username/password combo exists
-  const user = await checkUsernamePassword(loginData.username, loginData.password)
+    // Query the database to see if the username/password combo exists
+    const user = await checkUsernamePassword(loginData.username, loginData.password)
 
-  // There is no user with those login credentials
-  if (user.length === 0) {
-    // Incorrect login info; User not logged in
-    // Send status code 401 and JSON, then end the response
-    res.status(401)
+    // There is no user with those login credentials
+    if (user.length === 0) {
+      // Incorrect login info; User not logged in
+      // Send status code 401 and JSON, then end the response
+      throw new Error('Unauthorized', { cause: { error: { status: 401, message: 'Unauthorized' } } })
+    }
+
+    const token = await signToken(user[0].credentialsId, user[0].userPermissions)
+
+    // Successful login
+    // Send status code 200 and JSON, then end the response
+    res.status(200)
+      .set('Authorization', token)
       .json({
-        error: {
-          status: 401,
-          message: 'Unauthorized'
-        }
+        userId: user[0].credentialsId,
+        isManager: user[0].userPermissions
       })
       .end()
-    return
+  } catch (err) {
+    switch (err.message) {
+      // Data is either missing or invalid
+      case 'Missing/Invalid':
+        res.status(400)
+          .json(err.cause)
+        break
+      // User doe not exist in database
+      case 'Unauthorized':
+        res.status(401)
+          .json(err.cause)
+        break
+      default:
+        console.error(err)
+        // Some kind of error occurred, though not unique constraints
+        res.status(500)
+          .json({
+            error: {
+              status: 500,
+              message: 'Internal Server Error'
+            }
+          })
+          .end()
+    }
   }
-
-  const token = await signToken(user[0].credentialsId, user[0].isManager)
-
-  // Successful login
-  // Send status code 200 and JSON, then end the response
-  res.status(200)
-    .set('Authorization', token)
-    .json({
-      userId: user[0].credentialsId,
-      isManager: user[0].userPermissions
-    })
-    .end()
 }
 
 const checkUsernamePassword = async (username, password) => {
@@ -62,6 +77,7 @@ const checkUsernamePassword = async (username, password) => {
     .then(result => {
       return result // Returns an array of Rows
     })
+    .catch(err => { throw err })
 }
 
 const signToken = (_userId, _isManager) => {

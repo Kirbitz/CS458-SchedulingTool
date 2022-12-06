@@ -51,6 +51,21 @@ Returns json data about the login session.
   }
   ```
 
+- **Error Response**
+
+  **Code:** `400 BAD REQUEST`
+
+  **Content:** 
+
+  ```json
+  {
+    "error": {
+      "status": 400,
+      "message": "Bad Request - Missing or Invalid Parameters"
+    }
+  }
+  ```
+
 - **Error Response:**
 
   **Code:** `401 UNAUTHORIZED`

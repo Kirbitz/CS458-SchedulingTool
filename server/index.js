@@ -1,8 +1,11 @@
 const Express = require('express')
 const path = require('path')
 const dataRouter = require('./api/api.js')
+const cors = require('cors')
 
 const app = new Express()
+
+app.use(cors())
 
 // Logs all request made to the server
 app.use((req, response, next) => {
