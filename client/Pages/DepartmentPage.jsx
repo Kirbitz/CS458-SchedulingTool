@@ -8,6 +8,7 @@ import SaveAndNotify from '../Components/SaveAndNotify.jsx'
 import DepAddRemoveFields from '../Components/DepAddRemoveFields.jsx'
 
 import { getDepartmentInfo, postDepartmentInfo, searchEmployeeInfo } from '../dataHelper.js'
+import Register from '../Components/RegisterModal.jsx'
 
 // Department Page that will display information for adding or removing employees from their department
 export default function DepartmentPage (props) {
@@ -22,7 +23,8 @@ export default function DepartmentPage (props) {
   const [inputInvalid, setInputInvalid] = React.useState(false)
   const [searchHappened, setSearchHappened] = React.useState(true)
   const [searchClicked, setSearchClicked] = React.useState(false)
-
+  // State management for open and close register modal
+  const [registerOpen, setRegisterOpen] = React.useState(false)
   // Reference for checking data that is added to the search field
   const searchRef = useRef('')
   const inputChange = () => {
@@ -106,27 +108,37 @@ export default function DepartmentPage (props) {
   }, [])
 
   // Renders this data if the collectDepartmentInfo failed to retrieve anything
-  if (!dataCollected) {
-    return (
-      <Box data-testid='department-page'>
-        <NavigationBar selected="Department" />
-        <Typography variant="h3" component="h2" align='center' sx={{ mt: 2 }}>
-          No Data Found
-        </Typography>
-      </Box>
-    )
-  }
+  // if (!dataCollected) {
+  //   return (
+  //     <Box data-testid='department-page'>
+  //       <NavigationBar selected="Department" />
+  //       <Typography variant="h3" component="h2" align='center' sx={{ mt: 2 }}>
+  //         No Data Found
+  //       </Typography>
+  //     </Box>
+  //   )
+  // }
 
   // Runs a loading wheel to indicate that data is being fetched
-  if (!departmentInfo || departmentInfo === undefined) {
-    return (
-      <Box data-testid='department-page'>
-        <NavigationBar selected="Department" />
-        <Box height="100vh" display='flex' justifyContent='center' alignItems='center'>
-          <CircularProgress color='secondary' />
-        </Box>
-      </Box>
-    )
+  // if (!departmentInfo || departmentInfo === undefined) {
+  //   return (
+  //     <Box data-testid='department-page'>
+  //       <NavigationBar selected="Department" />
+  //       <Box height="100vh" display='flex' justifyContent='center' alignItems='center'>
+  //         <CircularProgress color='secondary' />
+  //       </Box>
+  //     </Box>
+  //   )
+  // }
+
+  // This function will close the register modal
+  const handleRegistrationClose = () => {
+    setRegisterOpen(false)
+  }
+
+  // This function will open the register modal
+  const handleRegistrationOpen = () => {
+    setRegisterOpen(true)
   }
 
   // Renders once departmentInfo has been fetched
@@ -159,13 +171,14 @@ export default function DepartmentPage (props) {
         </Tooltip>
         <Tooltip title="Create User">
           <div>
-            <Fab data-testid='create-btn' disabled={searchHappened} color='secondary'>
+            <Fab onClick={handleRegistrationOpen} data-testid='create-btn' disabled={searchHappened} color='secondary'>
               <Create />
             </Fab>
           </div>
         </Tooltip>
       </Box>
       <DepAddRemoveFields currentEmployees={departmentInfo?.depEmployees} searchEmployees={searchStaff} removeEmployees={removeEmployees} addEmployees={addEmployees} />
+      <Register handleClose={handleRegistrationClose} open={registerOpen} />
     </Box>
   )
 }
