@@ -11,10 +11,12 @@ const searchEmployeesCallback = async (req, res) => {
   }
 
   try {
+    // Get the search data from the URL and check that it is a valid search item
     const searchData = (req.params.search).trim()
     console.log(searchData)
     if (searchData.match('^[a-zA-Z]+$') || searchData.match('/^[0-9]+$/')) {
       console.log('Executing query')
+      // This query searches for a user name or ID that is LIKE the search data
       res.status(200).json(await dbClient.select('User.userId', 'User.userName')
         .from('User')
         .whereILike('User.userId', `%${searchData}%`)
@@ -23,6 +25,7 @@ const searchEmployeesCallback = async (req, res) => {
       throw new Error('Invalid Search')
     }
   } catch (error) {
+    // 2 kinds of errors, malformed input or nondescript server error
     if (error.message === 'Invalid Search') {
       res.status(400).json({
         message: 'Invalid combination of characters: use alphabetical or digits - not both'
@@ -86,6 +89,7 @@ const postDepartmentCallback = async (req, res) => {
 
   const data = req.body
   try {
+    // Query for inserting the department into the database
     const response = await dbClient
       .into('Department')
       .insert({
@@ -94,11 +98,12 @@ const postDepartmentCallback = async (req, res) => {
         deptHourCap: data.deptHourCap
       })
     res.status(201).json({
-      message: 'Department created with ID: ' + response,
+      message: 'Department created with ID: ' + response[0],
       deptId: response[0]
     })
   } catch (error) {
     console.log(error)
+    // Catch any errors as a 500 response
     res.status(500).json({
       error: {
         message: 'Internal server error while creating department'
@@ -116,6 +121,7 @@ const getDepartments = async (req, res) => {
     return
   }
 
+  // Simple query to get the departments
   res.status(200).json(await dbClient
     .select('deptId', 'deptName', 'deptLocation', 'deptHourCap')
     .from('Department'))
