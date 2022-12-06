@@ -29,7 +29,7 @@ export function postDepartmentInfo (departmentInfo) {
 // TODO update call to the correct route
 export function searchEmployeeInfo (search) {
   return new Promise((resolve, reject) => {
-    axios.get(`/myfakeroute/${search}`)
+    axios.get(`/searchEmployees/${search}`)
       .then((response) => { return resolve(response) })
       .catch((error) => { return reject(error) })
   })
