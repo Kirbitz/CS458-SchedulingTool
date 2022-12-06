@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 
 import { IconButton, Grid, Stack } from '@mui/material'
 import { ArrowBack, ArrowForward } from '@mui/icons-material'
 
 // Component to display and change the currently selected week
 export default function WeekChanger (props) {
-  const [week, setWeek] = useState(new Date())
+  const { date, passNewDate } = props
+  const [week, setWeek] = useState(date)
 
   const [, updateState] = React.useState()
   const forceRender = React.useCallback(() => updateState({}), [])
@@ -13,12 +15,18 @@ export default function WeekChanger (props) {
   function MondayDate (date) {
     const thisDate = new Date(date)
     thisDate.setDate((date.getDate() - date.getDay()) + 1) // Monday is 1 and Sunday is 0; subtracting the current day of the week from itself and adding 1 will give us Monday's date.
+    if (date.getDay() === 0) { // Since Sunday = 0, we need to go back one week if we're making Monday the first day of the week.
+      thisDate.setDate(thisDate.getDate() - 7)
+    }
     return thisDate
   }
 
   function SundayNextDate (date) {
     const thisDate = new Date(date)
     thisDate.setDate(date.getDate() + (7 - date.getDay())) // Sunday is 0; adding 7 minus the current day of the week will get us this coming Sunday's date.
+    if (date.getDay() === 0) { // Since Sunday = 0, we need to go back one week if we're making Monday the first day of the week.
+      thisDate.setDate(thisDate.getDate() - 7)
+    }
     return thisDate
   }
 
@@ -34,6 +42,7 @@ export default function WeekChanger (props) {
     const thisDate = new Date(week)
     thisDate.setDate(thisDate.getDate() - 7)
     setWeek(thisDate)
+    passNewDate(thisDate)
     forceRender()
   }
   // Moves the current week forward by one week
@@ -41,6 +50,7 @@ export default function WeekChanger (props) {
     const thisDate = new Date(week)
     thisDate.setDate(thisDate.getDate() + 7)
     setWeek(thisDate)
+    passNewDate(thisDate)
     forceRender()
   }
   /* For use in the bi-weekly view. Commented out until it is implemented fully.
@@ -85,4 +95,14 @@ export default function WeekChanger (props) {
       </Grid>
     </Grid>
   )
+}
+// Checks that the props passed in match the correct type
+WeekChanger.propTypes = {
+  date: PropTypes.instanceOf(Date),
+  passNewDate: PropTypes.func.isRequired
+}
+
+// defaults the props to a set value if they are not required
+WeekChanger.defaultProps = {
+  date: new Date()
 }
