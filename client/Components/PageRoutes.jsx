@@ -2,6 +2,7 @@ import React from 'react'
 
 import { Navigate, Route, Routes } from 'react-router-dom'
 
+import LoginPage from '../Pages/LogIn.jsx'
 import NavigationBar from './NavigationBar.jsx'
 import MasterView from '../Pages/MasterView.jsx'
 import ShiftView from '../Pages/ShiftView.jsx'
@@ -18,8 +19,8 @@ export default function PageRoutes (props) {
       <Route path="/staff" element={<NavigationBar selected="Staff" />} />
       <Route path="/department" element={<DepartmentPage />} />
       <Route path="/settings" element={<NavigationBar selected="Settings" />} />
-      <Route path="/login" element={<NavigationBar />} />
       <Route path="/master-schedule/shift" element={<ShiftView />} />
+      <Route path="/login" element={<LoginPage/>} />
       <Route path="/*" element={<Navigate to="/" replace />} />
     </Routes>
   )
