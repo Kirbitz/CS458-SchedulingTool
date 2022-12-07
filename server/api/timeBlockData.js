@@ -1,4 +1,4 @@
-const { verifyJWTAuthToken } = require('./dataHelper')
+const { verifyJWTAuthToken, errorOccurred } = require('./dataHelper')
 
 // Database connection with knex
 const dbClient = require('./dbClient')
@@ -147,7 +147,7 @@ const createModifyTimeBlockInDB = async (timeData) => {
       // Checks the user permissions are manager or above
       if (timeData.isManager > 0) {
         // Collects department data based on the manager
-        const _deptId = await getDepartmentId(timeData)
+        const _deptId = timeData.deptId
         await dbClient.insert({
           timeId: timeData?.timeId,
           timeStart: timeData.timeStart,
@@ -190,46 +190,6 @@ const deleteTimeBlockInDB = async (_timeId) => {
     .del()
     .where({ timeId: _timeId })
     .catch(err => { throw err })
-}
-
-// Grabs department Id of a user
-const getDepartmentId = (accountData) => {
-  return dbClient.select('deptId')
-    .from('_userDept')
-    .where('userId', '=', accountData.userId)
-    .andWhere('isManager', '=', 1)
-    .then(result => {
-      return result[0].deptId
-    })
-    .catch(err => { throw err })
-}
-
-const errorOccurred = (err, res) => {
-  switch (err.message) {
-    // Sends response with missing data message
-    case 'Missing/Invalid Data':
-      res.status(400)
-        .json(err.cause)
-        .end()
-      break
-    // Sends response with unauthorized message
-    case 'Unauthorized':
-      res.status(401)
-        .json(err.cause)
-        .end()
-      break
-    // Sends response with 500 in the case of an unexpected error
-    default:
-      console.error(err)
-      res.status(500)
-        .json({
-          error: {
-            status: 500,
-            message: 'Internal Server Error'
-          }
-        })
-        .end()
-  }
 }
 
 module.exports = {

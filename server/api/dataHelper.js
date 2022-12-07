@@ -24,7 +24,36 @@ const getJWTSecret = () => {
   return process.env.JWTSecret
 }
 
+const errorOccurred = (err, res) => {
+  switch (err.message) {
+    // Sends response with missing data message
+    case 'Missing/Invalid Data':
+      res.status(400)
+        .json(err.cause)
+        .end()
+      break
+    // Sends response with unauthorized message
+    case 'Unauthorized':
+      res.status(401)
+        .json(err.cause)
+        .end()
+      break
+    // Sends response with 500 in the case of an unexpected error
+    default:
+      console.error(err)
+      res.status(500)
+        .json({
+          error: {
+            status: 500,
+            message: 'Internal Server Error'
+          }
+        })
+        .end()
+  }
+}
+
 module.exports = {
   verifyJWTAuthToken,
-  getJWTSecret
+  getJWTSecret,
+  errorOccurred
 }

@@ -1,5 +1,5 @@
 const dbClient = require('./dbClient')
-const { verifyJWTAuthToken } = require('./dataHelper')
+const { verifyJWTAuthToken, errorOccurred } = require('./dataHelper')
 
 const shiftViewGETCallback = async (req, res) => {
   try {
@@ -8,7 +8,7 @@ const shiftViewGETCallback = async (req, res) => {
     const shiftViewData = req.body
 
     if (!shiftViewData.date || !shiftViewData.positionId) {
-      throw new Error('Missing/Invalid', { cause: { error: { status: 400, message: 'Missing Required Data' } } })
+      throw new Error('Missing/Invalid Data', { cause: { error: { status: 400, message: 'Missing Required Data' } } })
     }
 
     // slices off the time
@@ -19,10 +19,10 @@ const shiftViewGETCallback = async (req, res) => {
 
     const formattedEmployees = []
 
-    for (let i = 0; i < employees.length; i++) {
+    for (const employee of employees) {
       const employeeInfo = {
-        employeeId: employees[i].userId,
-        employeeName: employees[i].userName
+        employeeId: employee.userId,
+        employeeName: employee.userName
       }
 
       // push to the array
@@ -38,14 +38,14 @@ const shiftViewGETCallback = async (req, res) => {
 
     const formattedTimeBlocks = []
 
-    for (let i = 0; i < timeBlocks.length; i++) {
+    for (const timeBlock of timeBlocks) {
       const timeBlockInfo = {
-        timeID: timeBlocks[i].timeId,
-        startTime: timeBlocks[i].timeStart,
-        endTime: timeBlocks[i].timeEnd,
-        positionName: timeBlocks[i].positionName,
-        assignedToID: timeBlocks[i].userId,
-        assignedToName: timeBlocks[i].userName
+        timeID: timeBlock.timeId,
+        startTime: timeBlock.timeStart,
+        endTime: timeBlock.timeEnd,
+        positionName: timeBlock.positionName,
+        assignedToID: timeBlock.userId,
+        assignedToName: timeBlock.userName
       }
 
       formattedTimeBlocks.push(timeBlockInfo)
@@ -56,29 +56,7 @@ const shiftViewGETCallback = async (req, res) => {
       employees: formattedEmployees
     }).end()
   } catch (err) {
-    switch (err.message) {
-      // Data is either missing or invalid
-      case 'Missing/Invalid':
-        res.status(400)
-          .json(err.cause)
-        break
-      // User doe not exist in database
-      case 'Unauthorized':
-        res.status(401)
-          .json(err.cause)
-        break
-      default:
-        console.error(err)
-        // Some kind of error occurred, though not unique constraints
-        res.status(500)
-          .json({
-            error: {
-              status: 500,
-              message: 'Internal Server Error'
-            }
-          })
-          .end()
-    }
+    errorOccurred(err, res)
   }
 }
 
@@ -90,7 +68,7 @@ const shiftViewPOSTCallback = async (req, res) => {
 
     // get timeblock id and user id
     if (shiftData.records?.length === 0) {
-      throw new Error('Missing/Invalid', { cause: { error: { status: 400, message: 'Missing Required Data' } } })
+      throw new Error('Missing/Invalid Data', { cause: { error: { status: 400, message: 'Missing Required Data' } } })
     }
 
     if (!shiftData?.isManager) {
@@ -100,7 +78,7 @@ const shiftViewPOSTCallback = async (req, res) => {
     for (let i = 0; i < shiftData.records.length; ++i) {
       if (!shiftData.records[i].timeBlockId || !shiftData.records[i].employeeId) {
         console.log('error')
-        throw new Error('Missing/Invalid', { cause: { error: { status: 400, message: 'Missing Required Data' } } })
+        throw new Error('Missing/Invalid Data', { cause: { error: { status: 400, message: 'Missing Required Data' } } })
       }
 
       await assignShiftToUser(shiftData.records[i].timeBlockId, shiftData.records[i].employeeId)
@@ -116,29 +94,7 @@ const shiftViewPOSTCallback = async (req, res) => {
       })
       .end()
   } catch (err) {
-    switch (err.message) {
-      // Data is either missing or invalid
-      case 'Missing/Invalid':
-        res.status(400)
-          .json(err.cause)
-        break
-      // User doe not exist in database
-      case 'Unauthorized':
-        res.status(401)
-          .json(err.cause)
-        break
-      default:
-        console.error(err)
-        // Some kind of error occurred, though not unique constraints
-        res.status(500)
-          .json({
-            error: {
-              status: 500,
-              message: 'Internal Server Error'
-            }
-          })
-          .end()
-    }
+    errorOccurred(err, res)
   }
 }
 

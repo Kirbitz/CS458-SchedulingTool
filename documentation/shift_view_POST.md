@@ -16,16 +16,6 @@ Returns json data about shift assignment
 
 - **Data Params:**
 
-  [
-    {
-      timeBlockId: 1,
-      userId: 1
-    },
-    {
-
-    }
-  ]
-
   __Required:__ Records
   
     `records: object`

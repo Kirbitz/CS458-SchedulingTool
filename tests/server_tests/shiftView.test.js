@@ -52,8 +52,6 @@ describe('Testing for shiftViewGETCallback', () => {
     ])
   })
 
-  afterEach(() => {})
-
   it('ShiftVewGETCallback - Success 200', async () => {
     const response = await request.get('/api/shift_view')
       .send({

@@ -3,17 +3,16 @@ const jwt = require('jsonwebtoken')
 
 // Database connection with knex
 const dbClient = require('./dbClient')
-const { getJWTSecret } = require('./dataHelper')
+const { getJWTSecret, errorOccurred } = require('./dataHelper')
 
 // function is asynchronous to allow query to happen before trying to access results
 const loginCallback = async (req, res) => {
   try {
-    console.log(dbClient)
     const loginData = req.body
 
     // Throw an error if no username or password passed in
     if (!loginData.username || !loginData.password) {
-      throw new Error('Missing/Invalid', { cause: { error: { status: 400, message: 'Missing Required Data' } } })
+      throw new Error('Missing/Invalid Data', { cause: { error: { status: 400, message: 'Missing Required Data' } } })
     }
 
     // Query the database to see if the username/password combo exists
@@ -39,29 +38,7 @@ const loginCallback = async (req, res) => {
       })
       .end()
   } catch (err) {
-    switch (err.message) {
-      // Data is either missing or invalid
-      case 'Missing/Invalid':
-        res.status(400)
-          .json(err.cause)
-        break
-      // User doe not exist in database
-      case 'Unauthorized':
-        res.status(401)
-          .json(err.cause)
-        break
-      default:
-        console.error(err)
-        // Some kind of error occurred, though not unique constraints
-        res.status(500)
-          .json({
-            error: {
-              status: 500,
-              message: 'Internal Server Error'
-            }
-          })
-          .end()
-    }
+    errorOccurred(err, res)
   }
 }
 
