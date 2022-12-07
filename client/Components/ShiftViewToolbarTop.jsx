@@ -3,7 +3,7 @@ import React from 'react'
 
 import { AppBar, Button, Grid, IconButton, Stack, Toolbar, Tooltip } from '@mui/material'
 import { Add, Close, FilterAlt } from '@mui/icons-material'
-import { useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
 
 /** Notes for Top Toolbar:
 * TODO: Create Time Block Editor before enabling Add Shift button.
@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom'
 // to return to the Master View
 export default function ShiftViewToolbarTop (props) {
   const selectedDate = new Date()
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   // const { date } = props
   return (
     <AppBar position="fixed" sx={{ bgcolor: '#ffffff', color: '#000000', top: 64 }}>
@@ -75,7 +75,7 @@ export default function ShiftViewToolbarTop (props) {
                   aria-label="close"
                   id="close-button"
                   onClick={() => {
-                    navigate('/master-schedule')
+                    // navigate('/master-schedule')
                   }}
                 >
                   <Close />
