@@ -37,12 +37,14 @@ const searchEmployeesCallback = async (req, res) => {
 const getEmployeesFromDepartmentCallback = async (req, res) => {
   // Main code for endpoint
   try {
-    // Verify and add the user ID to the request
-    verifyJWTAuthToken(req, res)
+    verifyJWTAuthToken(req)
 
-    // Get the department name from only the first department the user manages
-    const deptName = await getDepartmentNameFromDeptId(req.body.deptId)
-
+    // Get the departments that the user belongs to and place the IDs into an array
+    const tempIds = await getDepartmentsFromUserId(req.body.userId, res)
+    const deptIds = []
+    tempIds.forEach(element => {
+      deptIds.push(element.deptId)
+    })
     // Query the employees from the departments the logged in user is a manager of
     const employeeList = await dbClient.select('_userDept.userId', 'User.userName')
       .from('_userDept')

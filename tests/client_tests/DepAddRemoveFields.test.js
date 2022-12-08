@@ -4,6 +4,20 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import DepAddRemoveFields from '../../client/Components/DepAddRemoveFields.jsx'
 
 describe('Tests for <DepAddRemoveFields />', () => {
+  let employees
+  beforeAll(() => {
+    employees = [
+      {
+        userId: '8675309',
+        userName: 'Rick Roll'
+      },
+      {
+        userId: '5555555',
+        userName: 'Ben Dover'
+      }
+    ]
+  })
+
   it('Initial Render', () => {
     const component = render(<DepAddRemoveFields />)
 
@@ -11,16 +25,6 @@ describe('Tests for <DepAddRemoveFields />', () => {
   })
 
   it('Current Employee and Search Employee provided', () => {
-    const employees = [
-      {
-        id: '8675309',
-        name: 'Rick Roll'
-      },
-      {
-        id: '5555555',
-        name: 'Ben Dover'
-      }
-    ]
     const component = render(<DepAddRemoveFields currentEmployees={employees} searchEmployees={employees} />)
 
     expect(component.getAllByTestId('option-in-department').length).toBe(employees.length)
@@ -30,16 +34,6 @@ describe('Tests for <DepAddRemoveFields />', () => {
   it('Select options is current employee box', async () => {
     let result = []
     const removeEmployees = jest.fn((response) => { result = response })
-    const employees = [
-      {
-        id: '8675309',
-        name: 'Rick Roll'
-      },
-      {
-        id: '5555555',
-        name: 'Ben Dover'
-      }
-    ]
 
     const component = render(<DepAddRemoveFields currentEmployees={employees} removeEmployees={removeEmployees} />)
 
@@ -53,16 +47,6 @@ describe('Tests for <DepAddRemoveFields />', () => {
   it('Select options is search employee box', async () => {
     let result = []
     const addEmployees = jest.fn((response) => { result = response })
-    const employees = [
-      {
-        id: '8675309',
-        name: 'Rick Roll'
-      },
-      {
-        id: '5555555',
-        name: 'Ben Dover'
-      }
-    ]
 
     const component = render(<DepAddRemoveFields searchEmployees={employees} addEmployees={addEmployees} />)
 

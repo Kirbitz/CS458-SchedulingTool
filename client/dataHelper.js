@@ -11,7 +11,7 @@ export function userLogin (userCredentials) {
 // TODO check functionality of updated call
 export function getDepartmentInfo () {
   return new Promise((resolve, reject) => {
-    axios.get('/getEmployees')
+    axios.get('/api/getEmployees')
       .then((response) => { return resolve(response) })
       .catch((error) => { return reject(error) })
   })

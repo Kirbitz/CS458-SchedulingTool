@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 
 const verifyJWTAuthToken = (req) => {
   // Read the Authorization header
-  const rawAuth = req.headers.Authorization ?? req.headers.authorization?.replace('Bearer ', '')
+  const rawAuth = req.headers.cookie?.replace('token=', '') ?? req.headers.authorization?.replace('Bearer ', '')
   return jwt.verify(rawAuth, getJWTSecret(),
     (err, decodedAuth) => {
       // Session token not valid if there is an error or decodedAuth is undefined
