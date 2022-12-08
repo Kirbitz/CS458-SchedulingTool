@@ -1,10 +1,10 @@
-# Create New Account
+# Master Schedule Shift View
 
-Returns json data about the account creation.
+Returns json data about shift assignment
 
 - **URL:**
 
-  /api/create_new_account
+  /api/shift_view
 
 - **Method:**
 
@@ -16,51 +16,41 @@ Returns json data about the account creation.
 
 - **Data Params:**
 
-  __Required:__ Username
+  __Required:__ Records
+  
+    `records: object`
+    ```json
+    {
+      "records": [
+        {
+          "timeBlockId": 1,
+          "employeeId": 1
+        },
+        // ...
+      ]
+    }
+    ```
+  
+  __Required:__ Employee ID
 
-  `username: [string]`
+    `employeeId: [int]`
+    `1234`
 
-  `jshmoe1234`
-
-  __Required:__ Password
-
-  `password: [string]`
-
-  `MyPet'sName1234!`
-
-  __Required:__ New User ID
-
-  `newUserID: [int]`
-
-  123456
-
-  __Required:__ Name
-
-  `name: [string]`
-
-  `Joe Shmoe`
-
-  __Required:__ Hour Cap
-
-  `hourCap: [double]`
-
-  20
-
-- **Auth Required:** Yes, JWT set in Authorization header.
+- **Auth Required:** Yes, JWT set in Authorization header. 
 
 ## Response
 
 - **Success Response:**
 
-  **Code:** `201 CREATED`
+  **Code:** `200 OK`
 
   **Content:**
 
-  ```json
+  ```json 
   {
     "success": {
-      "status": 201,
-      "message": "Created new account"
+      "status": 200,
+      "message": "Assigned Successfully"
     }
   }
   ```
@@ -75,7 +65,7 @@ Returns json data about the account creation.
   {
     "error": {
       "status": 400,
-      "message": "Bad Request - Non-Unique Fields",
+      "message": "Bad Request - User or Time Block Does Not Exist",
       "fields": ["field1", "field2"]
     }
   }
@@ -118,14 +108,11 @@ Returns json data about the account creation.
 ```javascript
 axios({
   method: 'POST',
-  url: '/api/create_new_account',
-  responseType: 'json',
+  url: '/api/shift_view',
+  reponseType: 'json',
   data: {
-    username: 'jshmoe1234',
-    password: "MyPet'sName1234!",
-    userid: 123456,
-    name: 'Joe Shmoe',
-    hourCap: 20,
+    timeBlockId: 1234,
+    employeeId: 1234,
   }
 })
 ```

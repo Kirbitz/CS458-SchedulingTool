@@ -8,19 +8,19 @@ export function userLogin (userCredentials) {
   })
 }
 
-// TODO update call to the correct route
+// TODO check functionality of updated call
 export function getDepartmentInfo () {
   return new Promise((resolve, reject) => {
-    axios.get('/myfakeroute')
+    axios.get('/api/getEmployees')
       .then((response) => { return resolve(response) })
       .catch((error) => { return reject(error) })
   })
 }
 
-// TODO update call to the correct route
+// TODO check functionality of updated call
 export function postDepartmentInfo (departmentInfo) {
   return new Promise((resolve, reject) => {
-    axios.post('/myfakeroute', departmentInfo)
+    axios.post('/postDepartment', departmentInfo)
       .then((response) => { return resolve(response) })
       .catch((error) => { return reject(error) })
   })
@@ -30,6 +30,14 @@ export function postDepartmentInfo (departmentInfo) {
 export function searchEmployeeInfo (search) {
   return new Promise((resolve, reject) => {
     axios.get(`/myfakeroute/${search}`)
+      .then((response) => { return resolve(response) })
+      .catch((error) => { return reject(error) })
+  })
+}
+
+export function deleteEmployeeFromDepartment (remove) {
+  return new Promise((resolve, reject) => {
+    axios.delete('/deleteEmployee', remove)
       .then((response) => { return resolve(response) })
       .catch((error) => { return reject(error) })
   })

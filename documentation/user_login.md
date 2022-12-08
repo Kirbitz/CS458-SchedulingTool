@@ -14,7 +14,7 @@ Returns json data about the login session.
 
   None
 
-- **Data Params**
+- **Data Params:**
 
   _Required:_ Username
 
@@ -48,6 +48,21 @@ Returns json data about the login session.
   {
     "userId": 1234,
     "isManager": false
+  }
+  ```
+
+- **Error Response**
+
+  **Code:** `400 BAD REQUEST`
+
+  **Content:** 
+
+  ```json
+  {
+    "error": {
+      "status": 400,
+      "message": "Bad Request - Missing or Invalid Parameters"
+    }
   }
   ```
 

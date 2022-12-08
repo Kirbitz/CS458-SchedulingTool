@@ -1,27 +1,33 @@
 const myApp = require('../../server/index')
 const supertest = require('supertest')
 const request = supertest(myApp)
+
 const dbClient = require('../../server/api/dbClient')
 const dataHelper = require('../../server/api/dataHelper')
 
-jest.mock('../../server/api/dataHelper')
+jest.mock('../../server/api/dataHelper', () => ({
+  ...jest.requireActual('../../server/api/dataHelper'),
+  getJWTSecret: jest.fn()
+}))
 
 jest.mock('../../server/api/dbClient', () => ({
   select: jest.fn().mockReturnThis(),
   where: jest.fn().mockReturnThis(),
   from: jest.fn().mockReturnThis(),
   andWhere: jest.fn().mockReturnThis(),
-  then: jest.fn().mockReturnValue([{ credentialsId: 3, userPermissions: 1 }]),
+  then: jest.fn().mockReturnValue([{ credentialsId: 3, userPermissions: 1, deptId: 1 }]),
   join: jest.fn().mockReturnThis()
 }))
 
-describe('testing loginCallBack from login.js', () => {
+describe('Tests for login.js', () => {
   beforeAll(() => {
     jest.spyOn(console, 'log').mockImplementation(() => {})
+    jest.spyOn(console, 'error').mockImplementation(() => {})
     jest.spyOn(dataHelper, 'getJWTSecret').mockImplementation(() => { return 'hello' })
   })
 
-  it('Logging in existing user', async () => {
+  it('LoginCallback - Success 200', async () => {
+    dbClient.andWhere.mockResolvedValue([{ credentialsId: 3, userPermissions: 1, deptId: 1 }])
     const response = await request.post('/api/login')
       .send({
         username: 'username',
@@ -33,21 +39,20 @@ describe('testing loginCallBack from login.js', () => {
     expect(response.body.isManager).toEqual(1)
   })
 
-  it('Logging in with existing username, wrong password', async () => {
-    // applies to the rest of the tests as well
-    jest.spyOn(dbClient, 'then').mockImplementationOnce(jest.fn().mockReturnValue([]))
+  it.each`
+  input
+  ${{ username: 'username' }}
+  ${{ password: 'password' }}
+  `('LoginCallback - Missing Data 400', async ({ input }) => {
     const response = await request.post('/api/login')
-      .send({
-        username: 'notUsername',
-        password: 'notPassword'
-      })
-    expect(response.statusCode).toEqual(401)
-    expect(response.body.error.status).toEqual(401)
-    expect(response.body.error.message).toEqual('Unauthorized')
+      .send(input)
+
+    expect(response.statusCode).toEqual(400)
+    expect(response.body.error?.message).toContain('Missing')
   })
 
-  it('Logging in with wrong username, correct password', async () => {
-    jest.spyOn(dbClient, 'then').mockImplementationOnce(jest.fn().mockReturnValue([]))
+  it('LoginCallback - Not In DB 401', async () => {
+    dbClient.andWhere.mockResolvedValue([])
     const response = await request.post('/api/login')
       .send({
         username: 'badUsername',
@@ -55,14 +60,18 @@ describe('testing loginCallBack from login.js', () => {
       })
 
     expect(response.statusCode).toEqual(401)
-    expect(response.body.error.status).toEqual(401)
-    expect(response.body.error.message).toEqual('Unauthorized')
+    expect(response.body.error?.message).toEqual('Unauthorized')
   })
 
-  it('Log in with no credentials', async () => {
-    jest.spyOn(dbClient, 'then').mockImplementationOnce(jest.fn().mockReturnValue([]))
+  it('LoginCallback - Internal Server Error 500', async () => {
+    dbClient.andWhere.mockRejectedValue({})
     const response = await request.post('/api/login')
+      .send({
+        username: 'badUsername',
+        password: 'test'
+      })
 
-    expect(response.statusCode).toEqual(401)
+    expect(response.statusCode).toEqual(500)
+    expect(response.body.error?.message).toEqual('Internal Server Error')
   })
 })
