@@ -75,13 +75,13 @@ const shiftViewPOSTCallback = async (req, res) => {
       throw new Error('Unauthorized', { cause: { error: { status: 401, message: 'Invalid Authorization Level' } } })
     }
 
-    for (let i = 0; i < shiftData.records.length; ++i) {
-      if (!shiftData.records[i].timeBlockId || !shiftData.records[i].employeeId) {
+    for (const record of shiftData.records) {
+      if (!record.timeBlockId || !record.employeeId) {
         console.log('error')
         throw new Error('Missing/Invalid Data', { cause: { error: { status: 400, message: 'Missing Required Data' } } })
       }
 
-      await assignShiftToUser(shiftData.records[i].timeBlockId, shiftData.records[i].employeeId)
+      await assignShiftToUser(record.timeBlockId, record.employeeId)
     }
 
     // return success
