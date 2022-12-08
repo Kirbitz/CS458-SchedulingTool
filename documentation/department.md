@@ -110,16 +110,20 @@ axios({
   **Content:**
 
   ```json
-  [
-    {
-        "userId": 3,
-        "userName": "test"
-    },
-    {
-        "userId": 1234,
-        "userName": "test_create_account"
-    }
-  ]
+  {
+    "depName": "Help Desk",
+    "deptId": 1,
+    "depEmployees": [
+        {
+            "userId": 3,
+            "userName": "test"
+        },
+        {
+            "userId": 1,
+            "userName": "Garrett Preston"
+        }
+    ]
+  }
   ```
 
 ## Sample Call
@@ -133,9 +137,9 @@ axios({
 });
 ```
 
-# Search Employees
+# Add Employees
 
-Allows you to add an employee to a department in the _userDept table
+Allows you to add a list of employees to a department in the _userDept table
 
 - **URL:**
 
@@ -151,17 +155,22 @@ Allows you to add an employee to a department in the _userDept table
 
 - **Data Params**
 
-  _Required:_ User ID - must be able to contain leading 0
+  _Required:_ Employee list - requires userId
 
-  `userId: [string]`
+  `depEmployees: [employee]`
 
-  `0705988`
-
-  _Required:_ Department ID
-
-  `deptId: [int]`
-
-  `3`
+  ```json
+  {
+    "depEmployees": [
+        {
+            "userId": 1234
+        },
+        {
+            "userId": 4
+        }
+    ]
+  }
+  ```
 
 - **Auth Required:** JWT set in authorization header
 
@@ -223,17 +232,24 @@ Allows you to delete a user from the _userDept table (IE remove them from the de
 
 - **Data Params**
 
-  _Required:_ User ID - must be able to contain leading 0
+  _Required:_ Employee list - requires userId
 
-  `userId: [string]`
+  `depEmployees: [employee]`
 
-  `0705988`
-
-  _Required:_ Department ID
-
-  `deptId: [int]`
-
-  `3`
+  ```json
+  
+  {
+    "depEmployees": [
+      {
+        "userId": 1234
+      },
+      {
+        "userId": 4
+      }
+    ]
+    
+  }
+  ```
 
 - **Auth Required:** JWT set in authorization header
 

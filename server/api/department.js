@@ -6,9 +6,11 @@ const searchEmployeesCallback = async (req, res) => {
   try {
     // Verify and add the user ID to the request
     verifyJWTAuthToken(req, res)
+
     // Get the search data from the URL and check that it is a valid search item
     const searchData = (req.params.search).trim()
-    if (searchData.match('^[a-zA-Z]+$') || searchData.match('/^[0-9]+$/')) {
+
+    if (searchData.match('^[a-zA-Z]+$') || searchData.match('^[0-9]+$')) {
       // This query searches for a user name or ID that is LIKE the search data
       res.status(200).json(await dbClient.select('User.userId', 'User.userName')
         .from('User')
@@ -45,13 +47,12 @@ const getEmployeesFromDepartmentCallback = async (req, res) => {
     const employeeList = await dbClient.select('_userDept.userId', 'User.userName')
       .from('_userDept')
       .where('_userDept.deptId', req.body.deptId)
-      .andWhere('isManager', 1)
       .join('User', 'User.userId', '_userDept.userId')
       .then((result) => { return result })
 
     res.status(200).json({
-      depName: deptName,
-      depId: req.body.deptId,
+      depName: deptName[0].deptName,
+      deptId: req.body.deptId,
       depEmployees: employeeList
     })
   } catch (error) {
@@ -63,7 +64,6 @@ const getEmployeesFromDepartmentCallback = async (req, res) => {
 }
 
 const getDepartmentNameFromDeptId = async (deptId) => {
-  console.log('starting getDepartmentNameFromDeptId:', deptId)
   return (await dbClient
     .from('Department')
     .where('Department.deptId', deptId)
@@ -73,8 +73,8 @@ const getDepartmentNameFromDeptId = async (deptId) => {
 const addEmployeeToDepartmentCallback = async (req, res) => {
   try {
     // Grab the deptId
-    const departmentId = req.body.deptId
     verifyJWTAuthToken(req, res)
+    const departmentId = req.body.deptId
 
     // Grab the list of employees
     const employeeList = req.body.depEmployees
@@ -108,7 +108,7 @@ const deleteEmployeeFromDeptCallback = async (req, res) => {
   const data = req.body
   try {
     verifyJWTAuthToken(req, res)
-    const departmentId = data.deptId
+    const departmentId = req.body.deptId
     const depEmployees = data.depEmployees
     // Execute query and get rows affected
     for (const employee of depEmployees) {
@@ -118,7 +118,6 @@ const deleteEmployeeFromDeptCallback = async (req, res) => {
         .andWhere('deptId', departmentId)
         .del())
       // If no rows are affected, 404
-      console.log('Delete employee response', response)
       if (response === 0) {
         throw new Error('No employee with that id found')
       }

@@ -70,7 +70,6 @@ describe('Tests for department.js', () => {
     console.log('Response for getEmployees', response.body)
 
     expect(response.statusCode).toBe(200)
-    expect(response.body.depName).toBe('TestDeptName')
     expect(response.body.depEmployees[0].userId).toBe(5)
     expect(response.body.depEmployees[0].userName).toBe('TestGetEmployees')
   })
