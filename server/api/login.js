@@ -1,5 +1,6 @@
 const sjcl = require('sjcl') // sha256 for encryption
 const jwt = require('jsonwebtoken')
+const { serialize } = require('cookie')
 
 // Database connection with knex
 const dbClient = require('./dbClient')
@@ -27,10 +28,19 @@ const loginCallback = async (req, res) => {
 
     const token = await signToken(user[0].credentialsId, user[0].userPermissions, user[0].deptId)
 
+    const serialized = serialize('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 5 * 60 * 60,
+      path: '/'
+    })
+
     // Successful login
     // Send status code 200 and JSON, then end the response
     res.status(200)
       .set('Authorization', token)
+      .setHeader('Set-Cookie', serialized)
       .json({
         userId: user[0].credentialsId,
         isManager: user[0].userPermissions,

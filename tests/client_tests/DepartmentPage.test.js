@@ -12,10 +12,11 @@ describe('Tests for <DepartmentPage />', () => {
   window.alert = jest.fn()
   let mock
   const depInfo = {
+    deptId: '123',
     depName: 'Yahoo',
     depEmployees: [
-      { id: '5555555', name: 'Ben Dover' },
-      { id: '5772342', name: 'Chris Angle' }
+      { userId: '5555555', userName: 'Ben Dover' },
+      { userId: '5772342', userName: 'Chris Angle' }
     ]
   }
 
@@ -117,7 +118,7 @@ describe('Tests for <DepartmentPage />', () => {
   })
 
   it('Updating the list of employees success', async () => {
-    mock.onGet().reply(200, depInfo).onPost().reply(200)
+    mock.onGet().reply(200, depInfo).onPost().reply(200).onDelete().reply(200)
 
     await act(async () => { render(<DepartmentPage />, { wrapper: BrowserRouter }) })
 
@@ -126,6 +127,7 @@ describe('Tests for <DepartmentPage />', () => {
     await fireEvent.click(screen.getByTestId('save-btn'))
 
     expect(mock.history.post.length).toBe(1)
+    expect(mock.history.delete.length).toBe(1)
   })
 
   it('Updating the list of employees fail', async () => {
