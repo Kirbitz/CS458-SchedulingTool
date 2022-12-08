@@ -4,7 +4,7 @@ const { serialize } = require('cookie')
 
 // Database connection with knex
 const dbClient = require('./dbClient')
-const { getJWTSecret } = require('./dataHelper')
+const { getJWTSecret, errorOccurred } = require('./dataHelper')
 
 // function is asynchronous to allow query to happen before trying to access results
 const loginCallback = async (req, res) => {
@@ -13,7 +13,7 @@ const loginCallback = async (req, res) => {
 
     // Throw an error if no username or password passed in
     if (!loginData.username || !loginData.password) {
-      throw new Error('Missing/Invalid', { cause: { error: { status: 400, message: 'Missing Required Data' } } })
+      throw new Error('Missing/Invalid Data', { cause: { error: { status: 400, message: 'Missing Required Data' } } })
     }
 
     // Query the database to see if the username/password combo exists
@@ -26,7 +26,7 @@ const loginCallback = async (req, res) => {
       throw new Error('Unauthorized', { cause: { error: { status: 401, message: 'Unauthorized' } } })
     }
 
-    const token = await signToken(user[0].credentialsId, user[0].userPermissions)
+    const token = await signToken(user[0].credentialsId, user[0].userPermissions, user[0].deptId)
 
     const serialized = serialize('token', token, {
       httpOnly: true,
@@ -43,33 +43,12 @@ const loginCallback = async (req, res) => {
       .setHeader('Set-Cookie', serialized)
       .json({
         userId: user[0].credentialsId,
-        isManager: user[0].userPermissions
+        isManager: user[0].userPermissions,
+        deptId: user[0].deptId
       })
       .end()
   } catch (err) {
-    switch (err.message) {
-      // Data is either missing or invalid
-      case 'Missing/Invalid':
-        res.status(400)
-          .json(err.cause)
-        break
-      // User doe not exist in database
-      case 'Unauthorized':
-        res.status(401)
-          .json(err.cause)
-        break
-      default:
-        console.error(err)
-        // Some kind of error occurred, though not unique constraints
-        res.status(500)
-          .json({
-            error: {
-              status: 500,
-              message: 'Internal Server Error'
-            }
-          })
-          .end()
-    }
+    errorOccurred(err, res)
   }
 }
 
@@ -79,9 +58,10 @@ const checkUsernamePassword = async (username, password) => {
   // create the password hash
   const passwordHash = sjcl.codec.hex.fromBits(passwordBitArray)
 
-  return dbClient.select('Credentials.credentialsId', 'User.userPermissions')
+  return dbClient.select('Credentials.credentialsId', 'User.userPermissions', '_userDept.deptId')
     .from('Credentials')
     .join('User', 'Credentials.credentialsId', 'User.userId')
+    .join('_userDept', 'User.userId', '_userDept.userId')
     .where('Credentials.credentialsUsername', '=', username)
     .andWhere('Credentials.credentialsPassword', '=', passwordHash)
     .then(result => {
@@ -90,11 +70,12 @@ const checkUsernamePassword = async (username, password) => {
     .catch(err => { throw err })
 }
 
-const signToken = (_userId, _isManager) => {
+const signToken = (_userId, _isManager, _deptId) => {
   return jwt.sign( // Sign a token to be stored in Authorization header
     { // Things used to sign the token
       userId: _userId,
-      isManager: _isManager
+      isManager: _isManager,
+      deptId: _deptId
     },
     getJWTSecret(),
     { expiresIn: 5 * 60 * 60 }) // Token valid for 5 hours
