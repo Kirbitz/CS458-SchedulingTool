@@ -41,13 +41,8 @@ const searchEmployeesCallback = async (req, res) => {
 const getEmployeesFromDepartment = async (req, res) => {
   // Verify and add the user ID to the request
   try {
-    verifyJWTAuthToken(req, res)
-  } catch (error) {
-    return
-  }
+    verifyJWTAuthToken(req)
 
-  // Main code for endpoint
-  try {
     // Get the departments that the user belongs to and place the IDs into an array
     const tempIds = await getDepartmentsFromUserId(req.body.userId, res)
     const deptIds = []

@@ -7,12 +7,13 @@ import NavigationBar from '../Components/NavigationBar.jsx'
 import SaveAndNotify from '../Components/SaveAndNotify.jsx'
 import DepAddRemoveFields from '../Components/DepAddRemoveFields.jsx'
 
-import { getDepartmentInfo, postDepartmentInfo, searchEmployeeInfo } from '../dataHelper.js'
+import { getDepartmentInfo, postDepartmentInfo, searchEmployeeInfo, deleteEmployeeFromDepartment } from '../dataHelper.js'
 
 // Department Page that will display information for adding or removing employees from their department
 export default function DepartmentPage (props) {
   // State management for current department employees and search employees
-  const [departmentInfo, setDepartmentInfo] = React.useState(null)
+  const [departmentInfoMaster, setDepartmentInfoMaster] = React.useState(null)
+  const [departmentInfoTemp, setDepartmentInfoTemp] = React.useState(null)
   const [searchStaff, setSearchStaff] = React.useState([])
   // State management for successful initial collection of the department data
   const [dataCollected, setDataCollected] = React.useState(-1)
@@ -44,6 +45,21 @@ export default function DepartmentPage (props) {
       await searchEmployeeInfo(searchRef.current.value)
         .then((response) => { setSearchStaff(response) })
         .catch((error) => {
+          const data = [
+            {
+              userId: '134',
+              username: 'Jim'
+            },
+            {
+              userId: '986',
+              username: 'Jim'
+            },
+            {
+              userId: '567',
+              username: 'Jim'
+            }
+          ]
+          setSearchStaff(data)
           alert('Failed to retrieve search data')
           console.error(error)
         })
@@ -55,20 +71,22 @@ export default function DepartmentPage (props) {
 
   // Function to run for temp removing employees from a department
   const removeEmployees = (selectedUsers) => {
-    setDepartmentInfo({
-      depName: departmentInfo?.depName,
-      depEmployees: departmentInfo?.depEmployees?.filter((employee) => { return !selectedUsers.includes(employee.id) })
+    setDepartmentInfoTemp({
+      deptId: departmentInfoTemp?.deptId,
+      depName: departmentInfoTemp?.depName,
+      depEmployees: departmentInfoTemp?.depEmployees?.filter((employee) => { return !selectedUsers.includes(employee.userId) })
     })
   }
 
   // Function to run for temp adding employees from a department
   const addEmployees = (selectedUsers) => {
-    const temp = departmentInfo?.depEmployees?.concat(selectedUsers)
-    setDepartmentInfo({
-      depName: departmentInfo?.depName,
+    const temp = departmentInfoTemp?.depEmployees?.concat(selectedUsers)
+    setDepartmentInfoTemp({
+      deptId: departmentInfoTemp?.deptId,
+      depName: departmentInfoTemp?.depName,
       depEmployees: temp?.filter((value, index, self) =>
         index === self.findIndex((t) => (
-          t.id === value.id
+          t.userId === value.userId
         ))
       )
     })
@@ -78,10 +96,32 @@ export default function DepartmentPage (props) {
   const collectDepartmentInfo = () => {
     getDepartmentInfo()
       .then((response) => {
-        setDepartmentInfo(response)
+        console.log(response)
+        setDepartmentInfoMaster(response.data)
+        setDepartmentInfoTemp(response.data)
         setDataCollected(true)
       })
       .catch((error) => {
+        const data = {
+          deptId: 2,
+          depName: 'Hey ;)',
+          depEmployees: [
+            {
+              userId: '1234',
+              username: 'Jim'
+            },
+            {
+              userId: '9876',
+              username: 'Jim'
+            },
+            {
+              userId: '5678',
+              username: 'Jim'
+            }
+          ]
+        }
+        setDepartmentInfoMaster(data)
+        setDepartmentInfoTemp(data)
         alert('Failed to retrieve department data')
         console.error(error)
         setDataCollected(false)
@@ -89,8 +129,14 @@ export default function DepartmentPage (props) {
   }
 
   // Function to run when user wants to save their temp updates
-  const updateDepartmentInfo = () => {
-    postDepartmentInfo(departmentInfo)
+  const updateDepartmentInfo = async () => {
+    const addEmployees = departmentInfoTemp?.depEmployees?.filter((tempEmployee) => { return !(departmentInfoMaster?.depEmployees?.findIndex((masterEmployee) => { return masterEmployee.userId === tempEmployee.userId }) + 1) })
+    const removeEmployees = departmentInfoMaster?.depEmployees?.filter((masterEmployee) => { return !(departmentInfoTemp?.depEmployees?.findIndex((tempEmployee) => { return masterEmployee.userId === tempEmployee.userId }) + 1) })
+
+    await postDepartmentInfo({
+      deptId: departmentInfoMaster?.deptId,
+      depEmployees: addEmployees
+    })
       .then(() => {
         setSuccess(true)
       })
@@ -98,6 +144,17 @@ export default function DepartmentPage (props) {
         console.error(error)
         setSuccess(false)
       })
+
+    if (success) {
+      deleteEmployeeFromDepartment({
+        deptId: departmentInfoMaster?.deptId,
+        depEmployees: removeEmployees
+      })
+        .catch((error) => {
+          console.error(error)
+          setSuccess(false)
+        })
+    }
   }
 
   // Runs the collectDepartmentInfo function exactly one time when the component is rendered
@@ -118,7 +175,7 @@ export default function DepartmentPage (props) {
   }
 
   // Runs a loading wheel to indicate that data is being fetched
-  if (!departmentInfo) {
+  if (!departmentInfoTemp) {
     return (
       <Box data-testid='department-page'>
         <NavigationBar selected="Department" />
@@ -129,12 +186,12 @@ export default function DepartmentPage (props) {
     )
   }
 
-  // Renders once departmentInfo has been fetched
+  // Renders once departmentInfoTemp has been fetched
   return (
     <Box data-testid='department-page'>
       <NavigationBar selected="Department" />
       <Typography variant="h3" component="h2" align='center' sx={{ mt: 2 }}>
-        Department: {departmentInfo?.depName}
+        Department: {departmentInfoTemp?.depName}
       </Typography>
       <Box display="flex" justifyContent="space-between" sx={{ mt: 2 }}>
         <SaveAndNotify callbackFunc={updateDepartmentInfo} success={success} />
@@ -165,7 +222,7 @@ export default function DepartmentPage (props) {
           </div>
         </Tooltip>
       </Box>
-      <DepAddRemoveFields currentEmployees={departmentInfo?.depEmployees} searchEmployees={searchStaff} removeEmployees={removeEmployees} addEmployees={addEmployees} />
+      <DepAddRemoveFields currentEmployees={departmentInfoTemp?.depEmployees} searchEmployees={searchStaff} removeEmployees={removeEmployees} addEmployees={addEmployees} />
     </Box>
   )
 }
