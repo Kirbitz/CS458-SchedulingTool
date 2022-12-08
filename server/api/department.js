@@ -39,10 +39,8 @@ const searchEmployeesCallback = async (req, res) => {
 // Request should contain a department ID, response should return list of employees in that department
 const getEmployeesFromDepartmentCallback = async (req, res) => {
   // Verify and add the user ID to the request
-  console.log('starting getEmployees')
   try {
     verifyJWTAuthToken(req, res)
-    console.log('JWT verified')
   } catch (error) {
     return
   }
@@ -50,30 +48,22 @@ const getEmployeesFromDepartmentCallback = async (req, res) => {
   // Main code for endpoint
   try {
     // Get the departments that the user belongs to and place the IDs into an array
-    const tempIds = await module.exports.getDepartmentsFromUserId(req.body.userId, res)
-    console.log('TempIds', tempIds)
-    const deptIds = []
-    tempIds.forEach(element => {
-      deptIds.push(element.deptId)
-    })
-    console.log('DeptIds', deptIds)
+    const tempIds = await getDepartmentsFromUserId(req.body.userId)
 
     // Get the department name from only the first department the user manages
-    const deptName = await module.exports.getDepartmentNameFromDeptId(deptIds[0])
-    console.log('DeptName', deptName)
+    const deptName = await getDepartmentNameFromDeptId(tempIds[0])
 
     // Query the employees from the departments the logged in user is a manager of
     const employeeList = await dbClient.select('_userDept.userId', 'User.userName')
       .from('_userDept')
-      .whereIn('_userDept.deptId', deptIds)
+      .where('_userDept.deptId', tempIds[0])
       .andWhere('isManager', 1)
       .join('User', 'User.userId', '_userDept.userId')
       .then((result) => { return result })
-    console.log('EmployeeList', employeeList)
 
     res.status(200).json({
-      depName: deptName[0].deptName,
-      depId: deptIds[0],
+      depName: deptName,
+      depId: tempIds[0],
       depEmployees: employeeList
     })
   } catch (error) {
@@ -85,23 +75,54 @@ const getEmployeesFromDepartmentCallback = async (req, res) => {
 }
 
 // Use the userId from the token to get the departments that user manages. Return the list of deptIds and names
-const getDepartmentsFromUserId = async (userId, res) => {
-  console.log('starting getDepartmentsFromUserId')
-  return (await dbClient.select('_userDept.deptId')
+const getDepartmentsFromUserId = async (userId) => {
+  console.log('starting getDepartmentsFromUserId:', userId)
+  return (await dbClient
     .from('_userDept')
-    .where('userId', '=', userId)
-    .andWhere('isManager', 1))
+    .where('_userDept.isManager', 1)
+    .andWhere('_userDept.userId', userId)
+    .select('_userDept.deptId'))
 }
 
 const getDepartmentNameFromDeptId = async (deptId) => {
-  console.log('starting getDepartmentNameFromDeptId')
-  return (await dbClient.select('Department.deptName')
+  console.log('starting getDepartmentNameFromDeptId:', deptId)
+  return (await dbClient
     .from('Department')
-    .where('Department.deptId', '=', deptId))
+    .where('Department.deptId', deptId)
+    .select('Department.deptName'))
 }
 
-const addEmployeeToDeptCallback = async (req, res) => {
+const addEmployeeToDepartmentCallback = async (req, res) => {
+  // Verify and add the user ID to the request
+  try {
+    verifyJWTAuthToken(req, res)
+  } catch (error) {
+    return
+  }
+  // Get the relevant info from request
+  const reqUserId = req.body.userId
+  const reqDeptId = req.body.deptId
 
+  try {
+    // Insert into the database
+    await dbClient
+      .insert({
+        userId: reqUserId,
+        deptId: reqDeptId
+      })
+      .into('_userDept')
+    res.status(201).json({
+      message: 'Employee placed into department'
+    })
+  } catch (error) {
+    // Catch all for unexpected stuff
+    console.log(error)
+    res.status(500).json({
+      error: {
+        message: 'Internal server error while inserting employee'
+      }
+    })
+  }
 }
 
 // Callback/wrapper for deleting an employee
@@ -118,7 +139,7 @@ const deleteEmployeeFromDeptCallback = async (req, res) => {
   console.log('Data for delete employee:', data)
   try {
     // Execute query and get rows affected
-    const response = (await dbClient.select('*')
+    const response = (await dbClient
       .from('_userDept')
       .where('userId', data.userId)
       .andWhere('deptId', data.deptId)
@@ -149,8 +170,6 @@ const deleteEmployeeFromDeptCallback = async (req, res) => {
 module.exports = {
   searchEmployeesCallback,
   getEmployeesFromDepartmentCallback,
-  addEmployeeToDeptCallback,
-  deleteEmployeeFromDeptCallback,
-  getDepartmentsFromUserId,
-  getDepartmentNameFromDeptId
+  addEmployeeToDepartmentCallback,
+  deleteEmployeeFromDeptCallback
 }
