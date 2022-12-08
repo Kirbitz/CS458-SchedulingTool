@@ -96,7 +96,7 @@ export default function Shift (props) {
               { employees[selectedIndex] }
             </Typography>
           </Button>
-          <Menu sx={{ 'overflow-y': scroll }}
+          <Menu
             aria-label="employee-menu"
             id="employee-menu"
             anchorEl={ anchorEl }
