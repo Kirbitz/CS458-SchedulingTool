@@ -45,21 +45,6 @@ export default function DepartmentPage (props) {
       await searchEmployeeInfo(searchRef.current.value)
         .then((response) => { setSearchStaff(response) })
         .catch((error) => {
-          const data = [
-            {
-              userId: '134',
-              username: 'Jim'
-            },
-            {
-              userId: '986',
-              username: 'Jim'
-            },
-            {
-              userId: '567',
-              username: 'Jim'
-            }
-          ]
-          setSearchStaff(data)
           alert('Failed to retrieve search data')
           console.error(error)
         })
@@ -101,26 +86,6 @@ export default function DepartmentPage (props) {
         setDataCollected(true)
       })
       .catch((error) => {
-        const data = {
-          deptId: 2,
-          depName: 'Hey ;)',
-          depEmployees: [
-            {
-              userId: '1234',
-              username: 'Jim'
-            },
-            {
-              userId: '9876',
-              username: 'Jim'
-            },
-            {
-              userId: '5678',
-              username: 'Jim'
-            }
-          ]
-        }
-        setDepartmentInfoMaster(data)
-        setDepartmentInfoTemp(data)
         alert('Failed to retrieve department data')
         console.error(error)
         setDataCollected(false)
