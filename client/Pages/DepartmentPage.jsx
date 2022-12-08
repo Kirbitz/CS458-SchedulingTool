@@ -96,7 +96,6 @@ export default function DepartmentPage (props) {
   const collectDepartmentInfo = () => {
     getDepartmentInfo()
       .then((response) => {
-        console.log(response)
         setDepartmentInfoMaster(response.data)
         setDepartmentInfoTemp(response.data)
         setDataCollected(true)
@@ -129,11 +128,10 @@ export default function DepartmentPage (props) {
   }
 
   // Function to run when user wants to save their temp updates
-  const updateDepartmentInfo = async () => {
+  const updateDepartmentInfo = () => {
     const addEmployees = departmentInfoTemp?.depEmployees?.filter((tempEmployee) => { return !(departmentInfoMaster?.depEmployees?.findIndex((masterEmployee) => { return masterEmployee.userId === tempEmployee.userId }) + 1) })
     const removeEmployees = departmentInfoMaster?.depEmployees?.filter((masterEmployee) => { return !(departmentInfoTemp?.depEmployees?.findIndex((tempEmployee) => { return masterEmployee.userId === tempEmployee.userId }) + 1) })
-
-    await postDepartmentInfo({
+    postDepartmentInfo({
       deptId: departmentInfoMaster?.deptId,
       depEmployees: addEmployees
     })
@@ -145,16 +143,17 @@ export default function DepartmentPage (props) {
         setSuccess(false)
       })
 
-    if (success) {
-      deleteEmployeeFromDepartment({
-        deptId: departmentInfoMaster?.deptId,
-        depEmployees: removeEmployees
+    deleteEmployeeFromDepartment({
+      deptId: departmentInfoMaster?.deptId,
+      depEmployees: removeEmployees
+    })
+      .then(() => {
+        setSuccess(true)
       })
-        .catch((error) => {
-          console.error(error)
-          setSuccess(false)
-        })
-    }
+      .catch((error) => {
+        console.error(error)
+        setSuccess(false)
+      })
   }
 
   // Runs the collectDepartmentInfo function exactly one time when the component is rendered
