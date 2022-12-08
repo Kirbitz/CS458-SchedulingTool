@@ -110,6 +110,7 @@ const deleteEmployeeFromDeptCallback = async (req, res) => {
     verifyJWTAuthToken(req)
     const departmentId = req.body.deptId
     const depEmployees = data.depEmployees
+
     // Execute query and get rows affected
     for (const employee of depEmployees) {
       const response = (await dbClient

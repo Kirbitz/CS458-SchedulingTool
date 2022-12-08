@@ -18,7 +18,7 @@ export default function DepAddRemoveFields (props) {
     const value = []
     for (const option of options) {
       if (option.selected) {
-        value.push(option.value)
+        value.push(parseInt(option.value))
       }
     }
     setSelectedUsers(value)
