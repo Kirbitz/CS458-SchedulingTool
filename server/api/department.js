@@ -5,7 +5,7 @@ const { verifyJWTAuthToken } = require('./dataHelper')
 const searchEmployeesCallback = async (req, res) => {
   try {
     // Verify and add the user ID to the request
-    verifyJWTAuthToken(req, res)
+    verifyJWTAuthToken(req)
 
     // Get the search data from the URL and check that it is a valid search item
     const searchData = (req.params.search).trim()
@@ -37,14 +37,12 @@ const searchEmployeesCallback = async (req, res) => {
 const getEmployeesFromDepartmentCallback = async (req, res) => {
   // Main code for endpoint
   try {
+    // Verify and add the user ID to the request
     verifyJWTAuthToken(req)
 
-    // Get the departments that the user belongs to and place the IDs into an array
-    const tempIds = await getDepartmentsFromUserId(req.body.userId, res)
-    const deptIds = []
-    tempIds.forEach(element => {
-      deptIds.push(element.deptId)
-    })
+    // Get the department name from only the first department the user manages
+    const deptName = await getDepartmentNameFromDeptId(req.body.deptId)
+
     // Query the employees from the departments the logged in user is a manager of
     const employeeList = await dbClient.select('_userDept.userId', 'User.userName')
       .from('_userDept')
@@ -75,7 +73,7 @@ const getDepartmentNameFromDeptId = async (deptId) => {
 const addEmployeeToDepartmentCallback = async (req, res) => {
   try {
     // Grab the deptId
-    verifyJWTAuthToken(req, res)
+    verifyJWTAuthToken(req)
     const departmentId = req.body.deptId
 
     // Grab the list of employees
@@ -109,7 +107,7 @@ const deleteEmployeeFromDeptCallback = async (req, res) => {
   // Grab the data
   const data = req.body
   try {
-    verifyJWTAuthToken(req, res)
+    verifyJWTAuthToken(req)
     const departmentId = req.body.deptId
     const depEmployees = data.depEmployees
     // Execute query and get rows affected
