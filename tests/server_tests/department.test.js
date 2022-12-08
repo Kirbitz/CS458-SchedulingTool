@@ -56,8 +56,6 @@ describe('Tests for department.js', () => {
   })
 
   it('Test for getEmployeesByDepartmentCallback - Success', async () => {
-    // mock for getDepartmentNameFromUserId
-    jest.spyOn(dbClient, 'select').mockImplementationOnce(jest.fn().mockReturnValue([1, 2]))
     // mock for getDepartmentNameFromDepartmentId
     jest.spyOn(dbClient, 'select').mockImplementationOnce(jest.fn().mockReturnValue('TestDeptName'))
     // Set up mocking for the main query
@@ -72,7 +70,6 @@ describe('Tests for department.js', () => {
     console.log('Response for getEmployees', response.body)
 
     expect(response.statusCode).toBe(200)
-    expect(response.body.depId).toBe(1)
     expect(response.body.depName).toBe('TestDeptName')
     expect(response.body.depEmployees[0].userId).toBe(5)
     expect(response.body.depEmployees[0].userName).toBe('TestGetEmployees')

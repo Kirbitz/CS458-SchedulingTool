@@ -37,23 +37,21 @@ const getEmployeesFromDepartmentCallback = async (req, res) => {
   try {
     // Verify and add the user ID to the request
     verifyJWTAuthToken(req, res)
-    // Get the departments that the user belongs to and place the IDs into an array
-    const tempIds = await getDepartmentsFromUserId(req.body.userId)
 
     // Get the department name from only the first department the user manages
-    const deptName = await getDepartmentNameFromDeptId(tempIds[0])
+    const deptName = await getDepartmentNameFromDeptId(req.body.deptId)
 
     // Query the employees from the departments the logged in user is a manager of
     const employeeList = await dbClient.select('_userDept.userId', 'User.userName')
       .from('_userDept')
-      .where('_userDept.deptId', tempIds[0])
+      .where('_userDept.deptId', req.body.deptId)
       .andWhere('isManager', 1)
       .join('User', 'User.userId', '_userDept.userId')
       .then((result) => { return result })
 
     res.status(200).json({
       depName: deptName,
-      depId: tempIds[0],
+      depId: req.body.deptId,
       depEmployees: employeeList
     })
   } catch (error) {
@@ -62,16 +60,6 @@ const getEmployeesFromDepartmentCallback = async (req, res) => {
       message: 'Error while getting employees from department'
     })
   }
-}
-
-// Use the userId from the token to get the departments that user manages. Return the list of deptIds and names
-const getDepartmentsFromUserId = async (userId) => {
-  console.log('starting getDepartmentsFromUserId:', userId)
-  return (await dbClient
-    .from('_userDept')
-    .where('_userDept.isManager', 1)
-    .andWhere('_userDept.userId', userId)
-    .select('_userDept.deptId'))
 }
 
 const getDepartmentNameFromDeptId = async (deptId) => {
@@ -92,14 +80,14 @@ const addEmployeeToDepartmentCallback = async (req, res) => {
     const employeeList = req.body.depEmployees
 
     // Iterate through and insert into the database
-    employeeList.forEach(async (employee) => {
+    for (const employee of employeeList) {
       await dbClient
         .insert({
           userId: employee.userId,
           deptId: departmentId
         })
         .into('_userDept')
-    })
+    }
     res.status(201).json({
       message: 'Employee placed into department'
     })
