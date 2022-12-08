@@ -55,22 +55,28 @@ describe('Tests for department.js', () => {
     expect(response.statusCode).toBe(500)
   })
 
-  it('Test for getEmployeesByDepartment - Success', async () => {
-    // Set up mocking for this test
-    jest.spyOn(dbClient, 'then').mockImplementationOnce(jest.fn().mockReturnValue([5]))
-    jest.spyOn(dbClient, 'then').mockImplementationOnce(jest.fn().mockReturnValue([{ userId: 3, userName: 'test' }]))
+  it('Test for getEmployeesByDepartmentCallback - Success', async () => {
+    // mock for getDepartmentNameFromDepartmentId
+    jest.spyOn(dbClient, 'select').mockImplementationOnce(jest.fn().mockReturnValue('TestDeptName'))
+    // Set up mocking for the main query
+    jest.spyOn(dbClient, 'then').mockImplementationOnce(jest.fn().mockReturnValue([{
+      userId: 5,
+      userName: 'TestGetEmployees'
+    }]))
 
     const response = await request.get('/api/getEmployees')
       .send({})
 
+    console.log('Response for getEmployees', response.body)
+
     expect(response.statusCode).toBe(200)
-    expect(response.body[0].userId).toBe(3)
-    expect(response.body[0].userName).toBe('test')
+    expect(response.body.depEmployees[0].userId).toBe(5)
+    expect(response.body.depEmployees[0].userName).toBe('TestGetEmployees')
   })
 
-  it('Test for getEmployeesByDepartment - fail', async () => {
+  it('Test for getEmployeesByDepartmentCallback - fail', async () => {
     // Set up mocking for this test
-    jest.spyOn(dbClient, 'then').mockImplementationOnce(jest.fn().mockReturnValue())
+    jest.spyOn(dbClient, 'from').mockImplementationOnce(jest.fn().mockReturnValue())
     jest.spyOn(dbClient, 'join').mockImplementation(() => {
       throw new Error('I am an error')
     })
@@ -81,58 +87,49 @@ describe('Tests for department.js', () => {
     expect(response.statusCode).toBe(500)
   })
 
-  it('Test for postDepartment - Success', async () => {
-    jest.spyOn(dbClient, 'insert').mockReturnValue([15])
-    const response = await request.post('/api/postDepartment')
+  it('Test for addEmployee - success', async () => {
+    jest.spyOn(dbClient, 'into').mockImplementation(jest.fn().mockReturnValue(1))
+
+    const response = await request.post('/api/addEmployee')
       .send({
-        deptName: 'testDept',
-        deptLocation: 'testLocation',
-        deptHourCap: '5'
+        deptId: 1,
+        depEmployees: [{
+          userId: 1
+        }]
       })
 
     expect(response.statusCode).toBe(201)
-    expect(response.body.message).toBe('Department created with ID: 15')
-    expect(response.body.deptId).toBe(15)
+    expect(response.body.message).toBe('Employee placed into department')
   })
 
-  it('Test for postDepartment - Fail', async () => {
+  it('Test for addEmployee - fail', async () => {
     jest.spyOn(dbClient, 'insert').mockImplementation(() => {
       throw new Error('I am an error')
     })
 
-    const response = await request.post('/api/postDepartment')
+    const response = await request.post('/api/addEmployee')
       .send({
-        deptName: 'testDept',
-        deptLocation: 'testLocation',
-        deptHourCap: '5'
+        deptId: 1,
+        deptEmployees: [{
+          userId: 1
+        }]
       })
 
+    // console.log('Fail addEmployee', response.body.error.message)
+
     expect(response.statusCode).toBe(500)
-    expect(response.body.error.message).toBe('Internal server error while creating department')
-  })
-
-  it('Test for getDepartments', async () => {
-    jest.spyOn(dbClient, 'from').mockImplementationOnce(jest.fn().mockReturnValue({
-      deptId: 0,
-      deptName: 'testDept',
-      deptLocation: 'MSC',
-      deptHourCap: 15
-    }))
-    const response = await request.get('/api/getDepartments')
-
-    expect(response.statusCode).toBe(200)
-    expect(response.body.deptId).toBe(0)
-    expect(response.body.deptName).toBe('testDept')
-    expect(response.body.deptLocation).toBe('MSC')
-    expect(response.body.deptHourCap).toBe(15)
+    expect(response.body.error.message).toBe('Internal server error while inserting employee')
   })
 
   it('Test for deleteEmployee - success', async () => {
     jest.spyOn(dbClient, 'del').mockImplementation(jest.fn().mockReturnValue(1))
+
     const response = await request.delete('/api/deleteEmployee')
       .send({
-        userId: 40,
-        deptId: 14
+        deptId: 1,
+        depEmployees: [{
+          userId: 1
+        }]
       })
 
     expect(response.statusCode).toBe(202)
@@ -143,8 +140,10 @@ describe('Tests for department.js', () => {
     jest.spyOn(dbClient, 'del').mockImplementation(jest.fn().mockReturnValue(0))
     const response = await request.delete('/api/deleteEmployee')
       .send({
-        employeeId: 40,
-        deptId: 14
+        deptId: 1,
+        depEmployees: [{
+          userId: 1
+        }]
       })
 
     expect(response.statusCode).toBe(404)
@@ -153,13 +152,15 @@ describe('Tests for department.js', () => {
 
   it('Test for deleteEmployee - fail', async () => {
     jest.spyOn(dbClient, 'del').mockImplementation(() => {
-      throw new Error('I am an error')
+      throw new Error('deleteEmployee error')
     })
 
     const response = await request.delete('/api/deleteEmployee')
       .send({
-        userId: 40,
-        deptId: 14
+        deptId: 1,
+        depEmployees: [{
+          userId: 1
+        }]
       })
 
     expect(response.statusCode).toBe(500)
