@@ -23,8 +23,8 @@ export default function ShiftViewToolbarBottom (props) {
   const [alertSeverity, setAlertSeverity] = useState('warning')
   const [alertText, setAlertText] = useState('There are no shifts for this day.')
 
-  setAlertText('There are no shifts for this day.')
-  setAlertSeverity('warning')
+  // setAlertText('There are no shifts for this day.')
+  // setAlertSeverity('warning')
 
   // These are used to test the Alert bar and its ability to change states.
   // These will be removed once the component is fully functional.
