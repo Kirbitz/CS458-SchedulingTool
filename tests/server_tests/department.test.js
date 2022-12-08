@@ -96,8 +96,10 @@ describe('Tests for department.js', () => {
 
     const response = await request.post('/api/addEmployee')
       .send({
-        userId: 1,
-        deptId: 1
+        deptId: 1,
+        depEmployees: [{
+          userId: 1
+        }]
       })
 
     expect(response.statusCode).toBe(201)
@@ -111,8 +113,10 @@ describe('Tests for department.js', () => {
 
     const response = await request.post('/api/addEmployee')
       .send({
-        userId: 1,
-        deptId: 1
+        deptId: 1,
+        deptEmployees: [{
+          userId: 1
+        }]
       })
 
     // console.log('Fail addEmployee', response.body.error.message)
@@ -126,8 +130,10 @@ describe('Tests for department.js', () => {
 
     const response = await request.delete('/api/deleteEmployee')
       .send({
-        userId: 1,
-        deptId: 14
+        deptId: 1,
+        depEmployees: [{
+          userId: 1
+        }]
       })
 
     expect(response.statusCode).toBe(202)
@@ -138,8 +144,10 @@ describe('Tests for department.js', () => {
     jest.spyOn(dbClient, 'del').mockImplementation(jest.fn().mockReturnValue(0))
     const response = await request.delete('/api/deleteEmployee')
       .send({
-        employeeId: 2,
-        deptId: 14
+        deptId: 1,
+        depEmployees: [{
+          userId: 1
+        }]
       })
 
     expect(response.statusCode).toBe(404)
@@ -148,13 +156,15 @@ describe('Tests for department.js', () => {
 
   it('Test for deleteEmployee - fail', async () => {
     jest.spyOn(dbClient, 'del').mockImplementation(() => {
-      throw new Error('I am an error')
+      throw new Error('deleteEmployee error')
     })
 
     const response = await request.delete('/api/deleteEmployee')
       .send({
-        userId: 3,
-        deptId: 14
+        deptId: 1,
+        depEmployees: [{
+          userId: 1
+        }]
       })
 
     expect(response.statusCode).toBe(500)

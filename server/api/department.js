@@ -3,14 +3,9 @@ const { verifyJWTAuthToken } = require('./dataHelper')
 
 // Query for searching employees
 const searchEmployeesCallback = async (req, res) => {
-  // Verify and add the user ID to the request
   try {
+    // Verify and add the user ID to the request
     verifyJWTAuthToken(req, res)
-  } catch (error) {
-    return
-  }
-
-  try {
     // Get the search data from the URL and check that it is a valid search item
     const searchData = (req.params.search).trim()
     if (searchData.match('^[a-zA-Z]+$') || searchData.match('/^[0-9]+$/')) {
@@ -38,15 +33,10 @@ const searchEmployeesCallback = async (req, res) => {
 
 // Request should contain a department ID, response should return list of employees in that department
 const getEmployeesFromDepartmentCallback = async (req, res) => {
-  // Verify and add the user ID to the request
-  try {
-    verifyJWTAuthToken(req, res)
-  } catch (error) {
-    return
-  }
-
   // Main code for endpoint
   try {
+    // Verify and add the user ID to the request
+    verifyJWTAuthToken(req, res)
     // Get the departments that the user belongs to and place the IDs into an array
     const tempIds = await getDepartmentsFromUserId(req.body.userId)
 
@@ -93,24 +83,23 @@ const getDepartmentNameFromDeptId = async (deptId) => {
 }
 
 const addEmployeeToDepartmentCallback = async (req, res) => {
-  // Verify and add the user ID to the request
   try {
+    // Grab the deptId
+    const departmentId = req.body.deptId
     verifyJWTAuthToken(req, res)
-  } catch (error) {
-    return
-  }
-  // Get the relevant info from request
-  const reqUserId = req.body.userId
-  const reqDeptId = req.body.deptId
 
-  try {
-    // Insert into the database
-    await dbClient
-      .insert({
-        userId: reqUserId,
-        deptId: reqDeptId
-      })
-      .into('_userDept')
+    // Grab the list of employees
+    const employeeList = req.body.depEmployees
+
+    // Iterate through and insert into the database
+    employeeList.forEach(async (employee) => {
+      await dbClient
+        .insert({
+          userId: employee.userId,
+          deptId: departmentId
+        })
+        .into('_userDept')
+    })
     res.status(201).json({
       message: 'Employee placed into department'
     })
@@ -127,30 +116,24 @@ const addEmployeeToDepartmentCallback = async (req, res) => {
 
 // Callback/wrapper for deleting an employee
 const deleteEmployeeFromDeptCallback = async (req, res) => {
-  // Verify and add the user ID to the request
-  try {
-    verifyJWTAuthToken(req, res)
-  } catch (error) {
-    return
-  }
-
   // Grab the data
   const data = req.body
-  console.log('Data for delete employee:', data)
   try {
+    verifyJWTAuthToken(req, res)
+    const departmentId = data.deptId
+    const depEmployees = data.depEmployees
     // Execute query and get rows affected
-    const response = (await dbClient
-      .from('_userDept')
-      .where('userId', data.userId)
-      .andWhere('deptId', data.deptId)
-      .del())
-
-    // If no rows are affected, 404
-    if (response === 0) {
-      res.status(404).json({
-        message: 'No employee with that id found'
-      })
-      return
+    for (const employee of depEmployees) {
+      const response = (await dbClient
+        .from('_userDept')
+        .where('userId', employee.userId)
+        .andWhere('deptId', departmentId)
+        .del())
+      // If no rows are affected, 404
+      console.log('Delete employee response', response)
+      if (response === 0) {
+        throw new Error('No employee with that id found')
+      }
     }
     // Otherwise, good job
     res.status(202).json({
@@ -159,6 +142,12 @@ const deleteEmployeeFromDeptCallback = async (req, res) => {
   } catch (error) {
     // Catch all for unexpected stuff
     console.log(error)
+    if (error.message === 'No employee with that id found') {
+      res.status(404).json({
+        message: error.message
+      })
+      return
+    }
     res.status(500).json({
       error: {
         message: 'Internal server error while deleting employee'
