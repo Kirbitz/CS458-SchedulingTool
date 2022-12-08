@@ -58,6 +58,7 @@ const getEmployeesFromDepartmentCallback = async (req, res) => {
     })
     console.log('DeptIds', deptIds)
 
+    // Get the department name from only the first department the user manages
     const deptName = await module.exports.getDepartmentNameFromDeptId(deptIds[0])
     console.log('DeptName', deptName)
 
@@ -122,8 +123,6 @@ const deleteEmployeeFromDeptCallback = async (req, res) => {
       .where('userId', data.userId)
       .andWhere('deptId', data.deptId)
       .del())
-
-    console.log('Delete employee', response)
 
     // If no rows are affected, 404
     if (response === 0) {

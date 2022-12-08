@@ -56,17 +56,22 @@ describe('Tests for department.js', () => {
   })
 
   it('Test for getEmployeesByDepartmentCallback - Success', async () => {
-    // Set up mocking for this test
-    jest.spyOn(dbClient, 'from').mockImplementationOnce(jest.fn().mockReturnValue([5]))
+    // mock for getDepartmentNameFromUserId
     jest.spyOn(dbClient, 'andWhere').mockImplementationOnce(jest.fn().mockReturnValue([{ deptName: 'Help Desk' }]))
+    // mock for getDepartmentNameFromDepartmentId
     jest.spyOn(dbClient, 'where').mockImplementationOnce(jest.fn().mockReturnValue([{ userId: 3, userName: 'test' }]))
+    // Set up mocking for the main query
+    jest.spyOn(dbClient, 'then').mockImplementationOnce(jest.fn().mockReturnValue([{
+      userId: 5,
+      userName: 'TestGetEmployees'
+    }]))
 
     const response = await request.get('/api/getEmployees')
       .send({})
 
     expect(response.statusCode).toBe(200)
-    expect(response.body[0].userId).toBe(3)
-    expect(response.body[0].userName).toBe('test')
+    expect(response.body[0].userId).toBe(5)
+    expect(response.body[0].userName).toBe('TestGetEmployees')
   })
 
   it('Test for getEmployeesByDepartmentCallback - fail', async () => {
