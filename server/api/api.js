@@ -2,6 +2,7 @@ const Express = require('express')
 const RateLimiters = require('./rateLimiters.js')
 
 const { loginCallback } = require('./login.js')
+const { shiftViewGETCallback, shiftViewPOSTCallback } = require('./shiftView')
 const { createAccountCallback } = require('./createAccount.js')
 const { collectTimeBlockData, createModifyTimeBlockData, deleteTimeBlockData } = require('./timeBlockData.js')
 const { searchEmployeesCallback, getEmployeesFromDepartmentCallback, addEmployeeToDepartmentCallback, deleteEmployeeFromDeptCallback } = require('./department.js')
@@ -12,6 +13,9 @@ router.use(Express.json())
 router.use(RateLimiters.loginLimiter)
 
 router.post('/login', loginCallback)
+router.get('/shift_view', shiftViewGETCallback)
+router.post('/shift_view', shiftViewPOSTCallback)
+
 router.post('/create_new_account', createAccountCallback)
 
 router.get('/collect_time_blocks/:startDate?/:endDate?', collectTimeBlockData)
