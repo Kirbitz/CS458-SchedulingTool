@@ -58,8 +58,8 @@ describe('Tests for department.js', () => {
   it('Test for getEmployeesByDepartmentCallback - Success', async () => {
     // Set up mocking for this test
     jest.spyOn(dbClient, 'from').mockImplementationOnce(jest.fn().mockReturnValue([5]))
-    jest.spyOn(dbClient, 'from').mockImplementationOnce(jest.fn().mockReturnValue([{ deptName: 'Help Desk' }]))
-    jest.spyOn(dbClient, 'from').mockImplementationOnce(jest.fn().mockReturnValue([{ userId: 3, userName: 'test' }]))
+    jest.spyOn(dbClient, 'andWhere').mockImplementationOnce(jest.fn().mockReturnValue([{ deptName: 'Help Desk' }]))
+    jest.spyOn(dbClient, 'where').mockImplementationOnce(jest.fn().mockReturnValue([{ userId: 3, userName: 'test' }]))
 
     const response = await request.get('/api/getEmployees')
       .send({})

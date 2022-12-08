@@ -88,7 +88,7 @@ const getDepartmentsFromUserId = async (userId, res) => {
   console.log('starting getDepartmentsFromUserId')
   return (await dbClient.select('_userDept.deptId')
     .from('_userDept')
-    .where('userId', userId)
+    .where('userId', '=', userId)
     .andWhere('isManager', 1))
 }
 
@@ -96,7 +96,7 @@ const getDepartmentNameFromDeptId = async (deptId) => {
   console.log('starting getDepartmentNameFromDeptId')
   return (await dbClient.select('Department.deptName')
     .from('Department')
-    .where('Department.deptId', deptId))
+    .where('Department.deptId', '=', deptId))
 }
 
 const addEmployeeToDeptCallback = async (req, res) => {
@@ -117,11 +117,11 @@ const deleteEmployeeFromDeptCallback = async (req, res) => {
   console.log('Data for delete employee:', data)
   try {
     // Execute query and get rows affected
-    const response = await dbClient
+    const response = (await dbClient.select('*')
       .from('_userDept')
       .where('userId', data.userId)
       .andWhere('deptId', data.deptId)
-      .del()
+      .del())
 
     console.log('Delete employee', response)
 
