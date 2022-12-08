@@ -23,31 +23,34 @@ export default function ShiftViewToolbarBottom (props) {
   const [alertSeverity, setAlertSeverity] = useState('warning')
   const [alertText, setAlertText] = useState('There are no shifts for this day.')
 
+  setAlertText('There are no shifts for this day.')
+  setAlertSeverity('warning')
+
   // These are used to test the Alert bar and its ability to change states.
   // These will be removed once the component is fully functional.
-  const debugButtons = [
-    <Button variant="contained" color="error" key="-1" onClick={() => {
-      changeAlertState(-1)
-    }}>-1</Button>,
-    <Button variant="contained" color="error" key="X" onClick={() => {
-      changeAlertState('X')
-    }}>X</Button>,
-    <Button variant="contained" key="0" onClick={() => {
-      changeAlertState(0)
-    }}>0</Button>,
-    <Button variant="contained" key="1" onClick={() => {
-      changeAlertState(1)
-    }}>1</Button>,
-    <Button variant="contained" key="2" onClick={() => {
-      changeAlertState(2)
-    }}>2</Button>,
-    <Button variant="contained" key="3" onClick={() => {
-      changeAlertState(3)
-    }}>3</Button>,
-    <Button variant="contained" key="4" onClick={() => {
-      changeAlertState(4)
-    }}>4</Button>
-  ]
+  // const debugButtons = [
+  //   <Button variant="contained" color="error" key="-1" onClick={() => {
+  //     changeAlertState(-1)
+  //   }}>-1</Button>,
+  //   <Button variant="contained" color="error" key="X" onClick={() => {
+  //     changeAlertState('X')
+  //   }}>X</Button>,
+  //   <Button variant="contained" key="0" onClick={() => {
+  //     changeAlertState(0)
+  //   }}>0</Button>,
+  //   <Button variant="contained" key="1" onClick={() => {
+  //     changeAlertState(1)
+  //   }}>1</Button>,
+  //   <Button variant="contained" key="2" onClick={() => {
+  //     changeAlertState(2)
+  //   }}>2</Button>,
+  //   <Button variant="contained" key="3" onClick={() => {
+  //     changeAlertState(3)
+  //   }}>3</Button>,
+  //   <Button variant="contained" key="4" onClick={() => {
+  //     changeAlertState(4)
+  //   }}>4</Button>
+  // ]
 
   /** changeAlertState
    * @description Changes alert icon, color, and text depending on changes and assignment status.
@@ -55,31 +58,31 @@ export default function ShiftViewToolbarBottom (props) {
    ** Error states: -1, all non-integer inputs
    ** Normal states: 0, 1, 2, 3, 4
   */
-  const changeAlertState = (state) => {
-    if (state === -1) {
-      setAlertSeverity('error')
-      setAlertText('Failed to retrieve shift data.')
-    } else if (state === 0) {
-      setAlertSeverity('warning')
-      setAlertText('There are no shifts for this day.')
-    } else if (state === 1) {
-      setAlertSeverity('success')
-      setAlertText('All shifts have been assigned to a team member!')
-    } else if (state === 2) {
-      setAlertSeverity('warning')
-      setAlertText('You have shifts which are not assigned to anyone!')
-    } else if (state === 3) {
-      setAlertSeverity('info')
-      setAlertText('You have unsaved changes.')
-    } else if (state === 4) {
-      setAlertSeverity('success')
-      setAlertText('Changes were saved successfully!')
-      // TODO: Timeout for a few seconds, then switch to state 0 or 1.
-    } else {
-      setAlertSeverity('error')
-      setAlertText('Invalid alert state.')
-    }
-  }
+  // const changeAlertState = (state) => {
+  //   if (state === -1) {
+  //     setAlertSeverity('error')
+  //     setAlertText('Failed to retrieve shift data.')
+  //   } else if (state === 0) {
+  //     setAlertSeverity('warning')
+  //     setAlertText('There are no shifts for this day.')
+  //   } else if (state === 1) {
+  //     setAlertSeverity('success')
+  //     setAlertText('All shifts have been assigned to a team member!')
+  //   } else if (state === 2) {
+  //     setAlertSeverity('warning')
+  //     setAlertText('You have shifts which are not assigned to anyone!')
+  //   } else if (state === 3) {
+  //     setAlertSeverity('info')
+  //     setAlertText('You have unsaved changes.')
+  //   } else if (state === 4) {
+  //     setAlertSeverity('success')
+  //     setAlertText('Changes were saved successfully!')
+  //     // TODO: Timeout for a few seconds, then switch to state 0 or 1.
+  //   } else {
+  //     setAlertSeverity('error')
+  //     setAlertText('Invalid alert state.')
+  //   }
+  // }
   return (
     <AppBar position="fixed" sx={{ bgcolor: '#ffffff', top: 'auto', bottom: 0 }}>
       <Toolbar disableGutters>
@@ -99,7 +102,7 @@ export default function ShiftViewToolbarBottom (props) {
               justifyContent="flex-end"
             >
               <ButtonGroup aria-label="debug-alert-buttons">
-                { debugButtons }
+                {/* { debugButtons } */}
               </ButtonGroup>
               <Button
                 // sx={{ height: 50 }}

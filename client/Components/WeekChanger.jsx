@@ -63,7 +63,7 @@ export default function WeekChanger (props) {
   */
 
   return (
-    <Grid container mt={2} justifyContent="center">
+    <Grid container mt={2} justifyContent="center" data-testid="week-changer">
       <Grid item>
         <Stack
           spacing={2}
