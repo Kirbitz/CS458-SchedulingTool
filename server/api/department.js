@@ -1,5 +1,5 @@
 const dbClient = require('./dbClient')
-const { verifyJWTAuthToken } = require('./dataHelper')
+const { verifyJWTAuthToken, errorOccurred } = require('./dataHelper')
 
 // Query for searching employees
 const searchEmployeesCallback = async (req, res) => {
@@ -17,19 +17,11 @@ const searchEmployeesCallback = async (req, res) => {
         .whereILike('User.userId', `%${searchData}%`)
         .orWhereILike('User.userName', `%${searchData}%`))
     } else {
-      throw new Error('Invalid Search')
+      throw new Error('Missing/Invalid Data', { cause: { error: { status: 400, message: 'Invalid Search Data' } } })
     }
   } catch (error) {
     // 2 kinds of errors, malformed input or nondescript server error
-    if (error.message === 'Invalid Search') {
-      res.status(400).json({
-        message: 'Invalid combination of characters: use alphabetical or digits - not both'
-      })
-    } else {
-      res.status(500).json({
-        message: 'Server error while searching for employees'
-      })
-    }
+    errorOccurred(error, res)
   }
 }
 
@@ -44,10 +36,11 @@ const getEmployeesFromDepartmentCallback = async (req, res) => {
     const deptName = await getDepartmentNameFromDeptId(req.body.deptId)
 
     // Query the employees from the departments the logged in user is a manager of
-    const employeeList = await dbClient.select('_userDept.userId', 'User.userName')
+    const employeeList = await dbClient
       .from('_userDept')
-      .where('_userDept.deptId', req.body.deptId)
       .join('User', 'User.userId', '_userDept.userId')
+      .where('_userDept.deptId', req.body.deptId)
+      .select('_userDept.userId', 'User.userName')
       .then((result) => { return result })
 
     res.status(200).json({
@@ -56,10 +49,7 @@ const getEmployeesFromDepartmentCallback = async (req, res) => {
       depEmployees: employeeList
     })
   } catch (error) {
-    console.log(error)
-    res.status(500).json({
-      message: 'Error while getting employees from department'
-    })
+    errorOccurred(error, res)
   }
 }
 
@@ -79,6 +69,14 @@ const addEmployeeToDepartmentCallback = async (req, res) => {
     // Grab the list of employees
     const employeeList = req.body.depEmployees
 
+    if (!employeeList) {
+      throw new Error('Missing/Invalid Data', { cause: { error: { status: 400, message: 'Missing Required Data' } } })
+    }
+
+    if (employeeList.length <= 0) {
+      throw new Error('Missing/Invalid Data', { cause: { error: { status: 400, message: 'Required Data is Invalid' } } })
+    }
+
     // Iterate through and insert into the database
     for (const employee of employeeList) {
       await dbClient
@@ -93,12 +91,7 @@ const addEmployeeToDepartmentCallback = async (req, res) => {
     })
   } catch (error) {
     // Catch all for unexpected stuff
-    console.log(error)
-    res.status(500).json({
-      error: {
-        message: 'Internal server error while inserting employee'
-      }
-    })
+    errorOccurred(error, res)
   }
 }
 
@@ -111,6 +104,14 @@ const deleteEmployeeFromDeptCallback = async (req, res) => {
     const departmentId = req.body.deptId
     const depEmployees = data.depEmployees
 
+    if (!depEmployees) {
+      throw new Error('Missing/Invalid Data', { cause: { error: { status: 400, message: 'Missing Required Data' } } })
+    }
+
+    if (depEmployees.length <= 0) {
+      throw new Error('Missing/Invalid Data', { cause: { error: { status: 400, message: 'Required Data is Invalid' } } })
+    }
+
     // Execute query and get rows affected
     for (const employee of depEmployees) {
       const response = (await dbClient
@@ -120,7 +121,7 @@ const deleteEmployeeFromDeptCallback = async (req, res) => {
         .del())
       // If no rows are affected, 404
       if (response === 0) {
-        throw new Error('No employee with that id found')
+        throw new Error('Not Found', { cause: { error: { status: 404, message: 'No employee with that id found' } } })
       }
     }
     // Otherwise, good job
@@ -129,18 +130,7 @@ const deleteEmployeeFromDeptCallback = async (req, res) => {
     })
   } catch (error) {
     // Catch all for unexpected stuff
-    console.log(error)
-    if (error.message === 'No employee with that id found') {
-      res.status(404).json({
-        message: error.message
-      })
-      return
-    }
-    res.status(500).json({
-      error: {
-        message: 'Internal server error while deleting employee'
-      }
-    })
+    errorOccurred(error, res)
   }
 }
 
