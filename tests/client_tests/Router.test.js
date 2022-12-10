@@ -8,7 +8,6 @@ import PageRoutes from '../../client/Components/PageRoutes.jsx'
 // Component for checking the route is correct
 const LocationDisplay = () => {
   const location = useLocation()
-  console.log(location)
 
   return <div data-testid="location-display">{location.pathname}</div>
 }
