@@ -23,6 +23,7 @@ export default function Shift (props) {
     'Abraham Abrahamsen',
     'Bob Robertson',
     'Cindy Cindyson',
+    'Dick Dickenson',
     'Erica Ericcson',
     'Francisco Domingo Carlos Andres Sebastián d\'Anconia',
     'Joe Johnson',
@@ -53,7 +54,7 @@ export default function Shift (props) {
   }
 
   return (
-    <Grid container alignItems="center">
+    <Grid container alignItems="center" data-testid='shift-root'>
       <Grid item xs={ 5 }>
         <Stack spacing={ 0 }>
           <Typography noWrap>
@@ -73,6 +74,7 @@ export default function Shift (props) {
             <span>
               <IconButton
                 aria-label="unassign-button"
+                data-testid="employee-Unassignment-Button"
                 id="unassign-button"
                 disabled={ !selectedIndex }
                 onClick={ () => { setSelectedIndex(0) } }
@@ -88,15 +90,17 @@ export default function Shift (props) {
             id="select-employee-button"
             elevation={ 0 }
             variant="contained"
+            data-testid='employee-Assignment-Button'
             // endIcon={ <KeyboardArrowDown /> }
               onClick={ handleClickListItem }
             sx={{ width: 250 }}
           >
-            <Typography noWrap>
+            <Typography data-testid="assigned-person" noWrap>
               { employees[selectedIndex] }
             </Typography>
           </Button>
           <Menu
+            data-testid='shift-menu'
             aria-label="employee-menu"
             id="employee-menu"
             anchorEl={ anchorEl }
@@ -112,6 +116,7 @@ export default function Shift (props) {
           >
             {employees.map((employee, index) => (
               <MenuItem
+                data-testid={`shift-menu-${index}`}
                 key={ employee }
                 // disabled={ index === 0 }
                 selected={ index === selectedIndex }
