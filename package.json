@@ -63,11 +63,10 @@
     "supertest": "^6.3.0"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.4",
-    "@emotion/styled": "^11.10.4",
     "@mui/icons-material": "^5.10.9",
     "@mui/lab": "^5.0.0-alpha.108",
     "@mui/material": "^5.10.14",
+    "@testing-library/user-event": "^14.4.3",
     "axios": "^1.1.2",
     "axios-mock-adapter": "^1.21.2",
     "cors": "^2.8.5",
