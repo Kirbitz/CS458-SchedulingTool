@@ -68,6 +68,7 @@ export default function ShiftViewToolbarTop (props) {
             >
               <Tooltip title='Return to Master Schedule'>
                 <IconButton
+                  data-testid="shift-view-close"
                   aria-label="close"
                   id="close-button"
                   onClick={() => {

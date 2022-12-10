@@ -34,6 +34,7 @@ export default function Day (props) {
       </h3>
       <Card spacing={0} sx={{ margin: 0, height: '90%', border: dayCardBorder }}>
         <Button
+          data-testid={`day-button-${weekday}`}
           sx={{
             color: buttonTextColor,
             width: btnWidth,

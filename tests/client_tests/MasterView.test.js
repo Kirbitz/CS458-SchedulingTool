@@ -1,7 +1,7 @@
 // Day component exists
 import MasterView from '../../client/Pages/MasterView.jsx'
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
+import { render, fireEvent, waitFor } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom'
 
 describe('Tests for <MasterView />', () => {
@@ -24,5 +24,19 @@ describe('Tests for <MasterView />', () => {
     expect(component.getByTestId('week-changer').outerHTML).toContain(
       (mondayDate.getMonth() + 1) + '/' + (mondayDate.getDate()) + ' thru ' + (sundayNextDate.getMonth() + 1) + '/' + (sundayNextDate.getDate())
     )
+  })
+
+  it('Show/Hide ShiftView Modal', async () => {
+    const component = render(<MasterView />, { wrapper: BrowserRouter })
+
+    await fireEvent.click(component.getByTestId('day-button-Sunday'))
+
+    expect(component.getByTestId('shift-view-dialog')).not.toBeNull()
+
+    await fireEvent.click(component.getByTestId('shift-view-close'))
+
+    await waitFor(() => {
+      expect(component.queryByTestId('shift-view-dialog')).toBeNull()
+    })
   })
 })

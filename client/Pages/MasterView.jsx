@@ -27,10 +27,6 @@ export default function MasterView (props) {
     clickedDate = date
     handleWeekClickOpen()
   }
-  // Receives a command from Shift View's top toolbar to close the Shift View Dialog
-  const closeButtonShiftView = () => {
-    handleShiftViewClose()
-  }
 
   // Used to set the initial values for weekdates (below)
   const getInitialWeekdate = (day) => {
@@ -72,6 +68,7 @@ export default function MasterView (props) {
     setShiftViewOpen(true)
   }
 
+  // Receives a command from Shift View's top toolbar to close the Shift View Dialog
   const handleShiftViewClose = () => {
     setShiftViewOpen(false)
   }
@@ -91,6 +88,7 @@ export default function MasterView (props) {
         </Grid>
       </Grid>
       <Dialog
+        data-testid="shift-view-dialog"
         fullScreen
         open={shiftViewOpen}
         onClose={handleShiftViewClose}
@@ -101,7 +99,7 @@ export default function MasterView (props) {
         }}>
           <Grid container direction="column" justifyContent="space-between">
             <Grid item xs={ 2 }>
-              <ShiftViewToolbarTop passCloseCommand={closeButtonShiftView} selectedDate={clickedDate}/>
+              <ShiftViewToolbarTop passCloseCommand={handleShiftViewClose} selectedDate={clickedDate}/>
             </Grid>
             <Grid item xs>
               <ShiftViewBody date='DATE WILL GO HERE'/>
