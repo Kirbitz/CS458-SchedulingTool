@@ -11,7 +11,7 @@ export function userLogin (userCredentials) {
 // TODO check functionality of updated call
 export function getDepartmentInfo () {
   return new Promise((resolve, reject) => {
-    axios.get('/getDepartments')
+    axios.get('/api/getEmployees')
       .then((response) => { return resolve(response) })
       .catch((error) => { return reject(error) })
   })
@@ -20,7 +20,7 @@ export function getDepartmentInfo () {
 // TODO check functionality of updated call
 export function postDepartmentInfo (departmentInfo) {
   return new Promise((resolve, reject) => {
-    axios.post('/postDepartment', departmentInfo)
+    axios.post('/api/addEmployee', departmentInfo)
       .then((response) => { return resolve(response) })
       .catch((error) => { return reject(error) })
   })
@@ -29,7 +29,7 @@ export function postDepartmentInfo (departmentInfo) {
 // TODO update call to the correct route
 export function searchEmployeeInfo (search) {
   return new Promise((resolve, reject) => {
-    axios.get(`/myfakeroute/${search}`)
+    axios.get(`/api/searchEmployees/${search}`)
       .then((response) => { return resolve(response) })
       .catch((error) => { return reject(error) })
   })
@@ -37,7 +37,7 @@ export function searchEmployeeInfo (search) {
 
 export function deleteEmployeeFromDepartment (remove) {
   return new Promise((resolve, reject) => {
-    axios.delete('/deleteEmployee', remove)
+    axios.delete('/api/deleteEmployee', { data: remove })
       .then((response) => { return resolve(response) })
       .catch((error) => { return reject(error) })
   })

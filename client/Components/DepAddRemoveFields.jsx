@@ -18,7 +18,7 @@ export default function DepAddRemoveFields (props) {
     const value = []
     for (const option of options) {
       if (option.selected) {
-        value.push(option.value)
+        value.push(parseInt(option.value))
       }
     }
     setSelectedUsers(value)
@@ -70,8 +70,8 @@ export default function DepAddRemoveFields (props) {
         >
           <option disabled>Id &emsp;&emsp;&emsp;&nbsp; Name</option>
           {currentEmployees.map((employee) => (
-          <option data-testid='option-in-department' key={employee.id} value={employee.id}>
-              {employee.id} &nbsp; {employee.name}
+            <option data-testid='option-in-department' key={employee.userId} value={employee.userId}>
+              {employee.userId} &nbsp; {employee.userName}
             </option>
           ))}
         </Select>
@@ -100,8 +100,8 @@ export default function DepAddRemoveFields (props) {
         >
           <option disabled>Id &emsp;&emsp;&emsp;&nbsp; Name</option>
           {searchEmployees.map((employee, index) => (
-            <option data-testid='option-not-in-department' key={employee.id} value={index}>
-              {employee.id} &nbsp; {employee.name}
+            <option data-testid='option-not-in-department' key={employee.userId} value={index}>
+              {employee.userId} &nbsp; {employee.userName}
             </option>
           ))}
         </Select>
