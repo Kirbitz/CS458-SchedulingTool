@@ -1,3 +1,84 @@
+# Search employees
+
+- **URL:**
+
+  /searchEmployees
+
+- **Method**
+
+  `GET`
+
+- **URL Params:**
+
+  _Required:_ search - either the user ID or the name of the employee (case insensitive)
+
+  `search: [string]`
+
+  `gar`
+
+- **Data Params**
+
+  None
+
+- **Auth Required:**
+
+  JWT set in authorization header
+
+## Response
+
+- **Success Response:**
+
+  **Code:** `200 OK`
+
+  **Content:**
+
+  ```json
+  [
+    {
+        "userId": 3,
+        "userName": "Garrett"
+    },
+    {
+        "userId": 1234,
+        "userName": "Garth"
+    }
+  ]
+  ```
+
+- **Bad Input Response**
+
+  **Code:** `400 BAD REQUEST`
+
+  **Content:**
+
+  ```json
+  {
+        "message": "Invalid combination of characters: use alphabetical or digits - not both"
+  }
+  ```
+
+- **Internal Server Error**
+
+  **Code:** `500 INTERNAL SERVER ERROR`
+
+  **Content:**
+  
+  ```json
+  {
+        "message": "Server error while searching for employees"
+  }
+  ```
+
+## Sample Call
+
+```javascript
+axios({
+  method: 'GET',
+  url: '/searchEmployees',
+  responseType: 'json',
+  data: { }
+});
+```
 # Get Employees From Department
 
 - **URL:**
@@ -20,12 +101,6 @@
 
   JWT set in authorization header
 
-- **Content:**
-
-  - `userId`
-
-  - `userName`
-
 ## Response
 
 - **Success Response:**
@@ -35,16 +110,20 @@
   **Content:**
 
   ```json
-  [
-    {
-        "userId": 3,
-        "userName": "test"
-    },
-    {
-        "userId": 1234,
-        "userName": "test_create_account"
-    }
-  ]
+  {
+    "depName": "Help Desk",
+    "deptId": 1,
+    "depEmployees": [
+        {
+            "userId": 3,
+            "userName": "test"
+        },
+        {
+            "userId": 1,
+            "userName": "Garrett Preston"
+        }
+    ]
+  }
   ```
 
 ## Sample Call
@@ -58,11 +137,13 @@ axios({
 });
 ```
 
-# Post Department
+# Add Employees
+
+Allows you to add a list of employees to a department in the _userDept table
 
 - **URL:**
 
-  /postDepartment
+  /addEmployee
 
 - **Method:**
 
@@ -72,29 +153,26 @@ axios({
 
   None
 
-- **Data Params:**
+- **Data Params**
 
-  _Required:_ Department Name
+  _Required:_ Employee list - requires userId
 
-  `deptName: [string]`
+  `depEmployees: [employee]`
 
-  `Dining`
+  ```json
+  {
+    "depEmployees": [
+        {
+            "userId": 1234
+        },
+        {
+            "userId": 4
+        }
+    ]
+  }
+  ```
 
-  _Required:_ Department Location
-
-  `deptLocaiton: [string]`
-
-  `MSC`
-
-  _Required:_ Maximum allowed working hours
-
-  `deptHourCap: [int]`
-
-  `25`
-
-- **Auth Required:**
-
-  JWT set in authorization header
+- **Auth Required:** JWT set in authorization header
 
 ## Response
 
@@ -102,28 +180,23 @@ axios({
 
   **Code:** `201 CREATED`
 
-  **Content**
+  **Content:**
 
-  Returns the deptId for the created department
-  
   ```json
   {
-    "message": "Department created with ID: 15",
-    "deptId": 15
+    "message": "Employee placed into department"
   }
   ```
 
-- **Fail Response:**
+- **Fail Response**
 
   **Code:** `500 Internal Server Error`
 
   **Content:**
 
-  Returns an error message
-
   ```json
   {
-    "message": "Internal server error while creating department"
+    "message": "Internal server error while inserting employee"
   }
   ```
 
@@ -131,97 +204,19 @@ axios({
 
 ```javascript
 axios({
-  method: 'POST',
-  url: '/postDepartment',
+  method: 'POST'
+  url: '/addEmployee',
   responseType: 'json',
   data: {
-    deptName: 'TestDept',
-    deptLocation: 'TestLocation',
-    deptHourCap: 40
+    'userId': '0705988',
+    'deptId': '3'
   }
-})
-```
-
-# Get Departments
-
-Returns json data for all existing departments
-
-- **URL:**
-
-  /getDepartments
-
-- **Method:**
-
-  `GET`
-
-- **URL Params:**
-
-  None
-
-- **Data Params:**
-
-  None
-
-- **Auth Required:**
-
-  JWT set in authorization header
-
-## Response
-
-- **Success Response:**
-
-  **Code:** `200 OK`
-
-  **Content:**
-
-  ```json
-  [
-    {
-        "deptId": 1,
-        "deptName": "Help Desk",
-        "deptLocation": "Sorensen",
-        "deptHourCap": 20
-    },
-    {
-        "deptId": 2,
-        "deptName": "CS Tutor",
-        "deptLocation": "Jarvis",
-        "deptHourCap": 10
-    },
-    {
-        "deptId": 3,
-        "deptName": "Cafeteria",
-        "deptLocation": "Price Commons",
-        "deptHourCap": 25
-    },
-    {
-        "deptId": 4,
-        "deptName": "Involvement Center",
-        "deptLocation": "MSC",
-        "deptHourCap": 15
-    },
-    {
-        "deptId": 5,
-        "deptName": "Math Tutor Lab",
-        "deptLocation": "Jarvis Hall",
-        "deptHourCap": 20
-    }
-  ]
-  ```
-
-## Sample Call
-
-```javascript
-axios({
-  method: 'GET',
-  url: '/getDepartments',
-  responseType: 'json'
 })
 ```
 
 # Delete Employee
 
-Allows you to delete a user in the database, as well as entries in associated child tables
+Allows you to delete a user from the _userDept table (IE remove them from the department)
 
 - **URL:**
 
@@ -237,17 +232,24 @@ Allows you to delete a user in the database, as well as entries in associated ch
 
 - **Data Params**
 
-  _Required:_ User ID - must be able to contain leading 0
+  _Required:_ Employee list - requires userId
 
-  `userId: [string]`
+  `depEmployees: [employee]`
 
-  `0705988`
-
-  _Required:_ Department ID
-
-  `deptId: [int]`
-
-  `3`
+  ```json
+  
+  {
+    "depEmployees": [
+      {
+        "userId": 1234
+      },
+      {
+        "userId": 4
+      }
+    ]
+    
+  }
+  ```
 
 - **Auth Required:** JWT set in authorization header
 
@@ -273,7 +275,7 @@ Allows you to delete a user in the database, as well as entries in associated ch
 
   ```json
   {
-    "message": "No employee with id 1112 found"
+    "message": "No employee with that id found"
   }
   ```
 

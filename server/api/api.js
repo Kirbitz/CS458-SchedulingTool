@@ -5,7 +5,7 @@ const { loginCallback } = require('./login.js')
 const { shiftViewGETCallback, shiftViewPOSTCallback } = require('./shiftView')
 const { createAccountCallback } = require('./createAccount.js')
 const { collectTimeBlockData, createModifyTimeBlockData, deleteTimeBlockData } = require('./timeBlockData.js')
-const { searchEmployeesCallback, getEmployeesFromDepartment, postDepartmentCallback, getDepartments, deleteEmployeeFromDeptCallback } = require('./department.js')
+const { searchEmployeesCallback, getEmployeesFromDepartmentCallback, addEmployeeToDepartmentCallback, deleteEmployeeFromDeptCallback } = require('./department.js')
 
 const router = new Express.Router()
 router.use(Express.urlencoded({ extended: true }))
@@ -25,11 +25,9 @@ router.delete('/delete_time_blocks', deleteTimeBlockData)
 // Search for an employee by partial ID or partial name
 router.get('/searchEmployees/:search', searchEmployeesCallback)
 // Get list of employees based on department
-router.get('/getEmployees', getEmployeesFromDepartment)
-// Create a department (not sure if this is needed)
-router.post('/postDepartment', postDepartmentCallback)
-// Get all departments
-router.get('/getDepartments', getDepartments)
+router.get('/getEmployees', getEmployeesFromDepartmentCallback)
+// Add employee to a department
+router.post('/addEmployee', addEmployeeToDepartmentCallback)
 // Delete an employee and the respective join table entry
 router.delete('/deleteEmployee', deleteEmployeeFromDeptCallback)
 

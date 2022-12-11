@@ -45,7 +45,7 @@ export default function DepartmentPage (props) {
       setSearchClicked(true)
       // search function for finding data related to entered search value
       await searchEmployeeInfo(searchRef.current.value)
-        .then((response) => { setSearchStaff(response) })
+        .then((response) => { setSearchStaff(response.data) })
         .catch((error) => {
           alert('Failed to retrieve search data')
           console.error(error)
@@ -98,6 +98,7 @@ export default function DepartmentPage (props) {
   const updateDepartmentInfo = () => {
     const addEmployees = departmentInfoTemp?.depEmployees?.filter((tempEmployee) => { return !(departmentInfoMaster?.depEmployees?.findIndex((masterEmployee) => { return masterEmployee.userId === tempEmployee.userId }) + 1) })
     const removeEmployees = departmentInfoMaster?.depEmployees?.filter((masterEmployee) => { return !(departmentInfoTemp?.depEmployees?.findIndex((tempEmployee) => { return masterEmployee.userId === tempEmployee.userId }) + 1) })
+
     postDepartmentInfo({
       deptId: departmentInfoMaster?.deptId,
       depEmployees: addEmployees

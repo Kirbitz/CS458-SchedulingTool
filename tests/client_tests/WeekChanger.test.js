@@ -6,7 +6,7 @@ import { fireEvent, render } from '@testing-library/react'
 
 describe('Tests for <WeekChanger />', () => {
   it('Initial Render', () => {
-    const component = render(<WeekChanger />)
+    const component = render(<WeekChanger date={ new Date() } passNewDate={() => {}}/>)
     const mondayDate = new Date()
     const sundayNextDate = new Date()
 
@@ -20,7 +20,10 @@ describe('Tests for <WeekChanger />', () => {
   })
 
   it('Previous Week Button Test', async () => {
-    const component = render(<WeekChanger />)
+    let called = false
+    const mockPassNewDate = (data) => { called = true }
+
+    const component = render(<WeekChanger date={ new Date() } passNewDate={ mockPassNewDate } />)
     const mondayDate = new Date()
     const sundayNextDate = new Date()
     mondayDate.setDate(((mondayDate.getDate() - mondayDate.getDay()) + 1) - 7)
@@ -31,9 +34,13 @@ describe('Tests for <WeekChanger />', () => {
     expect(component.baseElement.outerHTML).toContain(
       (mondayDate.getMonth() + 1) + '/' + (mondayDate.getDate()) + ' thru ' + (sundayNextDate.getMonth() + 1) + '/' + (sundayNextDate.getDate())
     )
+    expect(called).toBe(true)
   })
   it('Next Button Test', async () => {
-    const component = render(<WeekChanger />)
+    let called = false
+    const mockPassNewDate = (data) => { called = true }
+
+    const component = render(<WeekChanger date={ new Date() } passNewDate={ mockPassNewDate } />)
     const mondayDate = new Date()
     const sundayNextDate = new Date()
     mondayDate.setDate(((mondayDate.getDate() - mondayDate.getDay()) + 1) + 7)
@@ -44,5 +51,6 @@ describe('Tests for <WeekChanger />', () => {
     expect(component.baseElement.outerHTML).toContain(
       (mondayDate.getMonth() + 1) + '/' + (mondayDate.getDate()) + ' thru ' + (sundayNextDate.getMonth() + 1) + '/' + (sundayNextDate.getDate())
     )
+    expect(called).toBe(true)
   })
 })
