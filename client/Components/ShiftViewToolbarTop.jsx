@@ -22,10 +22,6 @@ export default function ShiftViewToolbarTop (props) {
     dateTitle = selectedDate.getMonth() + 1 + '/' + selectedDate.getDate() + '/' + selectedDate.getFullYear()
   }, [selectedDate])
 
-  // Used to trigger a re-render of the date
-  // const [, updateState] = React.useState()
-  // const forceRender = React.useCallback(() => updateState({}), [])
-
   return (
     <AppBar position="fixed" sx={{ bgcolor: '#ffffff', color: '#000000' }}>
       <Toolbar disableGutters>
