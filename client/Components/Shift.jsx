@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 
-import { Button, Grid, IconButton, Menu, MenuItem, Stack, Tooltip, Typography } from '@mui/material'
-import { Delete, Edit, PersonOff } from '@mui/icons-material'
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, IconButton, Menu, MenuItem, Stack, Tooltip, Typography } from '@mui/material'
+import { AutoDelete, Edit, PersonOff } from '@mui/icons-material'
+import { LoadingButton } from '@mui/lab'
 
 /** Notes for Shift:
  * TODO: Create const objects for conflicting, unassigned, assigned, unsaved colors.
@@ -10,16 +12,17 @@ import { Delete, Edit, PersonOff } from '@mui/icons-material'
 
 // Component to display shift information and provide access to tools for shift assignment and editing
 export default function Shift (props) {
+  let { deptName, posName, startTime, endTime, employees } = props
+
   //* This is dummy data and will be changed once prop data passing is complete.
-  const deptName = 'Department Name'
-  const posName = 'Position Name'
-  const startTime = '12:00 PM'
-  const endTime = '4:00 PM'
+  deptName = 'Department Name'
+  posName = 'Position Name'
+  startTime = new Date()
+  endTime = new Date()
 
   // This array will remain but will be populated by data pulled from the database.
   //! The first option must always be the unassigned option as it is used by the Unassign button to determine its disabled status.
-  const employees = [
-    '[unassigned]',
+  employees = [
     'Abraham Abrahamsen',
     'Bob Robertson',
     'Cindy Cindyson',
@@ -31,7 +34,11 @@ export default function Shift (props) {
     'Mark Marcussen',
     'Zoey Zimmerman'
   ]
+
   //* End of dummy data
+
+  // Adds an [unassigned] option to the beginning of the employees array
+  employees = [].concat(['[unassigned]'], employees)
 
   // anchorEl is used to set the position of the menu relative to a particular element (in this case, the button).
   const [anchorEl, setAnchorEl] = useState(null)
@@ -53,13 +60,21 @@ export default function Shift (props) {
     setAnchorEl(null)
   }
 
+  // The following variables, functions, and hooks are used for the confirmation dialog when a user tries to delete a time block.
+  const [deleting, setDeleting] = useState(false)
+  const [timeBlockWarningOpen, setTimeBlockWarningOpen] = useState(false)
+  const handleTimeBlockWarningConfirm = () => {
+    // TODO: Integrate this with backend.
+    setDeleting(true)
+  }
+
   return (
     <Grid container alignItems="center" data-testid='shift-root'>
       <Grid item xs={ 5 }>
         <Stack spacing={ 0 }>
           <Typography noWrap>
-            <p id="first-line">{deptName}: {posName}</p>
-            <p id="second-line">{startTime} - {endTime}</p>
+            {deptName}: {posName}
+            { /* <p id="second-line">{startTime} - {endTime}</p> */ }
           </Typography>
         </Stack>
       </Grid>
@@ -129,11 +144,71 @@ export default function Shift (props) {
           <Tooltip title = 'Edit Shift'>
             <IconButton aria-label="edit-shift-button"><Edit /></IconButton>
           </Tooltip>
-          <Tooltip title = 'Delete Shift'>
-            <IconButton aria-label="delete-shift-button"><Delete /></IconButton>
+          <Tooltip title = 'Delete Time Block'>
+            <IconButton
+              aria-label="delete-time-block-button"
+              onClick={() => { setTimeBlockWarningOpen(true) }}
+            >
+              <AutoDelete />
+            </IconButton>
           </Tooltip>
         </Stack>
       </Grid>
+      <Dialog
+        aria-label="time-block-warning-dialog"
+        open={timeBlockWarningOpen}
+        onClose={() => { setTimeBlockWarningOpen(false) }}
+      >
+        <DialogTitle>Delete Time Block?</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            This will delete only the time block, not the position itself.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            spacing={ 2 }
+          >
+            <LoadingButton
+              variant="contained"
+              color="error"
+              startIcon={<AutoDelete/>}
+              loading={deleting}
+              loadingIndicator="Deleting..."
+              onClick={handleTimeBlockWarningConfirm}
+            >
+              Delete
+            </LoadingButton>
+            <Button
+              variant="outlined"
+              disabled={deleting}
+              onClick={() => { setTimeBlockWarningOpen(false) }}
+              autoFocus
+            >
+              Cancel
+            </Button>
+          </Stack>
+        </DialogActions>
+      </Dialog>
     </Grid>
   )
+}
+// Checks that the props passed in match the correct type
+Shift.propTypes = {
+  deptName: PropTypes.string,
+  posName: PropTypes.string,
+  startTime: PropTypes.instanceOf(Date),
+  endTime: PropTypes.instanceOf(Date),
+  employees: PropTypes.array
+}
+// defaults the props to a set value if they are not required
+Shift.defaultProps = {
+  deptName: '',
+  posName: '',
+  startTime: new Date(),
+  endTime: new Date(),
+  employees: []
 }
