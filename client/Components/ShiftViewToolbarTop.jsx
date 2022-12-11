@@ -1,11 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 import { AppBar, Button, Grid, IconButton, Stack, Toolbar, Tooltip } from '@mui/material'
 import { Add, Close, FilterAlt } from '@mui/icons-material'
 
 /** Notes for Top Toolbar:
-* TODO: Create Time Block Editor before enabling Add Shift button.
 * TODO: Create Filter list before enabling Filter button.
 * TODO: Refactor Filter button into Menu.
 */
@@ -16,6 +15,16 @@ import { Add, Close, FilterAlt } from '@mui/icons-material'
 // to return to the Master View
 export default function ShiftViewToolbarTop (props) {
   const { selectedDate, passCloseCommand } = props
+  let dateTitle = selectedDate.getMonth() + 1 + '/' + selectedDate.getDate() + '/' + selectedDate.getFullYear()
+
+  // Used to re-render the date after a new date is passed (selectedDate prop)
+  useEffect(() => {
+    dateTitle = selectedDate.getMonth() + 1 + '/' + selectedDate.getDate() + '/' + selectedDate.getFullYear()
+  }, [selectedDate])
+
+  // Used to trigger a re-render of the date
+  // const [, updateState] = React.useState()
+  // const forceRender = React.useCallback(() => updateState({}), [])
 
   return (
     <AppBar position="fixed" sx={{ bgcolor: '#ffffff', color: '#000000' }}>
@@ -33,11 +42,10 @@ export default function ShiftViewToolbarTop (props) {
                 id="add-shift-button"
                 variant="contained"
                 endIcon={ <Add /> }
-                disabled
               >
                 Add Shift
               </Button>
-              <p id="selected-date">{selectedDate.getMonth() + 1}/{selectedDate.getDate()}/{selectedDate.getFullYear()}</p>
+              <p id="selected-date">{dateTitle}</p>
             </Stack>
           </Grid>
           <Grid item xs={ 2 }>

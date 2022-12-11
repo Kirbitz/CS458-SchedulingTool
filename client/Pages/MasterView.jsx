@@ -12,7 +12,7 @@ import { Box, Dialog, Grid } from '@mui/material'
 // MasterView Page that will display information for overseeing and editing employee shifts
 export default function MasterView (props) {
   const MAX_DAYS = 7
-  let clickedDate = new Date()
+  const [clickedDate, setClickedDate] = useState(new Date())
   const [week, setWeek] = useState(new Date())
   const [shiftViewOpen, setShiftViewOpen] = useState(false)
 
@@ -24,7 +24,7 @@ export default function MasterView (props) {
   // Receives the date bubbled up from Day component and opens the Shift View Dialog
   const getClickedDate = (date) => {
     // console.log('Date received: ' + date)
-    clickedDate = date
+    setClickedDate(date)
     handleWeekClickOpen()
   }
 
