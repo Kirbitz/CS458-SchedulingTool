@@ -18,6 +18,10 @@ describe('Tests for <MasterView />', () => {
     const sundayNextDate = new Date()
     mondayDate.setDate(((mondayDate.getDate() - mondayDate.getDay()) + 1) - 7)
     sundayNextDate.setDate((sundayNextDate.getDate() + (7 - sundayNextDate.getDay())) - 7)
+    if (new Date().getDay() === 0) {
+      mondayDate.setDate(mondayDate.getDate() - 7)
+      sundayNextDate.setDate(sundayNextDate.getDate() - 7)
+    }
 
     await fireEvent.click(component.getByTestId('previous-week-button'))
 

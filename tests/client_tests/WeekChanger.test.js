@@ -12,8 +12,13 @@ describe('Tests for <WeekChanger />', () => {
 
     mondayDate.setDate((mondayDate.getDate() - mondayDate.getDay()) + 1)
     sundayNextDate.setDate(sundayNextDate.getDate() + (7 - sundayNextDate.getDay()))
+    if (new Date().getDay() === 0) {
+      mondayDate.setDate(mondayDate.getDate() - 7)
+      sundayNextDate.setDate(sundayNextDate.getDate() - 7)
+    }
 
     expect(document.body).toBe(component.baseElement)
+
     expect(component.baseElement.outerHTML).toContain(
       (mondayDate.getMonth() + 1) + '/' + (mondayDate.getDate()) + ' thru ' + (sundayNextDate.getMonth() + 1) + '/' + (sundayNextDate.getDate())
     )
@@ -28,6 +33,10 @@ describe('Tests for <WeekChanger />', () => {
     const sundayNextDate = new Date()
     mondayDate.setDate(((mondayDate.getDate() - mondayDate.getDay()) + 1) - 7)
     sundayNextDate.setDate((sundayNextDate.getDate() + (7 - sundayNextDate.getDay())) - 7)
+    if (new Date().getDay() === 0) {
+      mondayDate.setDate(mondayDate.getDate() - 7)
+      sundayNextDate.setDate(sundayNextDate.getDate() - 7)
+    }
 
     await fireEvent.click(component.getByTestId('previous-week-button'))
 
@@ -45,6 +54,10 @@ describe('Tests for <WeekChanger />', () => {
     const sundayNextDate = new Date()
     mondayDate.setDate(((mondayDate.getDate() - mondayDate.getDay()) + 1) + 7)
     sundayNextDate.setDate((sundayNextDate.getDate() + (7 - sundayNextDate.getDay())) + 7)
+    if (new Date().getDay() === 0) {
+      mondayDate.setDate(mondayDate.getDate() - 7)
+      sundayNextDate.setDate(sundayNextDate.getDate() - 7)
+    }
 
     await fireEvent.click(component.getByTestId('next-week-button'))
 
