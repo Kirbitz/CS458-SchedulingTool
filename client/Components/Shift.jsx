@@ -15,14 +15,14 @@ export default function Shift (props) {
   let { deptName, posName, startTime, endTime, employees } = props
 
   //* This is dummy data and will be changed once prop data passing is complete.
-  deptName = 'Department Name'
-  posName = 'Position Name'
-  startTime = new Date()
-  endTime = new Date()
+  // deptName = 'Department Name'
+  // posName = 'Position Name'
+  // startTime = new Date()
+  // endTime = new Date()
 
   // This array will remain but will be populated by data pulled from the database.
   //! The first option must always be the unassigned option as it is used by the Unassign button to determine its disabled status.
-  employees = [
+  /* employees = [
     'Abraham Abrahamsen',
     'Bob Robertson',
     'Cindy Cindyson',
@@ -33,12 +33,31 @@ export default function Shift (props) {
     'Karlee Carlson',
     'Mark Marcussen',
     'Zoey Zimmerman'
-  ]
-
+  ] */
   //* End of dummy data
 
   // Adds an [unassigned] option to the beginning of the employees array
   employees = [].concat(['[unassigned]'], employees)
+
+  // This function returns a time as a string in 12-hour format.
+  function get12HourTime (date) {
+    let minutes = date.getMinutes()
+
+    // Conditional to prevent a single zero from being shown as opposed to two
+    if (date.getMinutes() === 0) {
+      minutes = '00'
+    }
+
+    if (date.getHours() > 12) {
+      return ((date.getHours() - 12) + ':' + minutes + ' PM')
+    } else if (date.getHours() === 12) {
+      return ('12:' + minutes + ' PM')
+    } else if (date.getHours() === 0) {
+      return ('12:' + minutes + ' AM')
+    } else {
+      return ((date.getHours()) + ':' + minutes + ' AM')
+    }
+  }
 
   // anchorEl is used to set the position of the menu relative to a particular element (in this case, the button).
   const [anchorEl, setAnchorEl] = useState(null)
@@ -73,8 +92,8 @@ export default function Shift (props) {
       <Grid item xs={ 5 }>
         <Stack spacing={ 0 }>
           <Typography noWrap>
-            {deptName}: {posName}
-            { /* <p id="second-line">{startTime} - {endTime}</p> */ }
+            <h3>{deptName}: {posName}</h3>
+            <p>{get12HourTime(startTime)} to {get12HourTime(endTime)}</p>
           </Typography>
         </Stack>
       </Grid>
@@ -206,8 +225,8 @@ Shift.propTypes = {
 }
 // defaults the props to a set value if they are not required
 Shift.defaultProps = {
-  deptName: '',
-  posName: '',
+  deptName: '[No Department Name]',
+  posName: '[No Position Name]',
   startTime: new Date(),
   endTime: new Date(),
   employees: []
