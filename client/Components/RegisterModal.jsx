@@ -4,6 +4,7 @@ import { Button, Dialog, Grid, TextField, DialogTitle, DialogContent, DialogActi
 import PropTypes from 'prop-types'
 
 import SaveAndNotify from './SaveAndNotify.jsx'
+import { createNewUserAccount } from '../dataHelper.js'
 
 export default function Register (props) {
   // Destructure open and handleClose from input props
@@ -78,7 +79,18 @@ export default function Register (props) {
   }
 
   const handleSubmit = () => {
-    setSuccess(true)
+    createNewUserAccount({
+      username: usernameRef.current.value,
+      password: passwordRef.current.value,
+      newUserId: userIdRef.current.value,
+      name: nameRef.current.value,
+      hourCap: hoursRef.current.value
+    })
+      .then(() => { setSuccess(true) })
+      .catch((error) => {
+        console.error(error)
+        setSuccess(false)
+      })
   }
 
   return (

@@ -43,3 +43,12 @@ export function deleteEmployeeFromDepartment (remove) {
       .catch((error) => { return reject(error) })
   })
 }
+
+// TODO needs route implemented
+export function createNewUserAccount (userData) {
+  return new Promise((resolve, reject) => {
+    axios.post('/fakeroute', userData)
+      .then((response) => { return resolve(response) })
+      .catch((error) => { return reject(error) })
+  })
+}
