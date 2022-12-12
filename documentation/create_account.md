@@ -123,7 +123,7 @@ axios({
   data: {
     username: 'jshmoe1234',
     password: "MyPet'sName1234!",
-    userid: 123456,
+    newUserId: 123456,
     name: 'Joe Shmoe',
     hourCap: 20,
   }
