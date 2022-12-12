@@ -129,7 +129,34 @@ describe('Testing for shiftViewGETCallback', () => {
     expect(response.statusCode).toBe(400)
   })
 
+  it('ShiftViewPOSTCallback - Status 400 Records Empty', async () => {
+    const response = await request.post('/api/shift_view')
+      .send({
+        records: [],
+        isManager: 1
+      })
+      .set('Authorization', 'abc123')
+
+    expect(response.statusCode).toBe(400)
+  })
+
   it('ShiftViewPOSTCallback - Status 401 Unauthorized', async () => {
+    const response = await request.post('/api/shift_view')
+      .send({
+        records: [
+          {
+            timeBlockId: 1,
+            employeeId: 1
+          }
+        ],
+        isManager: 0
+      })
+
+    expect(response.statusCode).toBe(401)
+    expect(response.body).toBe('Traitor')
+  })
+
+  it('ShiftViewPOSTCallback - Status 401 Invalid Authorization Level', async () => {
     const response = await request.post('/api/shift_view')
       .send({
         records: [
@@ -143,6 +170,7 @@ describe('Testing for shiftViewGETCallback', () => {
       .set('Authorization', 'abc123')
 
     expect(response.statusCode).toBe(401)
+    expect(response.body.error?.message).toBe('Invalid Authorization Level')
   })
 
   it('ShiftViewPOSTCallback - Status 500 Server Error', async () => {
@@ -163,16 +191,5 @@ describe('Testing for shiftViewGETCallback', () => {
       .set('Authorization', 'abc123')
 
     expect(response.statusCode).toBe(500)
-  })
-
-  it('ShiftViewPOSTCallback - Status 400 Records Empty', async () => {
-    const response = await request.post('/api/shift_view')
-      .send({
-        records: [],
-        isManager: 1
-      })
-      .set('Authorization', 'abc123')
-
-    expect(response.statusCode).toBe(400)
   })
 })
