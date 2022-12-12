@@ -29,11 +29,7 @@ export default function DepartmentPage (props) {
   // Reference for checking data that is added to the search field
   const searchRef = useRef('')
   const inputChange = () => {
-    if (searchRef.current.value.length > 0 && (searchRef.current.value.match('^[0-9]+$') || searchRef.current.value.match('^[a-zA-Z]+( [a-zA-Z]+)*$'))) {
-      setInputInvalid(false)
-    } else {
-      setInputInvalid(true)
-    }
+    setInputInvalid(!(searchRef.current.value.length > 0 && (searchRef.current.value.match('^[0-9]+$') || searchRef.current.value.match('^[a-zA-Z]+( [a-zA-Z]+)*$'))))
   }
 
   // Search employees function for find employees of a user query (query has to either be numeric XOR alpha)
@@ -179,9 +175,8 @@ export default function DepartmentPage (props) {
           id="employee-search"
           inputRef={searchRef}
           label="Employee Id/Name"
-          name={searchRef.current.value}
           type="search"
-          variant="outlined"
+          name={searchRef.current.value}
           onChange={inputChange}
         />
         <Tooltip title="Search Employees">

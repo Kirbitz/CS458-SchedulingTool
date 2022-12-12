@@ -1,305 +1,185 @@
-import React, { useState } from 'react'
-import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
-import Grid from '@mui/material/Grid'
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
-import Modal from '@mui/material/Modal'
+import React, { useState, useRef } from 'react'
+
+import { Button, Dialog, Grid, TextField, DialogTitle, DialogContent, DialogActions } from '@mui/material'
 import PropTypes from 'prop-types'
 
-export default function Register ({ open, handleClose }) {
-  // State management for input values
-  const [input, setInput] = useState({
-    username: '',
-    password: '',
-    repeat_password: '',
-    userId: '',
-    name: '',
-    maxHours: ''
-  })
-  // State management for error values
-  const [error, setError] = useState({
-    username: '',
-    password: '',
-    repeat_password: '',
-    userId: '',
-    name: '',
-    maxHours: '',
-    username_focus: 'focused',
-    password_focus: 'focused',
-    repeat_password_focus: 'focused',
-    userId_focus: 'focused',
-    name_focus: 'focused',
-    maxHours_focus: 'focused'
-  })
+import SaveAndNotify from './SaveAndNotify.jsx'
 
-  // this function will update the input value
-  const onInputChange = (e) => {
-    const { name, value } = e.target
-    setInput((prev) => ({
-      ...prev,
-      [name]: value
-    }))
-    validateInput(e)
-  }
+export default function Register (props) {
+  // Destructure open and handleClose from input props
+  const { open, handleClose } = props
 
-  // It will check all valid input enter
-  const checkAllValid = () => {
-    for (const key in error) {
-      console.log(key)
-      if (error[key] !== '') {
-        console.log('true :' + error[key])
-        return true
-      }
+  // Validates input for username field
+  const usernameRef = useRef('')
+  const [usernameValid, setUsernameValid] = useState(false)
+
+  // Validates input for password field
+  const passwordRef = useRef('')
+  const [passwordValid, setPasswordValid] = useState(false)
+
+  // Validates input for repeat password field
+  const repeatPasswordRef = useRef('')
+  const [repeatPasswordValid, setRepeatPasswordValid] = useState(false)
+
+  // Validates input for user id field
+  const userIdRef = useRef('')
+  const [userIdValid, setUserIdValid] = useState(false)
+
+  // Validates input for name field
+  const nameRef = useRef('')
+  const [nameValid, setNameValid] = useState(false)
+
+  // Validates input for max hours field
+  const hoursRef = useRef('')
+  const [hoursValid, setHoursValid] = useState(false)
+
+  // Checks all fields have a value in them
+  const [lengthCheck, setLengthCheck] = useState(true)
+
+  const [success, setSuccess] = useState(false)
+
+  const closeModal = () => {
+    if (handleClose) {
+      handleClose()
     }
-    console.log('false')
-    return false
-  }
-
-  // It will validate username input value.
-  function ValidateUsername (username) {
-    if (/^[a-zA-Z0-9]+$/.test(username)) {
-      return true
-    }
-    return false
   }
 
   // It will validate all input value.
-  const validateInput = (e) => {
-    const { name, value } = e.target
-    setError((prev) => {
-      const stateObj = { ...prev, [name]: '' }
-      switch (name) {
-        case 'username':
-          if (!value) {
-            stateObj[name] = 'Please enter Username.'
-          } else if (!ValidateUsername(value)) {
-            stateObj[name] = 'Please enter valid Username.'
-          }
-          stateObj.username_focus = ''
-          break
-        case 'password':
-          if (!value) {
-            stateObj[name] = 'Please enter Password.'
-          } else if (input.repeat_password && value !== input.repeat_password) {
-            stateObj.repeat_password =
-              'Password and Confirm Password does not match.'
-          } else {
-            stateObj.repeat_password = input.repeat_password
-              ? ''
-              : error.repeat_password
-          }
-          stateObj.password_focus = ''
-          break
+  const validateInput = async (textField) => {
+    // Destructure name from the textfield that triggered this function
+    const { name } = textField.target
+    switch (name) {
+      case 'userId':
+        await setUserIdValid(!(userIdRef.current.value.length > 0 && userIdRef.current.value.match('^[0-9]+$')))
+        break
+      case 'name':
+        setNameValid(!(nameRef.current.value.length > 0 && nameRef.current.value.match('^[a-zA-Z]+( [a-zA-Z]+)*$')))
+        break
+      case 'username':
+        setUsernameValid(!(usernameRef.current.value.length > 0 && usernameRef.current.value.match('^[a-zA-Z0-9]+$')))
+        break
+      case 'maxHours':
+        setHoursValid(!(hoursRef.current.value.length > 0 && hoursRef.current.value.match('^[0-9]+$')))
+        break
+      default:
+        setPasswordValid(!(passwordRef.current.value.length > 0 && passwordRef.current.value.match('^[a-zA-Z0-9 ~!@#$^*_+?.,]+$')))
+        setRepeatPasswordValid(repeatPasswordRef.current.value !== passwordRef.current.value)
+        break
+    }
 
-        case 'repeat_password':
-          if (!value) {
-            stateObj[name] = 'Please enter Repeat Password.'
-          } else if (input.password && value !== input.password) {
-            stateObj[name] = 'Password and Repeat Password does not match.'
-          }
-          stateObj.repeat_password_focus = ''
-          break
-
-        case 'userId':
-          if (!value) {
-            stateObj[name] = 'Please enter User Id.'
-          }
-          stateObj.userId_focus = ''
-          break
-
-        case 'name':
-          if (!value) {
-            stateObj[name] = 'Please enter Name.'
-          }
-          stateObj.name_focus = ''
-          break
-
-        case 'maxHours':
-          if (!value) {
-            stateObj[name] = 'Please enter Max Hours.'
-          }
-          stateObj.maxHours_focus = ''
-          break
-
-        default:
-          break
-      }
-
-      return stateObj
-    })
+    setLengthCheck(
+      userIdRef.current.value.length <= 0 ||
+      nameRef.current.value.length <= 0 ||
+      usernameRef.current.value.length <= 0 ||
+      hoursRef.current.value.length <= 0 ||
+      passwordRef.current.value.length <= 0 ||
+      repeatPasswordRef.current.value.length <= 0
+    )
   }
 
-  // It will handle submit form.
-  const handleSubmit = (event) => {
-    event.preventDefault()
-
-    const data = new FormData(event.currentTarget)
-    console.log({
-      username: data.get('username'),
-      password: data.get('password'),
-      repeat_password: data.get('repeat_password'),
-      user_id: data.get('userId'),
-      max_hours: data.get('maxHours'),
-      name: data.get('name')
-    })
+  const handleSubmit = () => {
+    setSuccess(true)
   }
 
   return (
-    <Modal
-      onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
+    <Dialog
       open={open}
+      onClose={closeModal}
+      data-testid="register-modal-root"
     >
-      <Box
-        sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: 400,
-          bgcolor: 'background.paper',
-          boxShadow: 24,
-          p: 4
-        }}
-      >
-        <Typography component="h1" variant="h5">
-          Register
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            autoFocus
-            id="username"
-            label="UserName"
-            name="username"
-            value={input.username}
-            onChange={onInputChange}
-            onBlur={validateInput}
-            error={error.username}
-            helperText={error.username}
-            inputProps={{
-              'data-testid': 'userName-input'
-            }}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            value={input.password}
-            onChange={onInputChange}
-            onBlur={validateInput}
-            error={error.password}
-            helperText={error.password}
-            inputProps={{
-              'data-testid': 'password-input'
-            }}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="repeat_password"
-            label="Repeat Password"
-            type="password"
-            id="repeat_password"
-            value={input.repeat_password}
-            onChange={onInputChange}
-            onBlur={validateInput}
-            error={error.repeat_password}
-            helperText={error.repeat_password}
-            inputProps={{
-              'data-testid': 'repeat_password-input'
-            }}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="userId"
-            label="User Id"
-            type="number"
-            id="userId"
-            value={input.userId}
-            onChange={onInputChange}
-            onBlur={validateInput}
-            error={error.userId}
-            helperText={error.userId}
-            inputProps={{
-              'data-testid': 'userId-input'
-            }}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="name"
-            label="Name"
-            id="name"
-            value={input.name}
-            onChange={onInputChange}
-            onBlur={validateInput}
-            error={error.name}
-            helperText={error.name}
-            inputProps={{
-              'data-testid': 'name-input'
-            }}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            type="number"
-            name="maxHours"
-            label="Max Hours"
-            id="maxHours"
-            value={input.maxHours}
-            onChange={onInputChange}
-            onBlur={validateInput}
-            error={error.maxHours}
-            helperText={error.maxHours}
-            inputProps={{
-              'data-testid': 'maxHours-input'
-            }}
-          />
-
-          <Grid
-            container
-            direction="row"
-            justify="space-between"
-            alignItems="center"
-            sx={{ mt: 3 }}
-          >
-            <Button
-              onClick={handleClose}
-              type="reset"
-              variant="contained"
-              color="error"
-              data-testid="reset-input"
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              color="success"
-              variant="contained"
-              sx={{ ml: 3 }}
-              data-testid="submit-input"
-              disabled={checkAllValid()}
-            >
-              Sign Up
-            </Button>
+      <DialogTitle>Register</DialogTitle>
+      <DialogContent>
+        <Grid container spacing={2} sx={{ mt: 1 }}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              name="userId"
+              label="User Id"
+              inputRef={userIdRef}
+              onChange={validateInput}
+              error={userIdValid}
+              data-testid="userId-input"
+            />
           </Grid>
-        </Box>
-      </Box>
-    </Modal>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              name="name"
+              label="Name"
+              inputRef={nameRef}
+              onChange={validateInput}
+              error={nameValid}
+              data-testid="name-input"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              label="Username"
+              name="username"
+              inputRef={usernameRef}
+              onChange={validateInput}
+              error={usernameValid}
+              data-testid="userName-input"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              name="maxHours"
+              label="Max Hours"
+              inputRef={hoursRef}
+              onChange={validateInput}
+              error={hoursValid}
+              data-testid="maxHours-input"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              inputRef={passwordRef}
+              onChange={validateInput}
+              error={passwordValid}
+              data-testid="password-input"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              name="repeat_password"
+              label="Repeat Password"
+              type="password"
+              inputRef={repeatPasswordRef}
+              onChange={validateInput}
+              error={repeatPasswordValid}
+              data-testid="repeat_password-input"
+            />
+          </Grid>
+        </Grid>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          onClick={closeModal}
+          variant="contained"
+          color="secondary"
+          data-testid="close-register-modal"
+        >
+          Close
+        </Button>
+        <SaveAndNotify disabled={
+          userIdValid ||
+          nameValid ||
+          usernameValid ||
+          hoursValid ||
+          passwordValid ||
+          repeatPasswordValid ||
+          lengthCheck
+        } callbackFunc={handleSubmit} success={success} />
+      </DialogActions>
+    </Dialog>
   )
 }
 
@@ -312,5 +192,5 @@ Register.propTypes = {
 // Sets the default value of the props if none are provided
 Register.defaultProps = {
   open: false,
-  handleClose: () => {}
+  handleClose: null
 }
