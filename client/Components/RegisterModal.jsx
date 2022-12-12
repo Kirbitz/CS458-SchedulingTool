@@ -135,14 +135,7 @@ export default function Register ({ open, handleClose }) {
     event.preventDefault()
 
     const data = new FormData(event.currentTarget)
-    console.log({
-      username: data.get('username'),
-      password: data.get('password'),
-      repeat_password: data.get('repeat_password'),
-      user_id: data.get('userId'),
-      max_hours: data.get('maxHours'),
-      name: data.get('name')
-    })
+  
   }
 
   return (
