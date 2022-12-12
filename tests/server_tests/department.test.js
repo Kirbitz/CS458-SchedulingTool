@@ -1,10 +1,9 @@
 const myIndex = require('../../server/index.js')
 const dbClient = require('../../server/api/dbClient')
-const dataHelper = require('../../server/api/dataHelper')
+const jwt = require('jsonwebtoken')
 const request = require('supertest')(myIndex)
 
 jest.mock('knex')
-jest.mock('../../server/api/dataHelper')
 
 jest.mock('../../server/api/dbClient', () => ({
   select: jest.fn().mockReturnThis(),
@@ -24,38 +23,56 @@ jest.mock('../../server/api/dbClient', () => ({
 
 describe('Tests for department.js', () => {
   beforeEach(() => {
-    // jest.spyOn(console, 'log').mockImplementation(() => {})
-    jest.spyOn(dataHelper, 'verifyJWTAuthToken').mockImplementation(jest.fn(() => {}))
+    jest.spyOn(console, 'log').mockImplementation(() => {})
+    jest.spyOn(console, 'error').mockImplementation(() => {})
+    jest.spyOn(jwt, 'verify').mockImplementation((data) => {
+      if (data) {
+        return true
+      } else {
+        throw new Error('Unauthorized', { cause: 'Traitor' })
+      }
+    })
   })
 
-  it('Test for searchEmployees - Success', async () => {
+  it('SearchEmployeesCallback - Success 200', async () => {
     // Set up mocking
-    jest.spyOn(dbClient, 'orWhereILike').mockImplementationOnce(jest.fn().mockReturnValue([{ userId: 3, userName: 'test' }]))
+    dbClient.orWhereILike.mockResolvedValue([{ userId: 3, userName: 'test' }])
 
     const response = await request.get('/api/searchEmployees/test')
+      .set('Authorization', 'abc123')
 
     expect(response.statusCode).toBe(200)
   })
 
-  it('Test for searchEmployees - Invalid Search', async () => {
+  it('SearchEmployeesCallback - Invalid Data 400', async () => {
     // No mocking needed
     const response = await request.get('/api/searchEmployees/1234-sadjn_.')
+      .set('Authorization', 'abc123')
 
     expect(response.statusCode).toBe(400)
+    expect(response.body.error?.message).toBe('Invalid Search Data')
   })
 
-  it('Test for searchEmployees - Fail', async () => {
+  it('SearchEmployeesCallback - Unauthorized 401', async () => {
+    // No mocking needed
+    const response = await request.get('/api/searchEmployees/1234')
+
+    expect(response.statusCode).toBe(401)
+    expect(response.body).toBe('Traitor')
+  })
+
+  it('SearchEmployeesCallback - Internal Server Error 500', async () => {
     // Set up mocking
-    jest.spyOn(dbClient, 'orWhereILike').mockImplementation(() => {
-      throw new Error('I am an error')
-    })
+    dbClient.orWhereILike.mockRejectedValue([{ userId: 3, userName: 'test' }])
 
     const response = await request.get('/api/searchEmployees/test')
+      .set('Authorization', 'abc123')
 
     expect(response.statusCode).toBe(500)
+    expect(response.body.error?.message).toBe('Internal Server Error')
   })
 
-  it('Test for getEmployeesByDepartmentCallback - Success', async () => {
+  it('GetEmployeesByDepartmentCallback - Success 200', async () => {
     // mock for getDepartmentNameFromDepartmentId
     jest.spyOn(dbClient, 'select').mockImplementationOnce(jest.fn().mockReturnValue('TestDeptName'))
     // Set up mocking for the main query
@@ -66,6 +83,7 @@ describe('Tests for department.js', () => {
 
     const response = await request.get('/api/getEmployees')
       .send({})
+      .set('Authorization', 'abc123')
 
     console.log('Response for getEmployees', response.body)
 
@@ -74,7 +92,17 @@ describe('Tests for department.js', () => {
     expect(response.body.depEmployees[0].userName).toBe('TestGetEmployees')
   })
 
-  it('Test for getEmployeesByDepartmentCallback - fail', async () => {
+  it('GetEmployeesByDepartmentCallback - Unauthorized 401', async () => {
+    const response = await request.get('/api/getEmployees')
+      .send({})
+
+    console.log('Response for getEmployees', response.body)
+
+    expect(response.statusCode).toBe(401)
+    expect(response.body).toBe('Traitor')
+  })
+
+  it('GetEmployeesByDepartmentCallback - Internal Server Error 500', async () => {
     // Set up mocking for this test
     jest.spyOn(dbClient, 'from').mockImplementationOnce(jest.fn().mockReturnValue())
     jest.spyOn(dbClient, 'join').mockImplementation(() => {
@@ -83,11 +111,13 @@ describe('Tests for department.js', () => {
 
     const response = await request.get('/api/getEmployees')
       .send({})
+      .set('Authorization', 'abc123')
 
     expect(response.statusCode).toBe(500)
+    expect(response.body.error?.message).toBe('Internal Server Error')
   })
 
-  it('Test for addEmployee - success', async () => {
+  it('AddEmployeeToDepartmentCallback - Success 201', async () => {
     jest.spyOn(dbClient, 'into').mockImplementation(jest.fn().mockReturnValue(1))
 
     const response = await request.post('/api/addEmployee')
@@ -97,31 +127,65 @@ describe('Tests for department.js', () => {
           userId: 1
         }]
       })
+      .set('Authorization', 'abc123')
 
     expect(response.statusCode).toBe(201)
     expect(response.body.message).toBe('Employee placed into department')
   })
 
-  it('Test for addEmployee - fail', async () => {
-    jest.spyOn(dbClient, 'insert').mockImplementation(() => {
-      throw new Error('I am an error')
-    })
+  it('AddEmployeeToDepartmentCallback - Missing Data 400', async () => {
+    const response = await request.post('/api/addEmployee')
+      .send({
+        deptId: 1
+      })
+      .set('Authorization', 'abc123')
+
+    expect(response.statusCode).toBe(400)
+    expect(response.body.error?.message).toBe('Missing Required Data')
+  })
+
+  it('AddEmployeeToDepartmentCallback - Invalid Data 400', async () => {
+    const response = await request.post('/api/addEmployee')
+      .send({
+        deptId: 1,
+        depEmployees: [
+        ]
+      })
+      .set('Authorization', 'abc123')
+
+    expect(response.statusCode).toBe(400)
+    expect(response.body.error?.message).toBe('Required Data is Invalid')
+  })
+
+  it('AddEmployeeToDepartmentCallback - Unauthorized 401', async () => {
+    const response = await request.post('/api/addEmployee')
+      .send({
+        deptId: 1,
+        depEmployees: [
+        ]
+      })
+
+    expect(response.statusCode).toBe(401)
+    expect(response.body).toBe('Traitor')
+  })
+
+  it('AddEmployeeToDepartmentCallback - Internal Server Error 500', async () => {
+    dbClient.into.mockRejectedValue('I am an error')
 
     const response = await request.post('/api/addEmployee')
       .send({
         deptId: 1,
-        deptEmployees: [{
+        depEmployees: [{
           userId: 1
         }]
       })
-
-    // console.log('Fail addEmployee', response.body.error.message)
+      .set('Authorization', 'abc123')
 
     expect(response.statusCode).toBe(500)
-    expect(response.body.error.message).toBe('Internal server error while inserting employee')
+    expect(response.body.error.message).toBe('Internal Server Error')
   })
 
-  it('Test for deleteEmployee - success', async () => {
+  it('DeleteEmployeeFromDeptCallback - Success 202', async () => {
     jest.spyOn(dbClient, 'del').mockImplementation(jest.fn().mockReturnValue(1))
 
     const response = await request.delete('/api/deleteEmployee')
@@ -131,29 +195,48 @@ describe('Tests for department.js', () => {
           userId: 1
         }]
       })
+      .set('Authorization', 'abc123')
 
     expect(response.statusCode).toBe(202)
     expect(response.body.message).toBe('Employee deleted')
   })
 
-  it('Test for deleteEmployee - not found', async () => {
-    jest.spyOn(dbClient, 'del').mockImplementation(jest.fn().mockReturnValue(0))
+  it('DeleteEmployeeFromDeptCallback - Missing Data 400', async () => {
     const response = await request.delete('/api/deleteEmployee')
       .send({
-        deptId: 1,
-        depEmployees: [{
-          userId: 1
-        }]
+        deptId: 1
       })
+      .set('Authorization', 'abc123')
 
-    expect(response.statusCode).toBe(404)
-    expect(response.body.message).toBe('No employee with that id found')
+    expect(response.statusCode).toBe(400)
+    expect(response.body.error?.message).toBe('Missing Required Data')
   })
 
-  it('Test for deleteEmployee - fail', async () => {
-    jest.spyOn(dbClient, 'del').mockImplementation(() => {
-      throw new Error('deleteEmployee error')
-    })
+  it('DeleteEmployeeFromDeptCallback - Invalid Data 400', async () => {
+    const response = await request.delete('/api/deleteEmployee')
+      .send({
+        deptId: 1,
+        depEmployees: []
+      })
+      .set('Authorization', 'abc123')
+
+    expect(response.statusCode).toBe(400)
+    expect(response.body.error?.message).toBe('Required Data is Invalid')
+  })
+
+  it('DeleteEmployeeFromDeptCallback - Unauthorized 401', async () => {
+    const response = await request.delete('/api/deleteEmployee')
+      .send({
+        deptId: 1,
+        depEmployees: []
+      })
+
+    expect(response.statusCode).toBe(401)
+    expect(response.body).toBe('Traitor')
+  })
+
+  it('DeleteEmployeeFromDeptCallback - Not Found 404', async () => {
+    dbClient.del.mockResolvedValue(0)
 
     const response = await request.delete('/api/deleteEmployee')
       .send({
@@ -162,8 +245,25 @@ describe('Tests for department.js', () => {
           userId: 1
         }]
       })
+      .set('Authorization', 'abc123')
+
+    expect(response.statusCode).toBe(404)
+    expect(response.body.error?.message).toBe('No employee with that id found')
+  })
+
+  it('DeleteEmployeeFromDeptCallback - Internal Server Error 500', async () => {
+    dbClient.del.mockRejectedValue('deleteEmployee error')
+
+    const response = await request.delete('/api/deleteEmployee')
+      .send({
+        deptId: 1,
+        depEmployees: [{
+          userId: 1
+        }]
+      })
+      .set('Authorization', 'abc123')
 
     expect(response.statusCode).toBe(500)
-    expect(response.body.error.message).toBe('Internal server error while deleting employee')
+    expect(response.body.error.message).toBe('Internal Server Error')
   })
 })

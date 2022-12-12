@@ -38,6 +38,12 @@ const errorOccurred = (err, res) => {
         .json(err.cause)
         .end()
       break
+    // Sends response with not found message
+    case 'Not Found':
+      res.status(404)
+        .json(err.cause)
+        .end()
+      break
     // Sends response with 500 in the case of an unexpected error
     default:
       console.error(err)

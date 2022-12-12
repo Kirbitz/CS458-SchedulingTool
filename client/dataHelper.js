@@ -8,7 +8,7 @@ export function userLogin (userCredentials) {
   })
 }
 
-// TODO check functionality of updated call
+// Grabs information about users in a department
 export function getDepartmentInfo () {
   return new Promise((resolve, reject) => {
     axios.get('/api/getEmployees')
@@ -17,7 +17,7 @@ export function getDepartmentInfo () {
   })
 }
 
-// TODO check functionality of updated call
+// Adds users to a department
 export function postDepartmentInfo (departmentInfo) {
   return new Promise((resolve, reject) => {
     axios.post('/api/addEmployee', departmentInfo)
@@ -26,7 +26,7 @@ export function postDepartmentInfo (departmentInfo) {
   })
 }
 
-// TODO update call to the correct route
+// Searches for an employee within the system
 export function searchEmployeeInfo (search) {
   return new Promise((resolve, reject) => {
     axios.get(`/api/searchEmployees/${search}`)
@@ -35,6 +35,7 @@ export function searchEmployeeInfo (search) {
   })
 }
 
+// Removes an employee from a department
 export function deleteEmployeeFromDepartment (remove) {
   return new Promise((resolve, reject) => {
     axios.delete('/api/deleteEmployee', { data: remove })
