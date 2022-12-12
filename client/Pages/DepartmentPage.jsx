@@ -8,6 +8,7 @@ import SaveAndNotify from '../Components/SaveAndNotify.jsx'
 import DepAddRemoveFields from '../Components/DepAddRemoveFields.jsx'
 
 import { getDepartmentInfo, postDepartmentInfo, searchEmployeeInfo, deleteEmployeeFromDepartment } from '../dataHelper.js'
+import Register from '../Components/RegisterModal.jsx'
 
 // Department Page that will display information for adding or removing employees from their department
 export default function DepartmentPage (props) {
@@ -23,15 +24,12 @@ export default function DepartmentPage (props) {
   const [inputInvalid, setInputInvalid] = React.useState(false)
   const [searchHappened, setSearchHappened] = React.useState(true)
   const [searchClicked, setSearchClicked] = React.useState(false)
-
+  // State management for open and close register modal
+  const [registerOpen, setRegisterOpen] = React.useState(false)
   // Reference for checking data that is added to the search field
   const searchRef = useRef('')
   const inputChange = () => {
-    if (searchRef.current.value.length > 0 && (searchRef.current.value.match('^[0-9]+$') || searchRef.current.value.match('^[a-zA-Z]+( [a-zA-Z]+)*$'))) {
-      setInputInvalid(false)
-    } else {
-      setInputInvalid(true)
-    }
+    setInputInvalid(!(searchRef.current.value.length > 0 && (searchRef.current.value.match('^[0-9]+$') || searchRef.current.value.match('^[a-zA-Z]+( [a-zA-Z]+)*$'))))
   }
 
   // Search employees function for find employees of a user query (query has to either be numeric XOR alpha)
@@ -151,6 +149,16 @@ export default function DepartmentPage (props) {
     )
   }
 
+  // This function will close the register modal
+  const handleRegistrationClose = () => {
+    setRegisterOpen(false)
+  }
+
+  // This function will open the register modal
+  const handleRegistrationOpen = () => {
+    setRegisterOpen(true)
+  }
+
   // Renders once departmentInfoTemp has been fetched
   return (
     <Box data-testid='department-page'>
@@ -167,9 +175,8 @@ export default function DepartmentPage (props) {
           id="employee-search"
           inputRef={searchRef}
           label="Employee Id/Name"
-          name={searchRef.current.value}
           type="search"
-          variant="outlined"
+          name={searchRef.current.value}
           onChange={inputChange}
         />
         <Tooltip title="Search Employees">
@@ -181,13 +188,14 @@ export default function DepartmentPage (props) {
         </Tooltip>
         <Tooltip title="Create User">
           <div>
-            <Fab data-testid='create-btn' disabled={searchHappened} color='secondary'>
+            <Fab onClick={handleRegistrationOpen} data-testid='create-btn' disabled={searchHappened} color='secondary'>
               <Create />
             </Fab>
           </div>
         </Tooltip>
       </Box>
       <DepAddRemoveFields currentEmployees={departmentInfoTemp?.depEmployees} searchEmployees={searchStaff} removeEmployees={removeEmployees} addEmployees={addEmployees} />
+      <Register handleClose={handleRegistrationClose} open={registerOpen} />
     </Box>
   )
 }
