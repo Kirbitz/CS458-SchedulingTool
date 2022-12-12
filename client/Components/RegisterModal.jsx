@@ -88,6 +88,7 @@ export default function Register (props) {
     })
       .then(() => {
         setSuccess(true)
+        setLengthCheck(true)
       })
       .catch((error) => {
         console.error(error)

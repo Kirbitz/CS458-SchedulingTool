@@ -86,7 +86,7 @@ const insertRows = async (accountData) => {
 const createUserRecord = (accountData, trx) => {
   return dbClient.insert({
     userId: accountData.newUserId,
-    userName: accountData.username,
+    userName: accountData.name,
     userPermissions: 0,
     userHourCap: accountData.hourCap
   })
