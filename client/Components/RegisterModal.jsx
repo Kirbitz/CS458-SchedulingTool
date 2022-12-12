@@ -88,7 +88,6 @@ export default function Register (props) {
     })
       .then(() => {
         setSuccess(true)
-        handleClose()
       })
       .catch((error) => {
         console.error(error)
