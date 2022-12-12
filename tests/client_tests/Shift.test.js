@@ -12,7 +12,15 @@ describe('Tests for <Shift />', () => {
   })
 
   it('Display Menu when Assignment Button Clicked', async () => {
-    const component = render(<Shift />, { wrapper: BrowserRouter })
+    const startTime = new Date()
+    const endTime = new Date()
+
+    startTime.setHours(12)
+    startTime.setMinutes(0)
+    endTime.setHours(16)
+    endTime.setMinutes(30)
+
+    const component = render(<Shift startTime={startTime} endTime={endTime} />, { wrapper: BrowserRouter })
     await fireEvent.click(component.getByTestId('employee-Assignment-Button'))
 
     await waitFor(() => {
@@ -21,6 +29,14 @@ describe('Tests for <Shift />', () => {
   })
 
   it('Employee Assigned To Shift', async () => {
+    const startTime = new Date()
+    const endTime = new Date()
+
+    startTime.setHours(12)
+    startTime.setMinutes(0)
+    endTime.setHours(16)
+    endTime.setMinutes(30)
+
     const employees = [
       'Abraham Abrahamsen',
       'Bob Robertson',
@@ -33,7 +49,7 @@ describe('Tests for <Shift />', () => {
       'Mark Marcussen',
       'Zoey Zimmerman'
     ]
-    const component = render(<Shift employees={employees}/>, { wrapper: BrowserRouter })
+    const component = render(<Shift startTime={startTime} endTime={endTime} employees={employees}/>, { wrapper: BrowserRouter })
     await fireEvent.click(component.getByTestId('employee-Assignment-Button'))
 
     await waitFor(async () => {
@@ -44,6 +60,14 @@ describe('Tests for <Shift />', () => {
   })
 
   it('Employee Unassigned From Shift', async () => {
+    const startTime = new Date()
+    const endTime = new Date()
+
+    startTime.setHours(12)
+    startTime.setMinutes(0)
+    endTime.setHours(16)
+    endTime.setMinutes(30)
+
     const employees = [
       'Abraham Abrahamsen',
       'Bob Robertson',
@@ -56,7 +80,7 @@ describe('Tests for <Shift />', () => {
       'Mark Marcussen',
       'Zoey Zimmerman'
     ]
-    const component = render(<Shift employees={employees}/>, { wrapper: BrowserRouter })
+    const component = render(<Shift startTime={startTime} endTime={endTime} employees={employees}/>, { wrapper: BrowserRouter })
     await fireEvent.click(component.getByTestId('employee-Assignment-Button'))
 
     await waitFor(async () => {
