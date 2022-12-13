@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Button, Box, TextField, Divider, Grid, Slide, Dialog, DialogTitle, DialogContent, DialogActions, Typography, Paper } from '@mui/material'
+import { ArrowDropDownIcon, Button, ButtonGroup, Divider, Grid, Slide, Dialog, DialogTitle, DialogContent, DialogActions, Typography, Paper } from '@mui/material'
 import { History } from '@mui/icons-material'
 
 import PropTypes from 'prop-types'
@@ -64,7 +64,6 @@ export default function TimeBlockEditor (props) {
       hideCallback()
     }
   }
-
   const timeBlockComponents = timeData.map((timeBlock, index) => {
     if (index === 0) {
       return (
@@ -74,6 +73,21 @@ export default function TimeBlockEditor (props) {
       return (
         <React.Fragment key={index}>
           <Divider sx={{ mx: 2 }} />
+          {/* top */}
+          <ButtonGroup variant="contained" ref={anchorRef} aria-label="split button">
+        <Button onClick={handleClick}>{options[selectedIndex]}</Button>
+        <Button
+          size="small"
+          aria-controls={open ? 'split-button-menu' : undefined}
+          aria-expanded={open ? 'true' : undefined}
+          aria-label="select merge strategy"
+          aria-haspopup="menu"
+          onClick={handleToggle}
+        >
+          <ArrowDropDownIcon />
+        </Button>
+      </ButtonGroup>
+          {/* bottom */}
           <TimeBlockInput key={index} timeBlockData={timeBlock} />
         </React.Fragment>
       )
