@@ -18,7 +18,7 @@ export default function Log () {
   const handleSubmit = async (event) => {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
-    if (data.get('userName').match('^[a-zA-Z0-9]+$') && data.get('password').match('^[a-zA-Z0-9 ~!@#$^&*_+?.,]+$')) {
+    if (data.get('userName').match('^[a-zA-Z0-9]+$') && data.get('password').match('^[a-zA-Z0-9 ~!@#$^*_+?.,]+$')) {
       await userLogin({ username: data.get('userName'), password: data.get('password') })
         .then(() => { navigate('/dashboard') })
         .catch((error) => {
