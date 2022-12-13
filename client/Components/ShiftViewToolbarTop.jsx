@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 import { AppBar, Button, Grid, IconButton, Stack, Toolbar, Tooltip } from '@mui/material'
@@ -7,7 +7,6 @@ import { Add, Close, FilterAlt } from '@mui/icons-material'
 import TimeBlockEditor from './TimeBlockEditor.jsx'
 
 /** Notes for Top Toolbar:
-* TODO: Create Time Block Editor before enabling Add Shift button.
 * TODO: Create Filter list before enabling Filter button.
 * TODO: Refactor Filter button into Menu.
 */
@@ -18,6 +17,12 @@ import TimeBlockEditor from './TimeBlockEditor.jsx'
 // to return to the Master View
 export default function ShiftViewToolbarTop (props) {
   const { selectedDate, passCloseCommand } = props
+  let dateTitle = selectedDate.getMonth() + 1 + '/' + selectedDate.getDate() + '/' + selectedDate.getFullYear()
+
+  // Used to re-render the date after a new date is passed (selectedDate prop)
+  useEffect(() => {
+    dateTitle = selectedDate.getMonth() + 1 + '/' + selectedDate.getDate() + '/' + selectedDate.getFullYear()
+  }, [selectedDate])
 
   const [showTimeBlockEditor, setShowTimeBlockEditor] = React.useState(false)
 
