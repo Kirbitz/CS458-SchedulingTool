@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ArrowDropDownIcon, Button, ButtonGroup, Divider, Grid, Slide, Dialog, DialogTitle, DialogContent, DialogActions, Typography, Paper } from '@mui/material'
+import { TextField, InputLabel, Select, MenuItem, FormControl, Button, Divider, Grid, Slide, Dialog, DialogTitle, DialogContent, DialogActions, Typography, Paper } from '@mui/material'
 import { History } from '@mui/icons-material'
 
 import PropTypes from 'prop-types'
@@ -12,6 +12,12 @@ const Transition = React.forwardRef(function Transition (props, ref) {
 })
 
 export default function TimeBlockEditor (props) {
+  const [departments, setDepartments] = React.useState('')
+
+  const handleChange = (event) => {
+    setDepartments(event.target.value)
+  }
+
   const { show, hideCallback, timeBlocks } = props
 
   const timeData = [
@@ -73,21 +79,6 @@ export default function TimeBlockEditor (props) {
       return (
         <React.Fragment key={index}>
           <Divider sx={{ mx: 2 }} />
-          {/* top */}
-          <ButtonGroup variant="contained" ref={anchorRef} aria-label="split button">
-        <Button onClick={handleClick}>{options[selectedIndex]}</Button>
-        <Button
-          size="small"
-          aria-controls={open ? 'split-button-menu' : undefined}
-          aria-expanded={open ? 'true' : undefined}
-          aria-label="select merge strategy"
-          aria-haspopup="menu"
-          onClick={handleToggle}
-        >
-          <ArrowDropDownIcon />
-        </Button>
-      </ButtonGroup>
-          {/* bottom */}
           <TimeBlockInput key={index} timeBlockData={timeBlock} />
         </React.Fragment>
       )
@@ -103,12 +94,28 @@ export default function TimeBlockEditor (props) {
       TransitionComponent={Transition}
     >
       <DialogTitle>
-        <Typography variant="h4" component="div">Adding shift</Typography>
+        <Typography variant="h4" component="div">Adding Position</Typography>
       </DialogTitle>
       <DialogContent>
         <Grid container>
           <Grid item xs={12} sm={5}>
-            <Typography>Garbage Text</Typography>
+            <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Department</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={departments}
+              label="Department Name Dropdown"
+              onChange={handleChange}
+            >
+              <MenuItem value={'Dining'}>Dining</MenuItem>
+              <MenuItem value={'TechDesk'}>TechDesk</MenuItem>
+              <MenuItem value={'Housing'}>Housing</MenuItem>
+            </Select>
+            </FormControl>
+          <Divider sx={{ mx: 2 }} />
+            <TextField id="outlined-basic" label="Shiftname TextField" variant="outlined"/>
+            <Button variant="contained" color="error">Delete position</Button>
           </Grid>
           <Grid item xs={12} sm={7}>
             <Typography variant="h6" component="div">Position TimeBlocks</Typography>
