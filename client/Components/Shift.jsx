@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 
-import { Button, Grid, IconButton, Menu, MenuItem, Stack, Tooltip, Typography } from '@mui/material'
-import { Delete, Edit, PersonOff } from '@mui/icons-material'
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, IconButton, Menu, MenuItem, Stack, Tooltip, Typography } from '@mui/material'
+import { AutoDelete, DeleteSweep, Edit, MoreTime, PersonOff } from '@mui/icons-material'
+import { LoadingButton } from '@mui/lab'
 
 /** Notes for Shift:
  * TODO: Create const objects for conflicting, unassigned, assigned, unsaved colors.
@@ -10,16 +12,23 @@ import { Delete, Edit, PersonOff } from '@mui/icons-material'
 
 // Component to display shift information and provide access to tools for shift assignment and editing
 export default function Shift (props) {
+  let hasTimeBlocks = false
+  let { deptName, posName, startTime, endTime, employees } = props
+
+  // This determines the type of shift window to render.
+  if (typeof (startTime) === 'object' && typeof (endTime) === 'object') {
+    hasTimeBlocks = true
+  }
+
   //* This is dummy data and will be changed once prop data passing is complete.
-  const deptName = 'Department Name'
-  const posName = 'Position Name'
-  const startTime = '12:00 PM'
-  const endTime = '4:00 PM'
+  // deptName = 'Department Name'
+  // posName = 'Position Name'
+  // startTime = new Date()
+  // endTime = new Date()
 
   // This array will remain but will be populated by data pulled from the database.
   //! The first option must always be the unassigned option as it is used by the Unassign button to determine its disabled status.
-  const employees = [
-    '[unassigned]',
+  /* employees = [
     'Abraham Abrahamsen',
     'Bob Robertson',
     'Cindy Cindyson',
@@ -30,8 +39,31 @@ export default function Shift (props) {
     'Karlee Carlson',
     'Mark Marcussen',
     'Zoey Zimmerman'
-  ]
+  ] */
   //* End of dummy data
+
+  // Adds an [unassigned] option to the beginning of the employees array
+  employees = [].concat(['[unassigned]'], employees)
+
+  // This function returns a time as a string in 12-hour format.
+  function get12HourTime (date) {
+    let minutes = date.getMinutes()
+
+    // Conditional to prevent a single zero from being shown as opposed to two
+    if (date.getMinutes() === 0) {
+      minutes = '00'
+    }
+
+    if (date.getHours() > 12) {
+      return ((date.getHours() - 12) + ':' + minutes + ' PM')
+    } else if (date.getHours() === 12) {
+      return ('12:' + minutes + ' PM')
+    } else if (date.getHours() === 0) {
+      return ('12:' + minutes + ' AM')
+    } else {
+      return ((date.getHours()) + ':' + minutes + ' AM')
+    }
+  }
 
   // anchorEl is used to set the position of the menu relative to a particular element (in this case, the button).
   const [anchorEl, setAnchorEl] = useState(null)
@@ -53,87 +85,236 @@ export default function Shift (props) {
     setAnchorEl(null)
   }
 
-  return (
-    <Grid container alignItems="center" data-testid='shift-root'>
-      <Grid item xs={ 5 }>
-        <Stack spacing={ 0 }>
-          <Typography noWrap>
-            <p id="first-line">{deptName}: {posName}</p>
-            <p id="second-line">{startTime} - {endTime}</p>
-          </Typography>
-        </Stack>
-      </Grid>
-      <Grid item xs={ 7 }>
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="flex-end"
-          spacing={ 2 }
-        >
-          <Tooltip title = 'Unassign Employee'>
-            <span>
-              <IconButton
-                aria-label="unassign-button"
-                data-testid="employee-Unassignment-Button"
-                id="unassign-button"
-                disabled={ !selectedIndex }
-                onClick={ () => { setSelectedIndex(0) } }
-              >
-                <PersonOff />
-              </IconButton>
-            </span>
-          </Tooltip>
-
-          <Button
-            aria-haspopup="true"
-            aria-label="select-employee-button"
-            id="select-employee-button"
-            elevation={ 0 }
-            variant="contained"
-            data-testid='employee-Assignment-Button'
-            // endIcon={ <KeyboardArrowDown /> }
-              onClick={ handleClickListItem }
-            sx={{ width: 250 }}
-          >
-            <Typography data-testid="assigned-person" noWrap>
-              { employees[selectedIndex] }
+  // The following variables, functions, and hooks are used for the confirmation dialog when a user tries to delete a time block.
+  const [deleting, setDeleting] = useState(false)
+  const [warningOpen, setwarningOpen] = useState(false)
+  const handleWarningConfirm = () => {
+    // TODO: Integrate this with backend.
+    setDeleting(true)
+    if (hasTimeBlocks) {
+      // Perform an action to delete the time block only.
+    } else {
+      // Perform an action to delete the entire position.
+    }
+  }
+  if (hasTimeBlocks) {
+    return (
+      <Grid container alignItems="center" data-testid='shift-root'>
+        <Grid item xs={ 5 }>
+          <Stack spacing={ 0 }>
+            <Typography noWrap>
+              <h3>{deptName}: {posName}</h3>
+              <p>{get12HourTime(startTime)} to {get12HourTime(endTime)}</p>
             </Typography>
-          </Button>
-          <Menu
-            data-testid='shift-menu'
-            aria-label="employee-menu"
-            id="employee-menu"
-            anchorEl={ anchorEl }
-            open={ open }
-            onClose={ handleClose }
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right'
-            }}
-            transformOrigin={{
-              horizontal: 'right'
-            }}
+          </Stack>
+        </Grid>
+        <Grid item xs={ 7 }>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="flex-end"
+            spacing={ 2 }
           >
-            {employees.map((employee, index) => (
-              <MenuItem
-                data-testid={`shift-menu-${index}`}
-                key={ employee }
-                // disabled={ index === 0 }
-                selected={ index === selectedIndex }
-                onClick={ (event) => { handleMenuItemClick(event, index) } }
+            <Tooltip title = 'Unassign Employee'>
+              <span>
+                <IconButton
+                  aria-label="unassign-button"
+                  data-testid="employee-Unassignment-Button"
+                  id="unassign-button"
+                  disabled={ !selectedIndex }
+                  onClick={ () => { setSelectedIndex(0) } }
+                >
+                  <PersonOff />
+                </IconButton>
+              </span>
+            </Tooltip>
+
+            <Button
+              aria-haspopup="true"
+              aria-label="select-employee-button"
+              id="select-employee-button"
+              elevation={ 0 }
+              variant="contained"
+              data-testid='employee-Assignment-Button'
+              // endIcon={ <KeyboardArrowDown /> }
+                onClick={ handleClickListItem }
+              sx={{ width: 250 }}
+            >
+              <Typography data-testid="assigned-person" noWrap>
+                { employees[selectedIndex] }
+              </Typography>
+            </Button>
+            <Menu
+              data-testid='shift-menu'
+              aria-label="employee-menu"
+              id="employee-menu"
+              anchorEl={ anchorEl }
+              open={ open }
+              onClose={ handleClose }
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right'
+              }}
+              transformOrigin={{
+                horizontal: 'right'
+              }}
+            >
+              {employees.map((employee, index) => (
+                <MenuItem
+                  data-testid={`shift-menu-${index}`}
+                  key={ employee }
+                  // disabled={ index === 0 }
+                  selected={ index === selectedIndex }
+                  onClick={ (event) => { handleMenuItemClick(event, index) } }
+                >
+                  {employee}
+                </MenuItem>
+              ))}
+            </Menu>
+            <Tooltip title = 'Edit Position'>
+              <IconButton aria-label="edit-shift-button"><Edit /></IconButton>
+            </Tooltip>
+            <Tooltip title = 'Delete Time Block'>
+              <IconButton
+                aria-label="delete-time-block-button"
+                onClick={() => { setwarningOpen(true) }}
               >
-                {employee}
-              </MenuItem>
-            ))}
-          </Menu>
-          <Tooltip title = 'Edit Shift'>
-            <IconButton aria-label="edit-shift-button"><Edit /></IconButton>
-          </Tooltip>
-          <Tooltip title = 'Delete Shift'>
-            <IconButton aria-label="delete-shift-button"><Delete /></IconButton>
-          </Tooltip>
-        </Stack>
+                <AutoDelete />
+              </IconButton>
+            </Tooltip>
+          </Stack>
+        </Grid>
+        <Dialog
+          aria-label="time-block-warning-dialog"
+          open={warningOpen}
+          onClose={() => { setwarningOpen(false) }}
+        >
+          <DialogTitle>Delete Time Block?</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              This will delete only the time block, not the position itself.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              spacing={ 2 }
+            >
+              <LoadingButton
+                variant="contained"
+                color="error"
+                startIcon={<AutoDelete/>}
+                loading={deleting}
+                loadingIndicator="Deleting..."
+                onClick={handleWarningConfirm}
+              >
+                Delete
+              </LoadingButton>
+              <Button
+                variant="outlined"
+                disabled={deleting}
+                onClick={() => { setwarningOpen(false) }}
+                autoFocus
+              >
+                Cancel
+              </Button>
+            </Stack>
+          </DialogActions>
+        </Dialog>
       </Grid>
-    </Grid>
-  )
+    )
+  } else {
+    return (
+      <Grid container alignItems="center" data-testid='shift-root'>
+        <Grid item xs={ 5 }>
+          <Stack spacing={ 0 }>
+            <Typography noWrap>
+              <h3>{deptName}: {posName}</h3>
+              <p>This position has no associated time blocks.</p>
+            </Typography>
+          </Stack>
+        </Grid>
+        <Grid item xs={ 7 }>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="flex-end"
+            spacing={ 2 }
+          >
+            <Tooltip title = 'Add Time Block'>
+              <IconButton aria-label="add-time-block-button"><MoreTime /></IconButton>
+            </Tooltip>
+            <Tooltip title = 'Edit Position'>
+              <IconButton aria-label="edit-shift-button"><Edit /></IconButton>
+            </Tooltip>
+            <Tooltip title = 'Delete Position'>
+              <IconButton
+                aria-label="delete-time-block-button"
+                onClick={() => { setwarningOpen(true) }}
+              >
+                <DeleteSweep />
+              </IconButton>
+            </Tooltip>
+          </Stack>
+        </Grid>
+        <Dialog
+          aria-label="time-block-warning-dialog"
+          open={warningOpen}
+          onClose={() => { setwarningOpen(false) }}
+        >
+          <DialogTitle>Delete Position?</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              This will delete the entire position. Are you sure?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              spacing={ 2 }
+            >
+              <LoadingButton
+                variant="contained"
+                color="error"
+                startIcon={<DeleteSweep/>}
+                loading={deleting}
+                loadingIndicator="Deleting..."
+                onClick={handleWarningConfirm}
+              >
+                Delete
+              </LoadingButton>
+              <Button
+                variant="outlined"
+                disabled={deleting}
+                onClick={() => { setwarningOpen(false) }}
+                autoFocus
+              >
+                Cancel
+              </Button>
+            </Stack>
+          </DialogActions>
+        </Dialog>
+      </Grid>
+    )
+  }
+}
+// Checks that the props passed in match the correct type
+Shift.propTypes = {
+  deptName: PropTypes.string,
+  posName: PropTypes.string,
+  startTime: PropTypes.instanceOf(Date),
+  endTime: PropTypes.instanceOf(Date),
+  employees: PropTypes.array
+}
+// defaults the props to a set value if they are not required
+Shift.defaultProps = {
+  deptName: '[No Department Name]',
+  posName: '[No Position Name]',
+  startTime: '',
+  endTime: '',
+  employees: []
 }
