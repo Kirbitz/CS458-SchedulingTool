@@ -3,18 +3,29 @@ import React, { useState } from 'react'
 import NavigationBar from '../Components/NavigationBar.jsx'
 import Week from '../Components/Week.jsx'
 import WeekChanger from '../Components/WeekChanger.jsx'
+import ShiftViewToolbarBottom from '../Components/ShiftViewToolbarBottom.jsx'
+import ShiftViewToolbarTop from '../Components/ShiftViewToolbarTop.jsx'
+import ShiftViewBody from '../Components/ShiftViewBody.jsx'
 
-import { Box, Grid } from '@mui/material'
+import { Box, Dialog, Grid } from '@mui/material'
 
 // MasterView Page that will display information for overseeing and editing employee shifts
 export default function MasterView (props) {
   const MAX_DAYS = 7
+  const [clickedDate, setClickedDate] = useState(new Date())
   const [week, setWeek] = useState(new Date())
+  const [shiftViewOpen, setShiftViewOpen] = useState(false)
 
   // Used by WeekChanger to set new date after button press
   const getNewWeek = (newWeek) => {
     setWeek(newWeek)
     updateWeekdates()
+  }
+  // Receives the date bubbled up from Day component and opens the Shift View Dialog
+  const getClickedDate = (date) => {
+    // console.log('Date received: ' + date)
+    setClickedDate(date)
+    handleWeekClickOpen()
   }
 
   // Used to set the initial values for weekdates (below)
@@ -52,6 +63,16 @@ export default function MasterView (props) {
     }
   }
 
+  // These are used to handle opening and closing of the Shift View Dialog.
+  const handleWeekClickOpen = () => {
+    setShiftViewOpen(true)
+  }
+
+  // Receives a command from Shift View's top toolbar to close the Shift View Dialog
+  const handleShiftViewClose = () => {
+    setShiftViewOpen(false)
+  }
+
   return (
   // TODO Month label
   // TODO date and day info on each day
@@ -63,9 +84,32 @@ export default function MasterView (props) {
       <WeekChanger date={week} passNewDate={getNewWeek} style={{ height: '100vh' }}/>
       <Grid container sx={{ mt: '2' }}>
         <Grid item xs={ 11 }>
-          <Week weekdates={weekdates} data-testid='week'/>
+          <Week weekdates={weekdates} passClickedDate={getClickedDate} data-testid='week'/>
         </Grid>
       </Grid>
+      <Dialog
+        data-testid="shift-view-dialog"
+        fullScreen
+        open={shiftViewOpen}
+        onClose={handleShiftViewClose}
+        // TransitionComponent={Transition}
+      >
+        <Box sx={{
+          flexDirection: 'column'
+        }}>
+          <Grid container direction="column" justifyContent="space-between">
+            <Grid item xs={ 2 }>
+              <ShiftViewToolbarTop passCloseCommand={handleShiftViewClose} selectedDate={clickedDate}/>
+            </Grid>
+            <Grid item xs>
+              <ShiftViewBody date='DATE WILL GO HERE'/>
+            </Grid>
+            <Grid item xs={ 2 }>
+              <ShiftViewToolbarBottom />
+            </Grid>
+          </Grid>
+        </Box>
+      </Dialog>
     </Box>
   )
 }

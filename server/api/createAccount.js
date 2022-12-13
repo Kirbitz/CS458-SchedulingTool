@@ -2,7 +2,7 @@ const sjcl = require('sjcl') // sha256 for encryption
 
 // Database connection with knex
 const dbClient = require('./dbClient')
-const { verifyJWTAuthToken } = require('./dataHelper')
+const { verifyJWTAuthToken, errorOccurred } = require('./dataHelper')
 
 const createAccountCallback = async (req, res) => {
   // If a query fails, all queries will be rolled back and error thrown
@@ -19,7 +19,7 @@ const createAccountCallback = async (req, res) => {
 
     // Checks that required data is provided
     if (!newAccountData.username || !newAccountData.password || !newAccountData.newUserId || !newAccountData.name || !newAccountData.hourCap) {
-      throw new Error('Missing/Invalid', { cause: { error: { status: 400, message: 'Missing Required Data' } } })
+      throw new Error('Missing/Invalid Data', { cause: { error: { status: 400, message: 'Missing Required Data' } } })
     }
 
     // a bit spaghetti, but I'd rather it be simple to call on the front end
@@ -41,7 +41,7 @@ const createAccountCallback = async (req, res) => {
 
     // Throws error if data is not unique
     if (badFields.length) {
-      throw new Error('Missing/Invalid', {
+      throw new Error('Missing/Invalid Data', {
         cause:
         {
           error:
@@ -66,29 +66,7 @@ const createAccountCallback = async (req, res) => {
         }
       }).end()
   } catch (err) {
-    switch (err.message) {
-      // Data is either missing or invalid
-      case 'Missing/Invalid':
-        res.status(400)
-          .json(err.cause)
-        break
-      // User is not authorized to create new account
-      case 'Unauthorized':
-        res.status(401)
-          .json(err.cause)
-        break
-      default:
-        console.error(err)
-        // Some kind of error occurred, though not unique constraints
-        res.status(500)
-          .json({
-            error: {
-              status: 500,
-              message: 'Internal Server Error'
-            }
-          })
-          .end()
-    }
+    errorOccurred(err, res)
   }
 }
 
@@ -100,18 +78,15 @@ const insertRows = async (accountData) => {
     // Create Credentials record
     await createCredentialsRecord(accountData, trx)
 
-    // Grab the manager's departmentID
-    const deptID = await getDepartmentId(accountData)
-
     // Create a _UserDepartment record
-    await createUserDepartmentRecord(accountData, deptID, trx)
+    await createUserDepartmentRecord(accountData, trx)
   }).catch(err => { throw err })
 }
 
 const createUserRecord = (accountData, trx) => {
   return dbClient.insert({
     userId: accountData.newUserId,
-    userName: accountData.username,
+    userName: accountData.name,
     userPermissions: 0,
     userHourCap: accountData.hourCap
   })
@@ -136,21 +111,10 @@ const createCredentialsRecord = (accountData, trx) => {
     .catch(err => { throw err })
 }
 
-const getDepartmentId = (accountData) => {
-  return dbClient.select('deptId')
-    .from('_userDept')
-    .where('userId', '=', accountData.userId)
-    .andWhere('isManager', '=', 1)
-    .then(result => {
-      return result[0].deptId
-    })
-    .catch(err => { throw err })
-}
-
-const createUserDepartmentRecord = (accountData, _deptId, trx) => {
+const createUserDepartmentRecord = (accountData, trx) => {
   return dbClient.insert({
     userId: accountData.newUserId,
-    deptId: _deptId,
+    deptId: accountData.deptId,
     isManager: 0
   })
     .into('_userDept')

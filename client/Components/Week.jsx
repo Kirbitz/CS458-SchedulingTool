@@ -6,12 +6,13 @@ import Timeline from './Timeline.jsx'
 
 // Week component for the master schedule view
 export default function Week (props) {
-  const weekdates = props.weekdates
+  const { weekdates, passClickedDate } = props
 
   // Maps each day and date of the week to a Day component
-  const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day, index) => {
+  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+  const weekDays = weekdates?.map((day, index) => {
     return (
-      <Day key={index} weekday={day} date={weekdates[index]} />
+      <Day key={index} passClickedDate={passClickedDate} weekday={dayNames[day.getDay()]} date={day} />
     )
   })
 
@@ -25,10 +26,11 @@ export default function Week (props) {
 }
 // Checks that the props passed in match the correct type
 Week.propTypes = {
-  weekdates: PropTypes.array
+  weekdates: PropTypes.arrayOf(PropTypes.instanceOf(Date)),
+  passClickedDate: PropTypes.func.isRequired
 }
 
 // defaults the props to a set value if they are not required
 Week.defaultProps = {
-  week: ''
+  week: null
 }

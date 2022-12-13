@@ -2,14 +2,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import { Button, Card, Typography, CardContent } from '@mui/material'
-// temp comment out use navigate because tests are failing, does not like without context of router
-import { useNavigate } from 'react-router-dom'
 
 // TODO: Find some way to use useNavigate() and still pass testing.
 // Week component for the master schedule view
 export default function Day (props) {
-  const { weekday, date } = props
-  const navigate = useNavigate() // This hook is used by the button to navigate to the shift view.
+  const { weekday, date, passClickedDate } = props
 
   // console.log('Date for this Day is: ' + date)
 
@@ -37,6 +34,7 @@ export default function Day (props) {
       </h3>
       <Card spacing={0} sx={{ margin: 0, height: '90%', border: dayCardBorder }}>
         <Button
+          data-testid={`day-button-${weekday}`}
           sx={{
             color: buttonTextColor,
             width: btnWidth,
@@ -44,7 +42,7 @@ export default function Day (props) {
             backgroundColor: buttonColor
           }}
           onClick={() => {
-            navigate('/master-schedule/shift')
+            passClickedDate(date)
           }}
         >
         <CardContent>
@@ -59,7 +57,8 @@ export default function Day (props) {
 // Checks that the props passed in match the correct type
 Day.propTypes = {
   weekday: PropTypes.string,
-  date: PropTypes.instanceOf(Date)
+  date: PropTypes.instanceOf(Date),
+  passClickedDate: PropTypes.func.isRequired
 }
 
 // defaults the props to a set value if they are not required

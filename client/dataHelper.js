@@ -8,36 +8,46 @@ export function userLogin (userCredentials) {
   })
 }
 
-// TODO check functionality of updated call
+// Grabs information about users in a department
 export function getDepartmentInfo () {
   return new Promise((resolve, reject) => {
-    axios.get('/getDepartments')
+    axios.get('/api/getEmployees')
       .then((response) => { return resolve(response) })
       .catch((error) => { return reject(error) })
   })
 }
 
-// TODO check functionality of updated call
+// Adds users to a department
 export function postDepartmentInfo (departmentInfo) {
   return new Promise((resolve, reject) => {
-    axios.post('/postDepartment', departmentInfo)
+    axios.post('/api/addEmployee', departmentInfo)
       .then((response) => { return resolve(response) })
       .catch((error) => { return reject(error) })
   })
 }
 
-// TODO update call to the correct route
+// Searches for an employee within the system
 export function searchEmployeeInfo (search) {
   return new Promise((resolve, reject) => {
-    axios.get(`/myfakeroute/${search}`)
+    axios.get(`/api/searchEmployees/${search}`)
       .then((response) => { return resolve(response) })
       .catch((error) => { return reject(error) })
   })
 }
 
+// Removes an employee from a department
 export function deleteEmployeeFromDepartment (remove) {
   return new Promise((resolve, reject) => {
-    axios.delete('/deleteEmployee', remove)
+    axios.delete('/api/deleteEmployee', { data: remove })
+      .then((response) => { return resolve(response) })
+      .catch((error) => { return reject(error) })
+  })
+}
+
+// TODO needs route implemented
+export function createNewUserAccount (userData) {
+  return new Promise((resolve, reject) => {
+    axios.post('/api/create_new_account', userData)
       .then((response) => { return resolve(response) })
       .catch((error) => { return reject(error) })
   })

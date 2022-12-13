@@ -12,10 +12,11 @@ describe('Tests for <DepartmentPage />', () => {
   window.alert = jest.fn()
   let mock
   const depInfo = {
+    deptId: '123',
     depName: 'Yahoo',
     depEmployees: [
-      { id: '5555555', name: 'Ben Dover' },
-      { id: '5772342', name: 'Chris Angle' }
+      { userId: '5555555', userName: 'Ben Dover' },
+      { userId: '5772342', userName: 'Chris Angle' }
     ]
   }
 
@@ -88,36 +89,26 @@ describe('Tests for <DepartmentPage />', () => {
     expect(mock.history.get.length).toBe(2)
   })
 
-  it('Search for employee data invalid inputs', async () => {
+  it.each`
+  input
+  ${'?><M'}
+  ${'asdf1234'}
+  ${' abc'}
+  ${'abc '}
+  ${' 123'}
+  `('Search for employee data invalid inputs', async ({ input }) => {
     mock.onGet().reply(200, depInfo)
 
     await act(async () => { render(<DepartmentPage />, { wrapper: BrowserRouter }) })
 
-    // Tests special symbols input validation
-    await fireEvent.change(screen.getByLabelText('Employee Id/Name'), { target: { value: '?><M' } })
-    expect(screen.getByLabelText('Employee Id/Name').outerHTML).toContain('aria-invalid="true"')
-
-    // Tests mix input of alphanumeric characters
-    await fireEvent.change(screen.getByLabelText('Employee Id/Name'), { target: { value: 'asdf1234' } })
-    expect(screen.getByLabelText('Employee Id/Name').outerHTML).toContain('aria-invalid="true"')
-
-    // Tests space before alpha characters
-    await fireEvent.change(screen.getByLabelText('Employee Id/Name'), { target: { value: ' abc' } })
-    expect(screen.getByLabelText('Employee Id/Name').outerHTML).toContain('aria-invalid="true"')
-
-    // Tests space after alpha characters
-    await fireEvent.change(screen.getByLabelText('Employee Id/Name'), { target: { value: 'abc ' } })
-    expect(screen.getByLabelText('Employee Id/Name').outerHTML).toContain('aria-invalid="true"')
-
-    // Tests numeric characters with space
-    await fireEvent.change(screen.getByLabelText('Employee Id/Name'), { target: { value: ' 123' } })
+    await fireEvent.change(screen.getByLabelText('Employee Id/Name'), { target: { value: input } })
     expect(screen.getByLabelText('Employee Id/Name').outerHTML).toContain('aria-invalid="true"')
 
     expect(mock.history.get.length).toBe(1)
   })
 
   it('Updating the list of employees success', async () => {
-    mock.onGet().reply(200, depInfo).onPost().reply(200)
+    mock.onGet().reply(200, depInfo).onPost().reply(200).onDelete().reply(200)
 
     await act(async () => { render(<DepartmentPage />, { wrapper: BrowserRouter }) })
 
@@ -126,6 +117,7 @@ describe('Tests for <DepartmentPage />', () => {
     await fireEvent.click(screen.getByTestId('save-btn'))
 
     expect(mock.history.post.length).toBe(1)
+    expect(mock.history.delete.length).toBe(1)
   })
 
   it('Updating the list of employees fail', async () => {

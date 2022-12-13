@@ -2,11 +2,13 @@
 import React, { useState } from 'react'
 // import PropTypes from 'prop-types'
 
-import { Alert, AppBar, Button, ButtonGroup, Grid, Stack, Toolbar, Typography } from '@mui/material'
+// import { Alert, AppBar, Button, ButtonGroup, Grid, Stack, Toolbar, Typography } from '@mui/material'
+import { AppBar, Button, ButtonGroup, Grid, Stack, Toolbar, Typography } from '@mui/material'
 import { History, Save } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 
 /** Notes for Bottom Toolbar:
+ * TODO: Reimplement Alert bar in the future.
  * TODO: Add method to determine initial alert state inside export function based on what data is available from the DB.
  * TODO: Add timeout function to change state away from "saved successfully!" after a few seconds.
  * TODO: Make Discard button functional.
@@ -20,12 +22,15 @@ import { LoadingButton } from '@mui/lab'
 export default function ShiftViewToolbarBottom (props) {
   // Used to change the Save LoadingButton into a loading state when the changes are saving
   const [saving, setSaving] = useState(false)
-  const [alertSeverity, setAlertSeverity] = useState('warning')
-  const [alertText, setAlertText] = useState('There are no shifts for this day.')
 
+  //! These Alert bar hooks have been disabled so ST-50 can be merged into main.
+  // const [alertSeverity, setAlertSeverity] = useState('warning')
+  // const [alertText, setAlertText] = useState('There are no shifts for this day.')
+
+  //! These debug buttons have been disabled so ST-50 can be merged into main.
   // These are used to test the Alert bar and its ability to change states.
   // These will be removed once the component is fully functional.
-  const debugButtons = [
+  /* const debugButtons = [
     <Button variant="contained" color="error" key="-1" onClick={() => {
       changeAlertState(-1)
     }}>-1</Button>,
@@ -47,15 +52,16 @@ export default function ShiftViewToolbarBottom (props) {
     <Button variant="contained" key="4" onClick={() => {
       changeAlertState(4)
     }}>4</Button>
-  ]
+  ] */
 
+  //! This Alert bar function has been disabled so ST-50 can be merged into main.
   /** changeAlertState
    * @description Changes alert icon, color, and text depending on changes and assignment status.
    * @param state Integer indicating the desired state of the alert. If this is not an integer, the Alert bar will display an error.
    ** Error states: -1, all non-integer inputs
    ** Normal states: 0, 1, 2, 3, 4
   */
-  const changeAlertState = (state) => {
+  /* const changeAlertState = (state) => {
     if (state === -1) {
       setAlertSeverity('error')
       setAlertText('Failed to retrieve shift data.')
@@ -79,17 +85,19 @@ export default function ShiftViewToolbarBottom (props) {
       setAlertSeverity('error')
       setAlertText('Invalid alert state.')
     }
-  }
+  } */
   return (
     <AppBar position="fixed" sx={{ bgcolor: '#ffffff', top: 'auto', bottom: 0 }}>
       <Toolbar disableGutters>
         <Grid container alignItems="center">
           <Grid item xs={ 6 }>
-            <Alert severity={ alertSeverity }>
-            <Typography noWrap>
-              { alertText }
-            </Typography>
-            </Alert>
+            {/* //! The Alert bar has been disabled so ST-50 can be merged into main.
+              <Alert severity={ alertSeverity }>
+              <Typography noWrap>
+                { alertText }
+              </Typography>
+              </Alert>
+            */}
           </Grid>
           <Grid item xs={ 6 }>
             <Stack
@@ -99,7 +107,7 @@ export default function ShiftViewToolbarBottom (props) {
               justifyContent="flex-end"
             >
               <ButtonGroup aria-label="debug-alert-buttons">
-                { debugButtons }
+                { /* debugButtons */ }
               </ButtonGroup>
               <Button
                 // sx={{ height: 50 }}
