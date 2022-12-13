@@ -5,7 +5,7 @@ import Week from '../Components/Week.jsx'
 import WeekChanger from '../Components/WeekChanger.jsx'
 import TimeBlockEditor from '../Components/TimeBlockEditor.jsx'
 
-import { Box, Button, Grid } from '@mui/material'
+import { Box, Grid } from '@mui/material'
 
 // MasterView Page that will display information for overseeing and editing employee shifts
 export default function MasterView (props) {
@@ -27,7 +27,6 @@ export default function MasterView (props) {
   // Add a line for the current time to the timeline component
     <Box>
       <NavigationBar selected="Master" />
-      <Button onClick={showModal}>Show Timeblock</Button>
       <TimeBlockEditor show={showTimeBlockEditor} hideCallback={hideModal} />
       <WeekChanger style={{ height: '100vh' }}/>
       <Grid container sx={{ mt: '2' }}>
