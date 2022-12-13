@@ -47,7 +47,7 @@ export function deleteEmployeeFromDepartment (remove) {
 // TODO needs route implemented
 export function createNewUserAccount (userData) {
   return new Promise((resolve, reject) => {
-    axios.post('/fakeroute', userData)
+    axios.post('/api/create_new_account', userData)
       .then((response) => { return resolve(response) })
       .catch((error) => { return reject(error) })
   })

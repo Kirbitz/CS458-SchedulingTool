@@ -16,10 +16,10 @@ export default function SaveAndNotify (props) {
   const [currentlyLoading, setCurrentlyLoading] = React.useState(false)
 
   // Handles the save button being clicked, running callbackFunc and showing snackbar
-  const handleSave = () => {
+  const handleSave = async () => {
     setCurrentlyLoading(true)
     if (callbackFunc) {
-      callbackFunc()
+      await callbackFunc()
     }
     setShowSnack(true)
   }

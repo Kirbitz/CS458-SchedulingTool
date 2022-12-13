@@ -86,7 +86,10 @@ export default function Register (props) {
       name: nameRef.current.value,
       hourCap: hoursRef.current.value
     })
-      .then(() => { setSuccess(true) })
+      .then(() => {
+        setSuccess(true)
+        setLengthCheck(true)
+      })
       .catch((error) => {
         console.error(error)
         setSuccess(false)
