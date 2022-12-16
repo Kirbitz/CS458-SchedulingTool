@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import { Typography, Dialog, Button, Grid } from '@mui/material'
+import { DeleteForever } from '@mui/icons-material'
 
 const DeleteWarningPopup = ({ onClose, isOpen }) => {
   const handleClose = () => {
@@ -38,15 +39,17 @@ const DeleteWarningPopup = ({ onClose, isOpen }) => {
         <Button
         onClick={handleClose}
         variant='contained'
-        color='error'>Abort
+        color='error'>
+          <DeleteForever />
+          DELETE
         </Button>
         </Grid>
         <Grid item xs={3} sx={{ m: 1, p: 1, textAlign: 'center' }}>
         <Button
         onClick={handleClose}
-        variant='contained'
-        color='success'>
-          Continue
+        variant='outlined'
+        >
+          CANCEL
         </Button>
         </Grid>
       </Grid>

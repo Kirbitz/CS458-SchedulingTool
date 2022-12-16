@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { TextField, InputLabel, Select, MenuItem, FormControl, Button, Divider, Grid, Slide, Dialog, DialogTitle, DialogContent, DialogActions, Typography, Paper } from '@mui/material'
-import { History } from '@mui/icons-material'
+import { History, DeleteForever } from '@mui/icons-material'
 
 import PropTypes from 'prop-types'
 
@@ -130,6 +130,7 @@ export default function TimeBlockEditor (props) {
             value = {isModalOpen}
             variant="contained"
             color="error">
+              <DeleteForever />
               Delete position
             </Button>
             <Divider sx={{ mx: 2 }} />

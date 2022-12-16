@@ -15,7 +15,7 @@ export default function TimeBlockInput (props) {
     <Box sx={{ m: 1 }}>
       <LocalizationProvider dateAdapter={AdapterMoment}>
         <DateTimePicker
-          label="Start Time"
+          label='Start Time'
           value={timeBlockData.timeStart}
           onChange={(newTimeData) => {
             setDidChange(true)
@@ -23,7 +23,7 @@ export default function TimeBlockInput (props) {
           renderInput={(params) => <TextField {...params} />}
         />
         <DateTimePicker
-          label="End Time"
+          label='End Time'
           value={timeBlockData.timeEnd}
           onChange={(newTimeData) => {
             setDidChange(true)
@@ -31,10 +31,10 @@ export default function TimeBlockInput (props) {
           renderInput={(params) => <TextField sx={{ ml: 2 }} {...params} />}
         />
       </LocalizationProvider>
-      <Tooltip title="Delete Time Block">
+      <Tooltip title='Delete Time Block'>
         <IconButton
-          color="error"
-          size="medium"
+          color='error'
+          size='medium'
           sx={{ mx: 2 }}
         >
           <DeleteForever />
@@ -42,8 +42,8 @@ export default function TimeBlockInput (props) {
       </Tooltip>
       {
         didChange
-          ? <ChangeCircle fontSize="large" color="info" />
-          : <Check fontSize="large" color="success" />
+          ? <ChangeCircle fontSize='large' color='info' />
+          : <Check fontSize='large' color='success' />
       }
     </Box>
   )
