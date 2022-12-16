@@ -11,6 +11,10 @@ export default function TimeBlockInput (props) {
 
   const [didChange, setDidChange] = React.useState(false)
 
+  const removeTimeBlock = () => {
+    console.log('removeTimeBlock function was activated')
+  }
+
   return (
     <Box sx={{ m: 1 }}>
       <Grid container >
@@ -30,7 +34,7 @@ export default function TimeBlockInput (props) {
           onChange={(newTimeData) => {
             setDidChange(true)
           }}
-          renderInput={(params) => <TextField sx={{ ml: 2 }} {...params} />}
+          renderInput={(params) => <TextField {...params} />}
         />
       </LocalizationProvider>
       </Grid>
@@ -41,7 +45,7 @@ export default function TimeBlockInput (props) {
           size='medium'
           sx={{ border: 'solid 2px black' }} */}
         {/* > */}
-          <DeleteForever fontSize='large' color='error' sx={{ border: 'solid 2px black' }} />
+          <DeleteForever onClick={removeTimeBlock} fontSize='large' color='error' />
         {/* </IconButton> */}
       </Tooltip>
       </Grid>

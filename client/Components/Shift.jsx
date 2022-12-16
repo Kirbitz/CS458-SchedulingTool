@@ -172,7 +172,10 @@ export default function Shift (props) {
               ))}
             </Menu>
             <Tooltip title = 'Edit Position'>
-              <IconButton aria-label="edit-shift-button"><Edit /></IconButton>
+              <IconButton
+               aria-label="edit-shift-button">
+                <Edit />
+              </IconButton>
             </Tooltip>
             <Tooltip title = 'Delete Time Block'>
               <IconButton
@@ -247,7 +250,10 @@ export default function Shift (props) {
               <IconButton aria-label="add-time-block-button"><MoreTime /></IconButton>
             </Tooltip>
             <Tooltip title = 'Edit Position'>
-              <IconButton aria-label="edit-shift-button"><Edit /></IconButton>
+              <IconButton
+              aria-label="edit-shift-button">
+                <Edit />
+              </IconButton>
             </Tooltip>
             <Tooltip title = 'Delete Position'>
               <IconButton
