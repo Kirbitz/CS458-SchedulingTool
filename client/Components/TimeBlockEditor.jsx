@@ -124,7 +124,7 @@ export default function TimeBlockEditor (props) {
             </FormControl>
           <Divider sx={{ mx: 2 }} />
             <TextField id="outlined-basic" label="Shiftname TextField" variant="outlined"/>
-            {/* Delete Position button on department side */}
+            <Divider sx={{ mx: 2 }} />
             <Button
             onClick={openModal}
             value = {isModalOpen}
