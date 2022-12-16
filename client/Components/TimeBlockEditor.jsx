@@ -7,18 +7,27 @@ import PropTypes from 'prop-types'
 import SaveAndNotify from './SaveAndNotify.jsx'
 import TimeBlockInput from './TimeBlockInput.jsx'
 
+import DeleteWarningPopup from './DeleteWarningPopup.jsx'
+
 const Transition = React.forwardRef(function Transition (props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
 })
 
 export default function TimeBlockEditor (props) {
   const [departments, setDepartments] = React.useState('')
+  const [isModalOpen, setOpenModal] = React.useState(false)
 
   const handleChange = (event) => {
     setDepartments(event.target.value)
   }
 
-  const { show, hideCallback, timeBlocks } = props
+  const openModal = () => {
+    setOpenModal(true)
+  }
+
+  // old version with wimeBlocks; wanted the console erros to not be displaied
+  // const { show, hideCallback, timeBlocks } = props
+  const { show, hideCallback } = props
 
   const timeData = [
     {
@@ -108,14 +117,26 @@ export default function TimeBlockEditor (props) {
               label="Department Name Dropdown"
               onChange={handleChange}
             >
-              <MenuItem value={'Dining'}>Dining</MenuItem>
-              <MenuItem value={'TechDesk'}>TechDesk</MenuItem>
+              <MenuItem value={'Cybernetics'}>Cybernetics</MenuItem>
+              <MenuItem value={'North Campus Cafe'}>North Campus Cafe</MenuItem>
               <MenuItem value={'Housing'}>Housing</MenuItem>
             </Select>
             </FormControl>
           <Divider sx={{ mx: 2 }} />
             <TextField id="outlined-basic" label="Shiftname TextField" variant="outlined"/>
-            <Button variant="contained" color="error">Delete position</Button>
+            {/* Delete Position button on department side */}
+            <Button
+            onClick={openModal}
+            value = {isModalOpen}
+            variant="contained"
+            color="error">
+              Delete position
+            </Button>
+            <Divider sx={{ mx: 2 }} />
+            <DeleteWarningPopup
+            isOpen={isModalOpen}
+            onClose={setOpenModal}
+            />
           </Grid>
           <Grid item xs={12} sm={7}>
             <Typography variant="h6" component="div">Position TimeBlocks</Typography>
