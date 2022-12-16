@@ -29,6 +29,7 @@ export default function TimeBlockEditor (props) {
   // const { show, hideCallback, timeBlocks } = props
   const { show, hideCallback } = props
 
+  // timeData is the array holding time blocks on the client side
   const timeData = [
     {
       timeStart: new Date(),
@@ -41,37 +42,37 @@ export default function TimeBlockEditor (props) {
       timeEnd: new Date(),
       timeType: 2,
       positionName: 'Grill'
-    },
-    {
-      timeStart: new Date(),
-      timeEnd: new Date(),
-      timeType: 2,
-      positionName: 'Grill'
-    },
-    {
-      timeStart: new Date(),
-      timeEnd: new Date(),
-      timeType: 2,
-      positionName: 'Grill'
-    },
-    {
-      timeStart: new Date(),
-      timeEnd: new Date(),
-      timeType: 2,
-      positionName: 'Grill'
-    },
-    {
-      timeStart: new Date(),
-      timeEnd: new Date(),
-      timeType: 2,
-      positionName: 'Grill'
-    },
-    {
-      timeStart: new Date(),
-      timeEnd: new Date(),
-      timeType: 2,
-      positionName: 'Grill'
     }
+    // {
+    //   timeStart: new Date(),
+    //   timeEnd: new Date(),
+    //   timeType: 2,
+    //   positionName: 'Grill'
+    // },
+    // {
+    //   timeStart: new Date(),
+    //   timeEnd: new Date(),
+    //   timeType: 2,
+    //   positionName: 'Grill'
+    // },
+    // {
+    //   timeStart: new Date(),
+    //   timeEnd: new Date(),
+    //   timeType: 2,
+    //   positionName: 'Grill'
+    // },
+    // {
+    //   timeStart: new Date(),
+    //   timeEnd: new Date(),
+    //   timeType: 2,
+    //   positionName: 'Grill'
+    // },
+    // {
+    //   timeStart: new Date(),
+    //   timeEnd: new Date(),
+    //   timeType: 2,
+    //   positionName: 'Grill'
+    // }
   ]
 
   const handleClose = () => {
@@ -139,8 +140,9 @@ export default function TimeBlockEditor (props) {
             onClose={setOpenModal}
             />
           </Grid>
-          <Grid item xs={12} sm={7}>
+          <Grid item xs={6} sm={7}>
             <Typography variant="h6" component="div">Position TimeBlocks</Typography>
+            <Button item xs={6} sm={7}>Add TimeBlock</Button>
             <Paper variant="outlined">
               {timeBlockComponents}
             </Paper>
